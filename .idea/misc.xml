@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="1.375" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares/app/src/main/res/drawable/ic_launcher_background.xml" value="1.375" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_login.xml" value="0.19953703703703704" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_setting.xml" value="0.5" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_smartwatch.xml" value="1.0" />
         <entry key="..\:/Users/slava/AndroidStudioProjects/GPShares2/app/src/main/res/layout/activity_login.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/slava/AndroidStudioProjects/GPShares2/app/src/main/res/layout/activity_map.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/slava/AndroidStudioProjects/GPShares2/app/src/main/res/layout/activity_registrar.xml" value="0.2957427536231884" />
