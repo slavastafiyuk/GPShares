@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071669500941",
+    "project_id": "gpshares-22a4b",
+    "storage_bucket": "gpshares-22a4b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071669500941:android:9eba2e3d796ba447d10944",
+        "android_client_info": {
+          "package_name": "com.example.gpshares"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071669500941-81773rj25om5q4licl7gp5ujpsmdmfth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGYQ5JvJJQHJA_XfXpEkNbvuKJq_KjVvM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071669500941-81773rj25om5q4licl7gp5ujpsmdmfth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
