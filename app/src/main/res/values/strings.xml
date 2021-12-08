@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">GPShare\'s</string>
+    <string name="title_activity_map">Map</string>
+    <string name="Iniciar_Caminho">Iniciar</string>
+    <string name="Parar_Caminho">Parar</string>
+    <string name="email">Email</string>
+    <string name="password">Palavra-passe</string>
+    <string name="login">Login</string>
+    <string name="registrar">Registrar</string>
+    <string name="ForgotPW">Escqueci-me da password</string>
+    <string name="nome">Nome inteiro</string>
+    <string name="idade">Idade</string>
+</resources>
