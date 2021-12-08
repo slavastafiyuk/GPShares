@@ -10,4 +10,5 @@
     <string name="ForgotPW">Escqueci-me da password</string>
     <string name="nome">Nome inteiro</string>
     <string name="idade">Idade</string>
+    <string name="reset">Reset Password</string>
 </resources>

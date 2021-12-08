@@ -2,6 +2,7 @@ package com.example.gpshares;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.TestLooperManager;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +21,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 public class Login extends AppCompatActivity implements View.OnClickListener{
 
-    private TextView register;
+    private TextView register, resetPW;
     private EditText editTextTextEmailAddress, editTextTextPassword;
     private Button signIn;
 
@@ -44,6 +47,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
         editTextTextPassword = (EditText) findViewById(R.id.editTextTextPassword);
         progressBar = (ProgressBar) findViewById(R.id.progressBar2);
 
+        resetPW = (TextView) findViewById(R.id.ResetPW);
+        resetPW.setOnClickListener(this);
+
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -55,6 +61,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                 break;
             case R.id.LOGIN:
                 userLogin();
+                break;
+            case R.id.ResetPW:
+                startActivity(new Intent(this, ResetPassword.class));
                 break;
         }
     }

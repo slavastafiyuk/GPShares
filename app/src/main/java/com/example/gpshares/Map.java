@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -62,6 +63,7 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
                 mapFragment.getMapAsync(this);
             }
         }
+
     }
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
