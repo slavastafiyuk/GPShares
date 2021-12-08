@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
@@ -104,7 +105,9 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        Toast.makeText(Registrar.this, "Registro efetuado com sucesso", Toast.LENGTH_LONG).show();
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        user.sendEmailVerification();
+                                        Toast.makeText(Registrar.this, "Registro efetuado com sucesso, foi-lhe enviado um email para verificar a sua conta", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }else{
                                         Toast.makeText(Registrar.this, "Houve um problema durante o registro, Tente de novo", Toast.LENGTH_LONG).show();
