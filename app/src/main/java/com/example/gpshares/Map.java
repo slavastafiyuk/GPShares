@@ -8,22 +8,31 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Polygon;
+import com.google.android.material.navigation.NavigationView;
+
 
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Map extends FragmentActivity implements OnMapReadyCallback {
+public class Map extends AppCompatActivity implements OnMapReadyCallback {
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    Toolbar toolbar;
 
     private GoogleMap mMap;
     private ActivityMapBinding binding;
@@ -32,14 +41,13 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
     //--------------------------------
     double lat1;
     double lon1;
-    Polygon poly;
-    //ArrayList<Polygon> polys = new ArrayList<Polygon>();
-    //ArrayList<Polygon> pl = new ArrayList<Polygon>();
-    //int i=0;
     //--------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
         if (!isLocationPermissionGranted()) {
             try {
                 requestLocationPermission();
@@ -62,6 +70,14 @@ public class Map extends FragmentActivity implements OnMapReadyCallback {
             if (mapFragment != null) {
                 mapFragment.getMapAsync(this);
             }
+
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
+            navigationView = (NavigationView) findViewById(R.id.navigation_view);
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(Map.this,drawerLayout,toolbar,R.string.menu_Open,R.string.menu_Close);
+            drawerLayout.addDrawerListener(toggle);
+            toggle.syncState();
         }
 
     }

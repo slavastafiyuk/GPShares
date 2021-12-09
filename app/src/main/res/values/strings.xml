@@ -11,4 +11,9 @@
     <string name="nome">Nome inteiro</string>
     <string name="idade">Idade</string>
     <string name="reset">Reset Password</string>
+    <string name="menu_Open">Open</string>
+    <string name="menu_Close">Close</string>
+    <string name="MAP">Mapa</string>
+    <string name="Auth">Autentificação</string>
+
 </resources>
