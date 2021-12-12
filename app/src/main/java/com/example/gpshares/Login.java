@@ -83,7 +83,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         //Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions
                 .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("1071669500941-81773rj25om5q4licl7gp5ujpsmdmfth.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
         //Build a GoogleSignInClient with the options specified by gso
