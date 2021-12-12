@@ -82,4 +82,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/googleAuth"
+        android:layout_width="380dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="100dp"
+        android:text="@string/google_Auth"
+        android:backgroundTint="#0Ed6B9"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

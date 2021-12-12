@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1071669500941",
+    "firebase_url": "https://gpshares-22a4b-default-rtdb.firebaseio.com",
     "project_id": "gpshares-22a4b",
     "storage_bucket": "gpshares-22a4b.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1071669500941-a793ehrgtnmulupt0u06i9erl2flutq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gpshares",
+            "certificate_hash": "c2f47e18050108d42f4bc71eea3e8f5ef83f5f3a"
+          }
+        },
         {
           "client_id": "1071669500941-81773rj25om5q4licl7gp5ujpsmdmfth.apps.googleusercontent.com",
           "client_type": 3

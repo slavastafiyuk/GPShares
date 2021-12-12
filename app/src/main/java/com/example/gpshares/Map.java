@@ -2,6 +2,7 @@ package com.example.gpshares;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -10,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.gpshares.MapHelper.FetchURL;
@@ -32,6 +35,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback {
+public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
@@ -101,12 +105,37 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             //SideMenu------------------------------------------------------------------------------
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
             navigationView = (NavigationView) findViewById(R.id.navigation_view);
+            navigationView.setNavigationItemSelectedListener(this);
             toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(Map.this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
+
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.nav_settings:
+                startActivity(new Intent(this,Setting.class));
+                break;
+            case R.id.menu_logout:
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, Login.class));
+        }
+        item.setChecked(true);
+        return true;
     }
 
     @Override
@@ -173,7 +202,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     double longitude = myLocation.getLongitude();
                     lat1 = latitude;
                     lon1 = longitude;
-                    place1 = new MarkerOptions().position(new LatLng(lat1,lon1)).title("MinhaLocalização");
+                    place1 = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
                     if (listPoints.size() == 1) {
                         String url = getRequestURL(place1.getPosition(), listPoints.get(0), "driving");
                         new FetchURL(Map.this).execute(url, "driving");
@@ -231,98 +260,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onTaskDone(Object... values) {
-        if(currentPolyline!=null){
+        if (currentPolyline != null) {
             currentPolyline.remove();
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
 
     }
-    //private String requestDirections(String reqUrl) throws IOException {
-    //    String responseString = "";
-    //    InputStream inputStream = null;
-    //    HttpURLConnection httpURLConnection = null;
-    //    try {
-    //        URL url = new URL(reqUrl);
-    //        httpURLConnection = (HttpURLConnection) url.openConnection();
-    //        httpURLConnection.connect();
-    //        //Get the response result
-    //        inputStream = httpURLConnection.getInputStream();
-    //        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-    //        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-    //        StringBuffer stringBuffer = new StringBuffer();
-    //        String line = "";
-    //        while((line = bufferedReader.readLine()) !=null){
-    //            stringBuffer.append(line);
-    //        }
-    //        responseString = stringBuffer.toString();
-    //        bufferedReader.close();
-    //        inputStreamReader.close();
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    }finally {
-    //        if (inputStream != null){
-    //            inputStream.close();
-    //        }
-    //        httpURLConnection.disconnect();
-    //    }
-    //    return  responseString;
-    //}
-    //public class TaskRequestDirections extends AsyncTask<String, Void, String> {
-    //    @Override
-    //    protected String doInBackground(String... strings) {
-    //        String responseString = "";
-    //        try {
-    //            responseString = requestDirections(strings[0]);
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //        return responseString;
-    //    }
-    //    @Override
-    //    protected void onPostExecute(String s) {
-    //        super.onPostExecute(s);
-    //        //parse json here
-    //        TaskParser taskParser = new TaskParser();
-    //        taskParser.execute(s);
-    //    }
-    //}
-    //public class TaskParser extends AsyncTask<String, Void, List<List<HashMap<String, String>>>>{
-    //    @Override
-    //    protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
-    //        JSONObject jsonObject = null;
-    //        List<List<HashMap<String, String>>> routes = null;
-    //        try {
-    //            jsonObject = new JSONObject(strings[0]);
-    //            DirectionsParser directionsParser = new DirectionsParser();
-    //            routes = directionsParser.parse(jsonObject);
-    //        } catch (JSONException e) {
-    //            e.printStackTrace();
-    //        }
-    //        return routes;
-    //    }
-    //    @Override
-    //    protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
-    //        //Get list route and display it into the map
-    //        ArrayList points = null;
-    //        PolylineOptions polylineOptions = null;
-    //        for (List<HashMap<String, String>> path: lists){
-    //            points = new ArrayList();
-    //            polylineOptions = new PolylineOptions();
-    //            for (HashMap<String, String> point: path){
-    //                double lat = Double.parseDouble(point.get("lat"));
-    //                double lon = Double.parseDouble(point.get("lon"));
-    //                points.add(new LatLng(lat, lon));
-    //            }
-    //            polylineOptions.addAll( points);
-    //            polylineOptions.width(15);
-    //            polylineOptions.color(Color.BLUE);
-    //            polylineOptions.geodesic(true);
-    //        }
-    //        if (polylineOptions!=null){
-    //            mMap.addPolyline(polylineOptions);
-    //        }else{
-    //            Toast.makeText(getApplicationContext(), "Direction not found!", Toast.LENGTH_SHORT).show();
-    //        }
-    //    }
-    //}
+
+
 }

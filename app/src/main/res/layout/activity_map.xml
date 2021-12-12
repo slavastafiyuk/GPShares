@@ -13,18 +13,6 @@
     <!--android:name="com.google.android.gms.maps.SupportMapFragment"-->
 
 
-
-
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:headerLayout="@layout/header"
-        app:menu="@menu/sidemenu"
-        android:layout_gravity="start"/>
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -33,14 +21,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:layout_marginBottom="5dp"
             android:background="#673AB7"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:title="Toolbars"
-            app:titleTextColor="#FFFFFF"
-            app:titleMarginStart="10dp"
-            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toTopOf="@+id/map"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Toolbars"
+            app:titleMarginStart="10dp"
+            app:titleTextColor="#FFFFFF" />
 
 
         <androidx.fragment.app.FragmentContainerView
@@ -56,6 +44,16 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:context=".Map" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:visibility="visible"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/sidemenu"
+        tools:visibility="visible" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
