@@ -10,4 +10,11 @@
     <string name="ForgotPW">Escqueci-me da password</string>
     <string name="nome">Nome inteiro</string>
     <string name="idade">Idade</string>
+    <string name="reset">Reset Password</string>
+    <string name="menu_Open">Open</string>
+    <string name="menu_Close">Close</string>
+    <string name="MAP">Mapa</string>
+    <string name="Auth">Autentificação</string>
+    <string name="Setting">Settings</string>
+    <string name="google_Auth">Sign in with google</string>
 </resources>
