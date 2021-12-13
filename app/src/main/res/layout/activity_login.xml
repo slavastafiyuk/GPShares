@@ -8,44 +8,58 @@
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="150dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="@string/email"
-        android:textSize="24sp"
+        android:importantForAutofill="no"
         android:inputType="textEmailAddress"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--android:layout_width="400dp"
+       android:layout_height="55dp"-->
 
     <EditText
         android:id="@+id/editTextTextPassword"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
         android:ems="10"
         android:hint="@string/password"
-        android:textSize="24sp"
+        android:importantForAutofill="no"
         android:inputType="textPassword"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+    <!--android:layout_width="400dp"
+        android:layout_height="55dp"-->
 
     <Button
         android:id="@+id/LOGIN"
-        android:layout_width="380dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginStart="1dp"
         android:layout_marginTop="20dp"
-        android:text="@string/login"
+        android:layout_marginEnd="1dp"
         android:backgroundTint="#0Ed6B9"
-        android:textStyle="bold"
+        android:text="@string/login"
         android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+    <!--android:layout_width="380dp"
+        android:layout_height="55dp"-->
 
     <TextView
         android:id="@+id/ResetPW"
@@ -53,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
+        android:layout_marginRight="30dp"
         android:text="@string/ForgotPW"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -64,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="75dp"
+        android:layout_marginEnd="30dp"
         android:text="@string/registrar"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -84,15 +99,20 @@
 
     <Button
         android:id="@+id/googleAuth"
-        android:layout_width="380dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="100dp"
-        android:text="@string/google_Auth"
+        android:layout_marginEnd="20dp"
         android:backgroundTint="#0Ed6B9"
-        android:textStyle="bold"
+        android:text="@string/google_Auth"
         android:textSize="26sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
+    <!--android:layout_width="380dp"
+        android:layout_height="55dp"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
