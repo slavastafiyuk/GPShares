@@ -1,5 +1,12 @@
 package com.example.gpshares;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,27 +14,18 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.UserHandle;
-import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class Setting extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class Setting extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     //SideMenu--------------------------------------------------------------------------------------
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -70,12 +68,13 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     fullNameTextView.setText(fullname);
                     emailTextView.setText(email);
                     ageTextView.setText(age);
-                }else if (signInAccount != null){
+                } else if (signInAccount != null) {
                     fullNameTextView.setText(signInAccount.getDisplayName());
                     emailTextView.setText(signInAccount.getEmail());
                     ageTextView.setText("Não conseguimos obter esta informação");
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(Setting.this, "Algo correu mal a processar os seus dados", Toast.LENGTH_SHORT).show();
@@ -85,17 +84,18 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_map:
-                startActivity(new Intent(this,Map.class));
+                startActivity(new Intent(this, Map.class));
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
