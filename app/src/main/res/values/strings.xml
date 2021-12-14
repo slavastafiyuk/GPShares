@@ -17,4 +17,7 @@
     <string name="Auth">Autentificação</string>
     <string name="Setting">Settings</string>
     <string name="google_Auth">Sign in with google</string>
+    <string name="nomeInt">Nome:</string>
+    <string name="emailDisplay">Email:</string>
+    <string name="ageDisplay">Idade:</string>
 </resources>
