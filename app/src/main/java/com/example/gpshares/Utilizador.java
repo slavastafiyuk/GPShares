@@ -1,14 +1,13 @@
 package com.example.gpshares;
 
 public class Utilizador {
-    public String nomeInteiro, idade, email;
+    public String nomeInteiro, email;
 
     public Utilizador(){
     }
 
-    public Utilizador(String nomeInteiro, String idade, String email){
+    public Utilizador(String nomeInteiro, String email){
         this.nomeInteiro=nomeInteiro;
-        this.idade=idade;
         this.email=email;
     }
 }

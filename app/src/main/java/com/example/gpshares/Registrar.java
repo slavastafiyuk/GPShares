@@ -98,7 +98,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Utilizador utilizador = new Utilizador(nomeInteiro, idade, email);
+                            Utilizador utilizador = new Utilizador(nomeInteiro, email);
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                     .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {

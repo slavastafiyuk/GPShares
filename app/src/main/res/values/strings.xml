@@ -20,4 +20,8 @@
     <string name="nomeInt">Nome:</string>
     <string name="emailDisplay">Email:</string>
     <string name="ageDisplay">Idade:</string>
+
+    <string name="facebook_app_id">5314220315261820</string>
+    <string name="fb_login_protocol_scheme">fb5314220315261820</string>
+
 </resources>

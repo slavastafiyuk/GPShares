@@ -26,6 +26,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.gpshares.MapHelper.FetchURL;
 import com.example.gpshares.MapHelper.TaskLoadedCallback;
 import com.example.gpshares.databinding.ActivityMapBinding;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -132,6 +133,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
         }
         item.setChecked(true);
