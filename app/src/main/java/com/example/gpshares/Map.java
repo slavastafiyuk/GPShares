@@ -4,14 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.gpshares.MapHelper.FetchURL;
 import com.example.gpshares.MapHelper.TaskLoadedCallback;
 import com.example.gpshares.databinding.ActivityMapBinding;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -37,38 +37,25 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener{
+public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener, Dialog.DialogListener {
+    private static final int LOCATION_PERMISSION_CODE = 101;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
-
     //Rotas------------------
     MarkerOptions place1;
     Polyline currentPolyline;
-    ArrayList<LatLng> listPoints;
     //------------------
-
-    private GoogleMap mMap;
-    private ActivityMapBinding binding;
-    private static final int LOCATION_PERMISSION_CODE = 101;
+    ArrayList<LatLng> listPoints;
     ReentrantLock lock = new ReentrantLock();
     //--------------------------------
     double lat1;
     double lon1;
+    private GoogleMap mMap;
+    private ActivityMapBinding binding;
 
     //--------------------------------
     @Override
@@ -103,8 +90,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             //new FetchURL(Map.this).execute(url, "driving");
             listPoints = new ArrayList<>();
             //SideMenu------------------------------------------------------------------------------
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
-            navigationView = (NavigationView) findViewById(R.id.navigation_view);
+            drawerLayout = findViewById(R.id.drawerlayout);
+            navigationView = findViewById(R.id.navigation_view);
             navigationView.setNavigationItemSelectedListener(this);
             toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -117,24 +104,25 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_settings:
-                startActivity(new Intent(this,Setting.class));
+                startActivity(new Intent(this, Setting.class));
                 break;
             case R.id.menu_add:
                 startActivity(new Intent(this,FindFriends.class));
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
         }
         item.setChecked(true);
@@ -146,7 +134,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         mMap = googleMap;
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(true);
+            mMap.getUiSettings().setZoomControlsEnabled(false);
+
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(@NonNull LatLng latLng) {
@@ -267,8 +256,22 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             currentPolyline.remove();
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
-
     }
 
+    public void Marcador(View view) {
+        openDialog();
+    }
 
+    public void openDialog() {
+        Dialog dialog = new Dialog();
+        dialog.show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void applyTexts(String username, String password) {
+        Toast.makeText(this, username + password, Toast.LENGTH_SHORT).show();
+        //mudar texto em dois text views
+        //textviewusername.setText(username);
+        //textviewpassword.setText(password);
+    }
 }

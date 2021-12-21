@@ -115,4 +115,17 @@
     <!--android:layout_width="380dp"
         android:layout_height="55dp"-->
 
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_button"
+        android:layout_width="380dp"
+        android:layout_height="55dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/googleAuth"
+        tools:visibility="visible" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
