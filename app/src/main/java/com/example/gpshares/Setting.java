@@ -15,8 +15,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.facebook.login.LoginManager;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,7 +56,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         final TextView emailTextView = (TextView) findViewById(R.id.textViewEmail);
         //final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
         //GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -74,7 +71,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             }
         });
     }
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
