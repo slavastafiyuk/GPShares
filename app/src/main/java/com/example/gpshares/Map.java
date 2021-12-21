@@ -130,6 +130,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             case R.id.nav_settings:
                 startActivity(new Intent(this,Setting.class));
                 break;
+            case R.id.menu_add:
+                startActivity(new Intent(this,FindFriends.class));
+                break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(this, Login.class));
