@@ -14,8 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,33 +54,23 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         userID = user.getUid();
         final TextView fullNameTextView = (TextView) findViewById(R.id.textViewName);
         final TextView emailTextView = (TextView) findViewById(R.id.textViewEmail);
-        final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
-        GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        //final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
+        //GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Utilizador userProfile = snapshot.getValue(Utilizador.class);
                 if (userProfile != null) {
-                    String fullname = userProfile.nomeInteiro;
-                    String email = userProfile.email;
-                    String age = userProfile.idade;
-                    fullNameTextView.setText(fullname);
-                    emailTextView.setText(email);
-                    ageTextView.setText(age);
-                } else if (signInAccount != null) {
-                    fullNameTextView.setText(signInAccount.getDisplayName());
-                    emailTextView.setText(signInAccount.getEmail());
-                    ageTextView.setText("Não conseguimos obter esta informação");
+                    fullNameTextView.setText(userProfile.nomeInteiro);
+                    emailTextView.setText(userProfile.email);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(Setting.this, "Algo correu mal a processar os seus dados", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -90,7 +79,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -99,6 +87,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
         }
         item.setChecked(true);
