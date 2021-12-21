@@ -13,11 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class FindFriends extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -67,18 +70,23 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
     private void SearchFriends(String searchBoxInput)
     {
+        Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
+        Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
+                .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
+
         FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
                 = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
                         FindNewFriends.class,
                         R.layout.all_users_layout,
                         FindNewFriendsViewHolder.class,
-                        allUsersDatabaseRef
+                        searchFriendsQuery
         ) {
             @Override
             protected void populateViewHolder(FindNewFriendsViewHolder findNewFriendsViewHolder, FindNewFriends findNewFriends, int i) {
-
+                findNewFriendsViewHolder.setNomeInteiro(findNewFriends.getNomeInteiro());
             }
         };
+        SearchResult.setAdapter(firebaseRecyclerAdapter);
     }
 
     public static class FindNewFriendsViewHolder extends RecyclerView.ViewHolder{
@@ -87,6 +95,11 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         public FindNewFriendsViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
+        }
+
+        public void setNomeInteiro(String nomeInteiro){
+            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullName);
+            myName.setText(nomeInteiro);
         }
     }
 
