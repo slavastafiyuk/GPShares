@@ -93,7 +93,7 @@
         android:visibility="visible"
         app:headerLayout="@layout/header"
         app:menu="@menu/sidemenu"
-        tools:visibility="visible" />
+        tools:visibility="invisible" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>
