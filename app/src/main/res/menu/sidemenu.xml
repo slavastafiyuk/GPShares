@@ -6,12 +6,27 @@
             android:icon="@drawable/ic_baseline_map_24"
             android:title="@string/MAP"
             />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_baseline_settings_24"
-            android:title="@string/Setting"
-            />
-
+    </group>
+    <group android:checkableBehavior="single">
+        <item android:title="Social">
+            <menu>
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_baseline_settings_24"
+                    android:title="Profile"
+                    />
+                <item
+                    android:id="@+id/menu_friends"
+                    android:icon="@drawable/ic_baseline_exit_to_app_24"
+                    android:title="Friends"
+                    />
+                <item
+                    android:id="@+id/menu_add"
+                    android:icon="@drawable/ic_baseline_exit_to_app_24"
+                    android:title="Add Friends"
+                    />
+            </menu>
+        </item>
     </group>
     <group android:checkableBehavior="single">
         <item android:title="@string/Auth">
