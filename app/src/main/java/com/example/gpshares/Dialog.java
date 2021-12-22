@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 public class Dialog extends AppCompatDialogFragment {
     private DialogListener listener;
     private AutoCompleteTextView autoCompleteTextView, autoCompleteTextView2;
+    private TextInputEditText coment_estabelecimento, nome_estabelecimento;
 
     @NonNull
     @Override
@@ -44,16 +46,21 @@ public class Dialog extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String username = autoCompleteTextView.getText().toString();
                         String password = autoCompleteTextView2.getText().toString();
-                        listener.applyTexts(username, password);
+                        String nome = nome_estabelecimento.getText().toString();
+                        String comment  = coment_estabelecimento.getText().toString();
+                        listener.applyTexts(username, password, nome, comment);
                     }
                 });
+        coment_estabelecimento = view.findViewById(R.id.coment_do_estabelecimento);
+        nome_estabelecimento = view.findViewById(R.id.estabelecimento_nome);
+
         autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView_ALGO);
-        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(getActivity(), R.array.languages, R.layout.dropdown_item);
+        ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(getActivity(), R.array.tipo, R.layout.dropdown_item);
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         autoCompleteTextView.setAdapter(adapter1);
 
         autoCompleteTextView2 = view.findViewById(R.id.autoCompleteTextView_ALGO2);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.languages2, R.layout.dropdown_item);
+        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.Avaliacao, R.layout.dropdown_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         autoCompleteTextView2.setAdapter(adapter2);
         return builder.create();
@@ -71,6 +78,6 @@ public class Dialog extends AppCompatDialogFragment {
     }
 
     public interface DialogListener {
-        void applyTexts(String username, String password);
+        void applyTexts(String username, String password, String nome, String comment);
     }
 }
