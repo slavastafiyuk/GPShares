@@ -26,6 +26,7 @@ import com.example.gpshares.MapHelper.FetchURL;
 import com.example.gpshares.MapHelper.TaskLoadedCallback;
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -185,6 +186,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             myLocation = lm.getLastKnownLocation(provider);
         }
         if (myLocation != null) {
+            //TESTAR
+            LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
             lat1 = myLocation.getLatitude();
             lon1 = myLocation.getLongitude();
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
@@ -200,7 +204,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                         new FetchURL(Map.this).execute(url, "driving");
                     }
                 }
-
                 @Override
                 public void onProviderDisabled(String provider) {
                     // TODO Auto-generated method stub
@@ -216,7 +219,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                             Bundle extras) {
                     // TODO Auto-generated method stub
                 }
+
             });
+
         }
     }
 
