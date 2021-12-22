@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -28,7 +28,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     NavigationView navigationView;
     private Toolbar toolbar;
     private ImageButton SearchButton;
-    private EditText SearchInput;
+    private TextInputEditText SearchInput;
     private RecyclerView SearchResult;
     private DatabaseReference allUsersDatabaseRef;
 
@@ -56,7 +56,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
         //Menu de Pesquisa
         SearchButton = (ImageButton) findViewById(R.id.searchButton);
-        SearchInput = (EditText) findViewById(R.id.searchBoxInput);
+        SearchInput = (TextInputEditText) findViewById(R.id.searchBoxInput);
 
         SearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
