@@ -119,7 +119,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 startActivity(new Intent(this, Setting.class));
                 break;
             case R.id.menu_add:
-                startActivity(new Intent(this,FindFriends.class));
+                startActivity(new Intent(this, FindFriends.class));
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
@@ -187,11 +187,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         if (myLocation != null) {
             //TESTAR
-            LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(myPosition));
             lat1 = myLocation.getLatitude();
             lon1 = myLocation.getLongitude();
+            LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
+
                 @Override
                 public void onLocationChanged(Location myLocation) {
                     double latitude = myLocation.getLatitude();
@@ -204,6 +205,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                         new FetchURL(Map.this).execute(url, "driving");
                     }
                 }
+
                 @Override
                 public void onProviderDisabled(String provider) {
                     // TODO Auto-generated method stub
@@ -273,8 +275,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     }
 
     @Override
-    public void applyTexts(String username, String password) {
-        Toast.makeText(this, username + password, Toast.LENGTH_SHORT).show();
+    public void applyTexts(String username, String password, String nome, String comment) {
+        Toast.makeText(this, username + password + nome + comment, Toast.LENGTH_SHORT).show();
+        LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        //Adicionar Marker
+        //Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        //LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        //mMap.addMarker(new MarkerOptions().position(myPosition));
         //mudar texto em dois text views
         //textviewusername.setText(username);
         //textviewpassword.setText(password);

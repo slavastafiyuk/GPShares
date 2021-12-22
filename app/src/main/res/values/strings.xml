@@ -21,14 +21,20 @@
     <string name="facebook_app_id">5314220315261820</string>
     <string name="fb_login_protocol_scheme">fb5314220315261820</string>
     <string name="marcar_lugar">Marcar</string>
-    <string-array name="languages">
-        <item>English</item>
-        <item>German</item>
-        <item>Chinese</item>
+    <string-array name="tipo">
+        <item>Restaurante</item>
+        <item>Centro comercial</item>
+        <item>Cinema</item>
     </string-array>
-    <string-array name="languages2">
-        <item>English2</item>
-        <item>German2</item>
-        <item>Chinese2</item>
+    <string-array name="Avaliacao">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
+    <string name="tipo_de_estabelecimento">Tipo de estabelecimento</string>
+    <string name="avaliacao">Avaliação</string>
+    <string name="coment">Comentario</string>
+    <string name="nome_do_estabelecimento">Nome do estabelecimento</string>
 </resources>
