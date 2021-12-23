@@ -76,7 +76,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
         Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
                 .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
-
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + allUsersDatabaseRef.child("Dados").child("nomeInteiro"));
         FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
                 = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
                         FindNewFriends.class,

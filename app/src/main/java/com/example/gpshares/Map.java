@@ -295,7 +295,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition);
+        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

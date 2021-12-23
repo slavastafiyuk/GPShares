@@ -4,11 +4,17 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Estabelecimentos {
     public String avaliacao, comentario;
-    public LatLng localizacao;
+    public double latitude;
+    public double longitude;
 
-    public Estabelecimentos( String avaliacao, String comentario, LatLng localizacao){
+    public Estabelecimentos(){
+
+    }
+
+    public Estabelecimentos( String avaliacao, String comentario, double latitude, double longitude){
         this.avaliacao = avaliacao;
         this.comentario = comentario;
-        this.localizacao = localizacao;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }
