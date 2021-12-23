@@ -29,12 +29,17 @@
                 <item
                     android:id="@+id/menu_friends"
                     android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="Friends"
+                    android:title="Amigos"
                     />
                 <item
                     android:id="@+id/menu_add"
                     android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="Add Friends"
+                    android:title="Adicionar Amigos"
+                    />
+                <item
+                    android:id="@+id/menu_request"
+                    android:icon="@drawable/ic_baseline_exit_to_app_24"
+                    android:title="Pedidos Recebidos"
                     />
             </menu>
         </item>

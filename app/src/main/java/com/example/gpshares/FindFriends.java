@@ -87,6 +87,16 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
             @Override
             protected void populateViewHolder(FindNewFriendsViewHolder findNewFriendsViewHolder, FindNewFriends findNewFriends, int i) {
                 findNewFriendsViewHolder.setNomeInteiro(findNewFriends.getNomeInteiro());
+
+                findNewFriendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String visitUserId = getRef(i).getKey();
+                        Intent profileIntent = new Intent(FindFriends.this, OtherUserProfile.class);
+                        profileIntent.putExtra("visitUserId",visitUserId);
+                        startActivity(profileIntent);
+                    }
+                });
             }
         };
         SearchResult.setAdapter(firebaseRecyclerAdapter);
