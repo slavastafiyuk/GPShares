@@ -22,9 +22,9 @@
     <string name="fb_login_protocol_scheme">fb5314220315261820</string>
     <string name="marcar_lugar">Marcar</string>
     <string-array name="tipo">
-        <item>Restaurante</item>
-        <item>Centro comercial</item>
-        <item>Cinema</item>
+        <item>Restaurantes</item>
+        <item>CentrosComerciais</item>
+        <item>Cinemas</item>
     </string-array>
     <string-array name="Avaliacao">
         <item>1</item>
@@ -37,4 +37,5 @@
     <string name="avaliacao">Avaliação</string>
     <string name="coment">Comentario</string>
     <string name="nome_do_estabelecimento">Nome do estabelecimento</string>
+    <string name="restaurantes">Restaurantes</string>
 </resources>

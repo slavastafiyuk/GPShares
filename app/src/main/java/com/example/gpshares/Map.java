@@ -120,6 +120,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_map:
+                startActivity(new Intent(this, Map.class));
+                break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, Setting.class));
                 break;
@@ -130,6 +133,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
+                break;
+            case R.id.nav_pontos_de_interesse:
+                startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
         }
         item.setChecked(true);
         return true;
@@ -288,7 +295,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition);
+        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -91,7 +91,6 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
             editTextTextPassword2.requestFocus();
             return;
         }
-
         progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

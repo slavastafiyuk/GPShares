@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +16,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -73,7 +76,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
         Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
                 .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
-
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + allUsersDatabaseRef.child("Dados").child("nomeInteiro"));
         FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
                 = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
                         FindNewFriends.class,
@@ -105,6 +108,26 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        return false;
+        switch (item.getItemId()) {
+            case R.id.nav_map:
+                startActivity(new Intent(this, Map.class));
+                break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, Setting.class));
+                break;
+            case R.id.menu_add:
+                startActivity(new Intent(this, FindFriends.class));
+                break;
+            case R.id.menu_logout:
+                FirebaseAuth.getInstance().signOut();
+                LoginManager.getInstance().logOut();
+                startActivity(new Intent(this, Login.class));
+                break;
+            case R.id.nav_pontos_de_interesse:
+                startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
+        }
+        item.setChecked(true);
+        return true;
     }
 }
