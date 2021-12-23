@@ -24,6 +24,9 @@
             android:name=".OtherUserProfile"
             android:exported="true" />
         <activity
+            android:name=".PontosDeInteresse"
+            android:exported="false" />
+        <activity
             android:name=".FindFriends"
             android:exported="true" />
         <activity

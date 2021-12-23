@@ -41,7 +41,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_setting);
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_settings);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_viewSettings);
         navigationView.setNavigationItemSelectedListener(this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,10 +85,20 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             case R.id.nav_map:
                 startActivity(new Intent(this, Map.class));
                 break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, Setting.class));
+                break;
+            case R.id.menu_add:
+                startActivity(new Intent(this, FindFriends.class));
+                break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
+                break;
+            case R.id.nav_pontos_de_interesse:
+                startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
         }
         item.setChecked(true);
         return true;

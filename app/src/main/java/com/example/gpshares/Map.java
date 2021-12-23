@@ -35,10 +35,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener, Dialog.DialogListener {
@@ -115,6 +120,9 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.nav_map:
+                startActivity(new Intent(this, Map.class));
+                break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, Setting.class));
                 break;
@@ -125,6 +133,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
+                break;
+            case R.id.nav_pontos_de_interesse:
+                startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
         }
         item.setChecked(true);
         return true;
@@ -275,19 +287,26 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     }
 
     @Override
-    public void applyTexts(String username, String password, String nome, String comment) {
-        Toast.makeText(this, username + password + nome + comment, Toast.LENGTH_SHORT).show();
+    public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment) {
+        Toast.makeText(this, tipo_de_estabelecimento + avaliacao_do_estabelecimento + nome + comment, Toast.LENGTH_SHORT).show();
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        //Adicionar Marker
-        //Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        //LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        //mMap.addMarker(new MarkerOptions().position(myPosition));
-        //mudar texto em dois text views
-        //textviewusername.setText(username);
-        //textviewpassword.setText(password);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
+        FirebaseDatabase.getInstance().getReference("Users")
+                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Toast.makeText(Map.this, "Local adicionado", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Map.this, "Houve um erro", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

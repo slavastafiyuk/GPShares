@@ -3,6 +3,7 @@ package com.example.gpshares;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -38,7 +39,11 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
@@ -81,6 +86,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         createRequest();
         mAuth = FirebaseAuth.getInstance();
+
+
+
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         loginFacebook = findViewById(R.id.login_button);
@@ -129,7 +137,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         Log.d(TAG, "handleFacebookToken" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -141,6 +149,22 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     //FirebaseUser user = mAuth.getCurrentUser();
                     //startActivity(new Intent(Login.this, Map.class));
                     //UpdateUI(user);
+                    //databaseReference.addValueEventListener(new ValueEventListener() {
+                    //    @Override
+                    //    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //
+                    //        for (DataSnapshot i : snapshot.getChildren()){
+                    //            i.ite
+                    //        }
+                    //
+                    //
+                    //        //if (snapshot.getKey()==FirebaseAuth.getInstance().getCurrentUser().getUid()){
+                    //        //}
+                    //    }
+                    //    @Override
+                    //    public void onCancelled(@NonNull DatabaseError error) {
+                    //    }
+                    //});
                     FirebaseDatabase.getInstance().getReference("Users")
                             .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                             .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
