@@ -69,7 +69,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
+                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         for (DataSnapshot i : snapshot.getChildren()){
                             if (i.hasChild("Estabelecimentos")){
                                 Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
@@ -95,7 +95,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
+                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         for (DataSnapshot i : snapshot.getChildren()){
                             if (i.hasChild("Estabelecimentos")){
                                 Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();

@@ -39,4 +39,10 @@
     <string name="nome_do_estabelecimento">Nome do estabelecimento</string>
     <string name="restaurantes">Restaurantes</string>
     <string name="cinemas">Cinemas</string>
+    <string name="visibilidade">Visibilidade</string>
+    <string-array name="tipo_visibilidade">
+        <item>Privado</item>
+        <item>Publico</item>
+        <item>Amigos</item>
+    </string-array>
 </resources>
