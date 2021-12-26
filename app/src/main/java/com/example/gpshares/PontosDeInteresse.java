@@ -71,7 +71,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //int d = 0;
-
+                        list.clear();
                         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         for (DataSnapshot i : snapshot.getChildren()){
                             if (i.hasChild("Estabelecimentos")){
@@ -97,68 +97,9 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
-                //SearchRestaurantes();
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //public void SearchRestaurantes(){
-    //    Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
-    //    Query searchRestaurantesQuery = todosRestaurantes.child("Dados");
-    //    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + todosRestaurantes.child("Estabelecimentos").child("Restaurante"));
-    //    FirebaseRecyclerAdapter<FindNewRestaurante,PontosDeInteresseViewHolder> firebaseRecyclerAdapter =
-    //            new FirebaseRecyclerAdapter<FindNewRestaurante, PontosDeInteresseViewHolder>(
-    //                    FindNewRestaurante.class,
-    //                    R.layout.all_restaurantes_layout,
-    //                    PontosDeInteresseViewHolder.class,
-    //                    searchRestaurantesQuery) {
-    //        @Override
-    //        protected void populateViewHolder(PontosDeInteresseViewHolder pontosDeInteresseViewHolder, FindNewRestaurante findNewRestaurante, int i) {
-    //            pontosDeInteresseViewHolder.setNomeRestaurante(findNewRestaurante.getAvaliacao());
-    //        }
-    //    };
-    //    searchResults.setAdapter(firebaseRecyclerAdapter);
-    //}
-    //public static class PontosDeInteresseViewHolder extends RecyclerView.ViewHolder{
-    //    View mView;
-    //    public PontosDeInteresseViewHolder(@NonNull View itemView) {
-    //        super(itemView);
-    //        mView = itemView;
-    //    }
-    //    public void setNomeRestaurante(String avaliacao){
-    //        TextView myName = (TextView) mView.findViewById(R.id.allRestaurantesFullName);
-    //        myName.setText(avaliacao);
-    //    }
-    //}
-
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

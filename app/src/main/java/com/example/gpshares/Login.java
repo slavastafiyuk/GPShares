@@ -3,7 +3,6 @@ package com.example.gpshares;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -17,10 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -36,9 +35,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,8 +53,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private Button signIn, signInGoogle;
     private LoginButton loginFacebook;
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener authStateListener;
-    private AccessTokenTracker accessTokenTracker;
     private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
@@ -87,9 +81,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         createRequest();
         mAuth = FirebaseAuth.getInstance();
 
-
-
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         loginFacebook = findViewById(R.id.login_button);
         mCallbackManager = CallbackManager.Factory.create();
@@ -110,31 +101,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 Log.d(TAG, "onError" + e);
             }
         });
-        //authStateListener = new FirebaseAuth.AuthStateListener() {
-        //    @Override
-        //    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-        //        FirebaseUser user = firebaseAuth.getCurrentUser();
-        //        if (user!=null){
-        //            //UpdateUI(user);
-        //        }else{
-        //            //UpdateUI(null);
-        //        }
-        //    }
-        //};
-
-        //accessTokenTracker = new AccessTokenTracker() {
-        //    @Override
-        //    protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-        //        if (currentAccessToken == null){
-        //            mAuth.signOut();
-        //        }
-        //    }
-        //};
-
     }
-
     private void handleFacebookToken(AccessToken token) {
-
         Log.d(TAG, "handleFacebookToken" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -146,34 +114,35 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     String nomeInteiro = mAuth.getCurrentUser().getDisplayName();
                     Utilizador utilizador = new Utilizador(nomeInteiro, email);
                     Log.d(TAG, "sign in with credential: successful");
-                    //FirebaseUser user = mAuth.getCurrentUser();
-                    //startActivity(new Intent(Login.this, Map.class));
-                    //UpdateUI(user);
-                    //databaseReference.addValueEventListener(new ValueEventListener() {
-                    //    @Override
-                    //    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //
-                    //        for (DataSnapshot i : snapshot.getChildren()){
-                    //            i.ite
-                    //        }
-                    //
-                    //
-                    //        //if (snapshot.getKey()==FirebaseAuth.getInstance().getCurrentUser().getUid()){
-                    //        //}
-                    //    }
-                    //    @Override
-                    //    public void onCancelled(@NonNull DatabaseError error) {
-                    //    }
-                    //});
-                    FirebaseDatabase.getInstance().getReference("Users")
-                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                            .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    databaseReference.addValueEventListener(new ValueEventListener() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                startActivity(new Intent(Login.this, Map.class));
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            int existencia = 0;
+                            for (DataSnapshot i : snapshot.getChildren()){
+                                String z = i.getKey();
+                                if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
+                                    existencia=1;
+                                };
+                                if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
+                                    FirebaseDatabase.getInstance().getReference("Users")
+                                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                            .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                FirebaseUser user = mAuth.getCurrentUser();
+                                                startActivity(new Intent(Login.this, Map.class));
+                                            }
+                                        }
+                                    });
+                                }else if(existencia == 1){
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    startActivity(new Intent(Login.this, Map.class));
+                                }
                             }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
                 } else {
@@ -215,7 +184,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         //Build a GoogleSignInClient with the options specified by gso
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
-
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -241,28 +209,45 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         String email = "GoogleAuthenticated";
         String nomeInteiro = acct.getDisplayName();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Utilizador utilizador = new Utilizador(nomeInteiro, email);
-                            //FirebaseUser user = mAuth.getCurrentUser();
-                            //startActivity(new Intent(Login.this, Map.class));
-                            //Toast.makeText(Login.this, "ALL DONE", Toast.LENGTH_SHORT).show();
-                            //startActivity(intent);
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                    .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            databaseReference.addValueEventListener(new ValueEventListener() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        startActivity(new Intent(Login.this, Map.class));
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    int existencia = 0;
+                                    for (DataSnapshot i : snapshot.getChildren()){
+                                        //i.getKey() == FirebaseAuth.getInstance().getCurrentUser().getUid()
+                                        String z = i.getKey();
+                                        if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
+                                            existencia=1;
+                                        }
+                                        if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
+                                            FirebaseDatabase.getInstance().getReference("Users")
+                                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                                    .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        FirebaseUser user = mAuth.getCurrentUser();
+                                                        startActivity(new Intent(Login.this, Map.class));
+                                                    }
+                                                }
+                                            });
+                                        }else if(existencia == 1){
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            startActivity(new Intent(Login.this, Map.class));
+                                        }
                                     }
                                 }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
                             });
-
                         } else {
                             //Snackbar.make(findViewById(R.id.LOGIN), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             Toast.makeText(Login.this, "Sorry auth failed.", Toast.LENGTH_SHORT).show();
@@ -270,8 +255,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     }
                 });
     }
-
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
@@ -290,7 +273,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
     }
-
     private void userLogin() {
         String email = editTextTextEmailAddress.getText().toString().trim();
         String password = editTextTextPassword.getText().toString().trim();
