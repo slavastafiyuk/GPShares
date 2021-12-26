@@ -25,9 +25,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView avaliacao;
+        private TextView nome;
+        private TextView comentario;
         public MyViewHolder(final View view){
             super(view);
-            avaliacao = view.findViewById(R.id.allRestaurantesAvaliacao);
+            avaliacao = view.findViewById(R.id.allEstabelecimentosAvaliacao);
+            nome = view.findViewById(R.id.allEstabelecimentosFullName);
+            comentario = view.findViewById(R.id.allEstabelecimentosComentarios);
         }
     }
 
@@ -42,6 +46,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, int position) {
         FindNewRestaurante findNewRestaurante = list.get(position);
         holder.avaliacao.setText(findNewRestaurante.getAvaliacao());
+        holder.nome.setText(findNewRestaurante.getNome());
+        holder.comentario.setText(findNewRestaurante.getComentario());
     }
 
     @Override

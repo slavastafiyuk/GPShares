@@ -1,6 +1,7 @@
 package com.example.gpshares;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -104,7 +105,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
-
         }
     }
 
@@ -117,12 +117,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_map:
-                startActivity(new Intent(this, Map.class));
-                break;
+            //case R.id.nav_map:
+            //    startActivity(new Intent(this, Map.class));
+            //    break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, Setting.class));
                 break;
@@ -295,7 +296,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        Estabelecimentos estabelecimentos = new Estabelecimentos(avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
+        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

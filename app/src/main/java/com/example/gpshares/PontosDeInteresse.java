@@ -33,8 +33,8 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
-    private Button restaurantesButton;
-    private DatabaseReference todosRestaurantes;
+    private Button restaurantesButton, cinemasButton;
+    private DatabaseReference rota;
     private RecyclerView searchResults;
     ArrayList<FindNewRestaurante> list;
     MyAdapter myAdapter;
@@ -43,7 +43,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pontos_de_interesse);
-        todosRestaurantes = FirebaseDatabase.getInstance().getReference("Users");
+        rota = FirebaseDatabase.getInstance().getReference("Users");
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_pontosDeInteresse);
         navigationView = (NavigationView) findViewById(R.id.navigation_viewPontosDeInteresse);
@@ -55,22 +55,19 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         toggle.syncState();
         //RecyclerView, Janela dos resultados dos restaurantes
         list = new ArrayList<>();
-
         searchResults = (RecyclerView) findViewById(R.id.searchResultRestaurantes);
         searchResults.setHasFixedSize(true);
         searchResults.setLayoutManager(new LinearLayoutManager(this));
         list = new ArrayList<>();
         myAdapter =new MyAdapter(this,list);
         searchResults.setAdapter(myAdapter);
-
         restaurantesButton=findViewById(R.id.buttonRestaurantes);
         restaurantesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                todosRestaurantes.addValueEventListener(new ValueEventListener() {
+                rota.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //int d = 0;
                         list.clear();
                         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         for (DataSnapshot i : snapshot.getChildren()){
@@ -79,22 +76,40 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 while(z.iterator().hasNext()){
                                     FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                     list.add(findNewRestaurante);
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + i.child("Estabelecimentos").child("Restaurantes").getChildren());
-                                    //z.iterator().next().getValue();
-                                    //FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + findNewRestaurante);
-                                    //list.add(findNewRestaurante);
-                                    ////list.add(new FindNewRestaurante(z.iterator().next().getValue()));
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAA" + " " + z.iterator().next().getValue() + " ");
                                 }
                             }
-                           //d++;
-                           //System.out.println("AAAAAAAAAAAAAAAAAAAAA" + d);
                         }
                         myAdapter.notifyDataSetChanged();
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        });
+        cinemasButton=findViewById(R.id.cinemaButton);
+        cinemasButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rota.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list.clear();
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
+                        for (DataSnapshot i : snapshot.getChildren()){
+                            if (i.hasChild("Estabelecimentos")){
+                                Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();
+                                while(z.iterator().hasNext()){
+                                    FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                    list.add(findNewRestaurante);
+                                }
+                            }
+                        }
+                        myAdapter.notifyDataSetChanged();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
                     }
                 });
             }
@@ -117,9 +132,9 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                 LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
                 break;
-            case R.id.nav_pontos_de_interesse:
-                startActivity(new Intent(this, PontosDeInteresse.class));
-                break;
+            //case R.id.nav_pontos_de_interesse:
+            //    startActivity(new Intent(this, PontosDeInteresse.class));
+            //    break;
         }
         item.setChecked(true);
         return true;
