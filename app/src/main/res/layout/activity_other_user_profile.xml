@@ -62,6 +62,18 @@ tools:openDrawer="start">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/OtherUserFullName" />
 
+    <Button
+        android:id="@+id/DeclineFriendRequest"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Decline"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SendFriendRequest" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <com.google.android.material.navigation.NavigationView

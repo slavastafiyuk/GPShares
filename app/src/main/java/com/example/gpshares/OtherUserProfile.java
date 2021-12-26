@@ -18,7 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 public class OtherUserProfile extends AppCompatActivity {
 
     private TextView name;
-    private Button sendFriendRequest;
+    private Button sendFriendRequest, declineFriendRequest;
 
     private DatabaseReference profileUserRef, userRef;
     private FirebaseAuth mAuth;
@@ -38,8 +38,10 @@ public class OtherUserProfile extends AppCompatActivity {
         userRef.child(receiverUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String otherUserName = snapshot.child("nomeInteiro").getValue().toString();
-                name.setText(otherUserName);
+                if (snapshot.exists()){
+                    String otherUserName = snapshot.child("nomeInteiro").getValue().toString();
+                    name.setText(otherUserName);
+                }
             }
 
             @Override
@@ -53,5 +55,6 @@ public class OtherUserProfile extends AppCompatActivity {
 
         name = (TextView) findViewById(R.id.OtherUserFullName);
         sendFriendRequest = (Button) findViewById(R.id.SendFriendRequest);
+        declineFriendRequest = (Button) findViewById(R.id.DeclineFriendRequest);
     }
 }
