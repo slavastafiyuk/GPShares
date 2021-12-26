@@ -191,7 +191,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             //    ActivityCompat#requestPermissions
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (myLocation == null) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -204,7 +204,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
 
                 @Override
                 public void onLocationChanged(Location myLocation) {
@@ -294,7 +294,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
         FirebaseDatabase.getInstance().getReference("Users")
