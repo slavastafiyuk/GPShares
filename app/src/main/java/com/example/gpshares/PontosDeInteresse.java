@@ -1,6 +1,5 @@
 package com.example.gpshares;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -34,16 +33,18 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     NavigationView navigationView;
     Toolbar toolbar;
     private Button restaurantesButton, cinemasButton;
-    private DatabaseReference rota;
+    private DatabaseReference rota, amigos;
     private RecyclerView searchResults;
     ArrayList<FindNewRestaurante> list;
     MyAdapter myAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pontos_de_interesse);
         rota = FirebaseDatabase.getInstance().getReference("Users");
+        amigos = FirebaseDatabase.getInstance().getReference("Friends");
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_pontosDeInteresse);
         navigationView = (NavigationView) findViewById(R.id.navigation_viewPontosDeInteresse);
@@ -70,12 +71,30 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
                         //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
+                        String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         for (DataSnapshot i : snapshot.getChildren()){
+                            //System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + snapshot.getChildren());
                             if (i.hasChild("Estabelecimentos")){
                                 Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
                                 while(z.iterator().hasNext()){
                                     FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                    list.add(findNewRestaurante);
+                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + findNewRestaurante.getVisibilidade());
+                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    String visibilidade = findNewRestaurante.getVisibilidade();
+                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + visibilidade + " " + i.getKey());
+                                    if (visibilidade.equals("Publico")){
+                                        list.add(findNewRestaurante);
+                                    }else if (visibilidade.equals("Amigos")){
+                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            @Override
+                                            public void onCallback(boolean i) {
+                                                if (i){
+                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                }
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -109,12 +128,40 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
                     }
                 });
             }
         });
     }
+    public void verificarAmizade(String id_utilizador, String id_outro, FirebaseCallback firebaseCallback){
+        amigos.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot i : snapshot.child(id_utilizador).getChildren()){
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + i + "id_utilizador:" + " " + id_utilizador + "od_outro: " + id_outro);
+                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + i.getKey());
+                    if (i.getKey().equals(id_outro)){
+                        firebaseCallback.onCallback(false);
+                    }
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+        System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP ");
+    }
+
+
+    private interface FirebaseCallback{
+        void onCallback(boolean i);
+    }
+
+
+
+
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
