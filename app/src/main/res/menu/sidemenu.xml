@@ -36,11 +36,6 @@
                     android:icon="@drawable/ic_baseline_exit_to_app_24"
                     android:title="Adicionar Amigos"
                     />
-                <item
-                    android:id="@+id/menu_request"
-                    android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="Pedidos Recebidos"
-                    />
             </menu>
         </item>
     </group>
