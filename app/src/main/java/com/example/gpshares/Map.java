@@ -183,7 +183,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     //}
                 }
             });
-
         }
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -191,7 +190,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             //    ActivityCompat#requestPermissions
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (myLocation == null) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -204,8 +203,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
-
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location myLocation) {
                     double latitude = myLocation.getLatitude();
@@ -218,39 +216,30 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                         new FetchURL(Map.this).execute(url, "driving");
                     }
                 }
-
                 @Override
                 public void onProviderDisabled(String provider) {
                     // TODO Auto-generated method stub
                 }
-
                 @Override
                 public void onProviderEnabled(String provider) {
                     // TODO Auto-generated method stub
                 }
-
                 @Override
                 public void onStatusChanged(String provider, int status,
                                             Bundle extras) {
                     // TODO Auto-generated method stub
                 }
-
             });
-
         }
     }
-
     private boolean isLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
-
     }
-
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 LOCATION_PERMISSION_CODE);
     }
-
     //Rotas-----------------------------------------------------------------------------------------
     private String getRequestURL(LatLng origin, LatLng dest, String directionMode) {
         //Origem da rota
@@ -269,7 +258,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getResources().getString(R.string.google_maps_key);
         return url;
     }
-
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null) {
@@ -277,26 +265,23 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
-
     public void Marcador(View view) {
         openDialog();
     }
-
     public void openDialog() {
         Dialog dialog = new Dialog();
         dialog.show(getSupportFragmentManager(), "dialog");
     }
-
     @Override
-    public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment) {
-        Toast.makeText(this, tipo_de_estabelecimento + avaliacao_do_estabelecimento + nome + comment, Toast.LENGTH_SHORT).show();
+    public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade) {
+        Toast.makeText(this, tipo_de_estabelecimento + avaliacao_do_estabelecimento + nome + comment + visibilidade, Toast.LENGTH_SHORT).show();
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude);
+        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude, visibilidade);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

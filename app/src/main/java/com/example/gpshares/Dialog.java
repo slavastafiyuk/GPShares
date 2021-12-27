@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class Dialog extends AppCompatDialogFragment {
     private DialogListener listener;
-    private AutoCompleteTextView autoCompleteTextView, autoCompleteTextView2;
+    private AutoCompleteTextView autoCompleteTextView, autoCompleteTextView2, visibilidadeAutoComplete;
     private TextInputEditText coment_estabelecimento, nome_estabelecimento;
 
     @NonNull
@@ -48,7 +48,8 @@ public class Dialog extends AppCompatDialogFragment {
                         String password = autoCompleteTextView2.getText().toString();
                         String nome = nome_estabelecimento.getText().toString();
                         String comment  = coment_estabelecimento.getText().toString();
-                        listener.applyTexts(username, password, nome, comment);
+                        String visibilidade = visibilidadeAutoComplete.getText().toString();
+                        listener.applyTexts(username, password, nome, comment, visibilidade);
                     }
                 });
         coment_estabelecimento = view.findViewById(R.id.coment_do_estabelecimento);
@@ -63,6 +64,12 @@ public class Dialog extends AppCompatDialogFragment {
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.Avaliacao, R.layout.dropdown_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         autoCompleteTextView2.setAdapter(adapter2);
+
+        visibilidadeAutoComplete = view.findViewById(R.id.VisibilidadeAutoComplete);
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(getActivity(), R.array.tipo_visibilidade, R.layout.dropdown_item);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        visibilidadeAutoComplete.setAdapter(adapter3);
+
         return builder.create();
     }
 
@@ -78,6 +85,6 @@ public class Dialog extends AppCompatDialogFragment {
     }
 
     public interface DialogListener {
-        void applyTexts(String username, String password, String nome, String comment);
+        void applyTexts(String username, String password, String nome, String comment, String visibilidade);
     }
 }

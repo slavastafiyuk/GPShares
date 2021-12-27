@@ -4,8 +4,17 @@ public class FindNewRestaurante {
     public String nome;
     public String avaliacao;
     public String comentario;
+    public String visibilidade;
     public float latitude;
     public float longitude;
+
+    public String getVisibilidade() {
+        return visibilidade;
+    }
+
+    public void setVisibilidade(String visibilidade) {
+        this.visibilidade = visibilidade;
+    }
 
     public String getAvaliacao() {
         return avaliacao;
