@@ -138,10 +138,10 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.child(id_utilizador).getChildren()){
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + i + "id_utilizador:" + " " + id_utilizador + "od_outro: " + id_outro);
-                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + i.getKey());
+                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + i + "id_utilizador:" + " " + id_utilizador + "od_outro: " + id_outro);
+                    //System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + i.getKey());
                     if (i.getKey().equals(id_outro)){
-                        firebaseCallback.onCallback(false);
+                        firebaseCallback.onCallback(true);
                     }
                 }
                 myAdapter.notifyDataSetChanged();
@@ -150,7 +150,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP ");
+        //System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP ");
     }
 
 
