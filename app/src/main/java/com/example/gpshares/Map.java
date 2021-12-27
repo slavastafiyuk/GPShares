@@ -138,6 +138,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             case R.id.nav_pontos_de_interesse:
                 startActivity(new Intent(this, PontosDeInteresse.class));
                 break;
+            case R.id.menu_friends:
+                startActivity(new Intent(this, UserFriends.class));
         }
         item.setChecked(true);
         return true;
