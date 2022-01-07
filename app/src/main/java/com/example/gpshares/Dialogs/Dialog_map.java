@@ -1,4 +1,4 @@
-package com.example.gpshares;
+package com.example.gpshares.Dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,12 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.example.gpshares.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
-public class Dialog extends AppCompatDialogFragment {
+public class Dialog_map extends AppCompatDialogFragment {
     private DialogListener listener;
     private AutoCompleteTextView autoCompleteTextView, autoCompleteTextView2, visibilidadeAutoComplete;
     private TextInputEditText coment_estabelecimento, nome_estabelecimento;

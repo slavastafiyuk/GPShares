@@ -16,14 +16,24 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.gpshares.FriendsHelper.FindNewFriends;
+import com.example.gpshares.FriendsHelper.FriendsAdapter;
+import com.example.gpshares.PontosDeInteresseHelper.FindNewRestaurante;
+import com.example.gpshares.PontosDeInteresseHelper.MyAdapter;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class FindFriends extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -34,17 +44,17 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     private TextInputEditText SearchInput;
     private RecyclerView SearchResult;
     private DatabaseReference allUsersDatabaseRef;
-
+    ArrayList<FindNewFriends> list;
+    FriendsAdapter friendsAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
 
-        allUsersDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         //Nav
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_find_friends);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view_FindFriends);
         navigationView.setNavigationItemSelectedListener(this);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +66,10 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         SearchResult = (RecyclerView) findViewById(R.id.searchResult);
         SearchResult.setHasFixedSize(true);
         SearchResult.setLayoutManager(new LinearLayoutManager(this));
-
+        allUsersDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        list = new ArrayList<>();
+        friendsAdapter =new FriendsAdapter(this,list);
+        SearchResult.setAdapter(friendsAdapter);
         //Menu de Pesquisa
         SearchButton = (ImageButton) findViewById(R.id.searchButton);
         SearchInput = (TextInputEditText) findViewById(R.id.searchBoxInput);
@@ -71,35 +84,52 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
     }
 
-    private void SearchFriends(String searchBoxInput)
-    {
+    private void SearchFriends(String searchBoxInput) {
         Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
-        Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
-                .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + allUsersDatabaseRef.child("Dados").child("nomeInteiro"));
-        FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
-                = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
-                        FindNewFriends.class,
-                        R.layout.all_users_layout,
-                        FindNewFriendsViewHolder.class,
-                        searchFriendsQuery
-        ) {
-            @Override
-            protected void populateViewHolder(FindNewFriendsViewHolder findNewFriendsViewHolder, FindNewFriends findNewFriends, int i) {
-                findNewFriendsViewHolder.setNomeInteiro(findNewFriends.getNomeInteiro());
 
-                findNewFriendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String visitUserId = getRef(i).getKey();
-                        Intent profileIntent = new Intent(FindFriends.this, OtherUserProfile.class);
-                        profileIntent.putExtra("visitUserId",visitUserId);
-                        startActivity(profileIntent);
+        allUsersDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot i : snapshot.getChildren()){
+                    FindNewFriends findnewfriends = i.getValue(FindNewFriends.class);
+                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX" + i.child("nomeInteiro").getValue() + " " + searchBoxInput);
+                    if (i.child("nomeInteiro").getValue().equals(searchBoxInput)){
+                        list.add(findnewfriends);
                     }
-                });
+                }
+                friendsAdapter.notifyDataSetChanged();
             }
-        };
-        SearchResult.setAdapter(firebaseRecyclerAdapter);
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
+        //        .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
+        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + allUsersDatabaseRef.child("Dados").child("nomeInteiro"));
+        //FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
+        //        = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
+        //                FindNewFriends.class,
+        //                R.layout.all_users_layout,
+        //                FindNewFriendsViewHolder.class,
+        //                searchFriendsQuery
+        //) {
+        //    @Override
+        //    protected void populateViewHolder(FindNewFriendsViewHolder findNewFriendsViewHolder, FindNewFriends findNewFriends, int i) {
+        //        findNewFriendsViewHolder.setNomeInteiro(findNewFriends.getNomeInteiro());
+        //        findNewFriendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View view) {
+        //                String visitUserId = getRef(i).getKey();
+        //                Intent profileIntent = new Intent(FindFriends.this, OtherUserProfile.class);
+        //                profileIntent.putExtra("visitUserId",visitUserId);
+        //                startActivity(profileIntent);
+        //            }
+        //        });
+        //    }
+        //};
+        //SearchResult.setAdapter(firebaseRecyclerAdapter);
     }
 
     public static class FindNewFriendsViewHolder extends RecyclerView.ViewHolder{
@@ -111,7 +141,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         }
 
         public void setNomeInteiro(String nomeInteiro){
-            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullName);
+            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullNames);
             myName.setText(nomeInteiro);
         }
     }

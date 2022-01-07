@@ -79,7 +79,7 @@ public class UserFriends extends AppCompatActivity {
         }
 
         public void setNomeInteiro(String nomeInteiro){
-            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullName);
+            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullNames);
             myName.setText(nomeInteiro);
         }
 

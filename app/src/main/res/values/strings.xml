@@ -45,4 +45,7 @@
         <item>Publico</item>
         <item>Amigos</item>
     </string-array>
+    <string name="F_restaurantes">Restaurantes</string>
+    <string name="F_cinemas">Cinemas</string>
+    <string name="Filter">Filtrar</string>
 </resources>

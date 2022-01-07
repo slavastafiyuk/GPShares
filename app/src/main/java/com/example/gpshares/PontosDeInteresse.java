@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -14,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gpshares.Dialogs.Dialog_filter_PontosDeInteresse;
 import com.example.gpshares.PontosDeInteresseHelper.FindNewRestaurante;
 import com.example.gpshares.PontosDeInteresseHelper.MyAdapter;
 import com.facebook.login.LoginManager;
@@ -27,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class PontosDeInteresse extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class PontosDeInteresse extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Dialog_filter_PontosDeInteresse.DialogListenerFilter {
     //SideMenu--------------------------------------------------------------------------------------
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -37,8 +39,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     private RecyclerView searchResults;
     ArrayList<FindNewRestaurante> list;
     MyAdapter myAdapter;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,10 +59,77 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         searchResults = (RecyclerView) findViewById(R.id.searchResultRestaurantes);
         searchResults.setHasFixedSize(true);
         searchResults.setLayoutManager(new LinearLayoutManager(this));
-        list = new ArrayList<>();
+        //list = new ArrayList<>();
         myAdapter =new MyAdapter(this,list);
         searchResults.setAdapter(myAdapter);
         restaurantesButton=findViewById(R.id.buttonRestaurantes);
+        //Lista inicial
+        rota.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                for (DataSnapshot i : snapshot.getChildren()){
+                    if (i.hasChild("Estabelecimentos")){
+                        if (i.child("Estabelecimentos").hasChild("Restaurantes")){
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
+                            while(z.iterator().hasNext()){
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + z.iterator().next().getValue());
+                                String visibilidade = findNewRestaurante.getVisibilidade();
+                                if (visibilidade.equals("Publico")){
+                                    list.add(findNewRestaurante);
+                                }else if (visibilidade.equals("Amigos")){
+                                    if (utilizador.equals(i.getKey())){
+                                        list.add(findNewRestaurante);
+                                    }else{
+                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            @Override
+                                            public void onCallback(boolean i) {
+                                                if (i){
+                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        if (i.child("Estabelecimentos").hasChild("Cinemas")){
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();
+                            while(z.iterator().hasNext()){
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                String visibilidade = findNewRestaurante.getVisibilidade();
+                                if (visibilidade.equals("Publico")){
+                                    list.add(findNewRestaurante);
+                                }else if (visibilidade.equals("Amigos")){
+                                    if (utilizador.equals(i.getKey())){
+                                        list.add(findNewRestaurante);
+                                    }else{
+                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            @Override
+                                            public void onCallback(boolean i) {
+
+                                                if (i){
+                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+        //Lista quando carregamos no botão de restaurantes
         restaurantesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,15 +152,20 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                     if (visibilidade.equals("Publico")){
                                         list.add(findNewRestaurante);
                                     }else if (visibilidade.equals("Amigos")){
-                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
-                                            @Override
-                                            public void onCallback(boolean i) {
-                                                if (i){
-                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                    list.add(findNewRestaurante);
+                                        if (utilizador.equals(i.getKey())){
+                                            list.add(findNewRestaurante);
+                                        }else{
+                                            verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                                @Override
+                                                public void onCallback(boolean i) {
+
+                                                    if (i){
+                                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -106,6 +178,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                 });
             }
         });
+        //Lista quando carregamos no botão de cinemas
         cinemasButton=findViewById(R.id.cinemaButton);
         cinemasButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +187,32 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
-                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
+                        String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         for (DataSnapshot i : snapshot.getChildren()){
                             if (i.hasChild("Estabelecimentos")){
                                 Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();
                                 while(z.iterator().hasNext()){
                                     FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                    list.add(findNewRestaurante);
+                                    String visibilidade = findNewRestaurante.getVisibilidade();
+                                    if (visibilidade.equals("Publico")){
+                                        list.add(findNewRestaurante);
+                                    }else if (visibilidade.equals("Amigos")){
+                                        if (utilizador.equals(i.getKey())){
+                                            list.add(findNewRestaurante);
+                                        }else{
+                                            verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                                @Override
+                                                public void onCallback(boolean i) {
+
+                                                    if (i){
+                                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                    }
                                 }
                             }
                         }
@@ -138,9 +230,9 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.child(id_utilizador).getChildren()){
-                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + i + "id_utilizador:" + " " + id_utilizador + "od_outro: " + id_outro);
-                    //System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + i.getKey());
                     if (i.getKey().equals(id_outro)){
+                        //System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" + id_utilizador);
+                        //System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" + i.getKey() + id_outro);
                         firebaseCallback.onCallback(true);
                     }
                 }
@@ -150,18 +242,11 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-        //System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPP ");
     }
-
 
     private interface FirebaseCallback{
         void onCallback(boolean i);
     }
-
-
-
-
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -179,11 +264,86 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                 LoginManager.getInstance().logOut();
                 startActivity(new Intent(this, Login.class));
                 break;
-            //case R.id.nav_pontos_de_interesse:
-            //    startActivity(new Intent(this, PontosDeInteresse.class));
-            //    break;
         }
         item.setChecked(true);
         return true;
     }
+    public void Filtrar(View view) {
+        openDialogFiltro();
+    }
+    public void openDialogFiltro(){
+        Dialog_filter_PontosDeInteresse dialog = new Dialog_filter_PontosDeInteresse();
+        dialog.show(getSupportFragmentManager(), "dialog");
+    }
+    @Override
+    public void applyTextsFilter(String restaurantes, String cinemas, int size) {
+        Toast.makeText(this, restaurantes + cinemas +" "+size, Toast.LENGTH_SHORT).show();
+
+        rota.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                for (DataSnapshot i : snapshot.getChildren()){
+                    if (i.hasChild("Estabelecimentos") && restaurantes.equals("Restaurantes")){
+                        if (i.child("Estabelecimentos").hasChild("Restaurantes")){
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
+                            while(z.iterator().hasNext()){
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                String visibilidade = findNewRestaurante.getVisibilidade();
+                                if (visibilidade.equals("Publico")){
+                                    list.add(findNewRestaurante);
+                                }else if (visibilidade.equals("Amigos")){
+                                    if (utilizador.equals(i.getKey())){
+                                        list.add(findNewRestaurante);
+                                    }else{
+                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            @Override
+                                            public void onCallback(boolean i) {
+                                                if (i){
+                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        if (i.child("Estabelecimentos").hasChild("Cinemas") && cinemas.equals("Cinemas")){
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();
+                            while(z.iterator().hasNext()){
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                String visibilidade = findNewRestaurante.getVisibilidade();
+                                if (visibilidade.equals("Publico")){
+                                    list.add(findNewRestaurante);
+                                }else if (visibilidade.equals("Amigos")){
+                                    if (utilizador.equals(i.getKey())){
+                                        list.add(findNewRestaurante);
+                                    }else{
+                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            @Override
+                                            public void onCallback(boolean i) {
+
+                                                if (i){
+                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+
+    }
+
 }

@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.gpshares.Dialogs.Dialog_map;
 import com.example.gpshares.MapHelper.FetchURL;
 import com.example.gpshares.MapHelper.TaskLoadedCallback;
 import com.example.gpshares.databinding.ActivityMapBinding;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener, Dialog.DialogListener {
+public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLoadedCallback, NavigationView.OnNavigationItemSelectedListener, Dialog_map.DialogListener {
     private static final int LOCATION_PERMISSION_CODE = 101;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -271,7 +272,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         openDialog();
     }
     public void openDialog() {
-        Dialog dialog = new Dialog();
+        Dialog_map dialog = new Dialog_map();
         dialog.show(getSupportFragmentManager(), "dialog");
     }
     @Override
