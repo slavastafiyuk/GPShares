@@ -42,6 +42,8 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     private TextInputEditText SearchInput;
     private RecyclerView SearchResult;
     private DatabaseReference allUsersDatabaseRef;
+    private FirebaseAuth mAuth;
+    private String meuID;
     ArrayList<FindNewFriends> list;
     ArrayList<String> list2;
     FriendsAdapter friendsAdapter;
@@ -49,8 +51,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_friends);
-
-
         //Nav
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_find_friends);
         navigationView = (NavigationView) findViewById(R.id.navigation_view_FindFriends);
@@ -60,7 +60,8 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
+        mAuth = FirebaseAuth.getInstance();
+        meuID = mAuth.getCurrentUser().getUid();
         //RecyclerView, Janela de Resultados
         SearchResult = (RecyclerView) findViewById(R.id.searchResult);
         SearchResult.setHasFixedSize(true);
@@ -86,7 +87,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
     private void SearchFriends(String searchBoxInput) {
         Toast.makeText(this, "Searching...", Toast.LENGTH_LONG).show();
-
         allUsersDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -95,9 +95,14 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                 for (DataSnapshot i : snapshot.getChildren()){
                     FindNewFriends findnewfriends = i.getValue(FindNewFriends.class);
                     System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX" + i.child("nomeInteiro").getValue() + " " + searchBoxInput);
+                    String id = i.getKey();
                     if (i.child("nomeInteiro").getValue().equals(searchBoxInput)){
-                        list.add(findnewfriends);
-                        list2.add(i.getKey());
+                        if (meuID.equals(id)){
+                            Toast.makeText(FindFriends.this, "Não consegue adicionar a sí proprio", Toast.LENGTH_SHORT).show();
+                        }else{
+                            list.add(findnewfriends);
+                            list2.add(i.getKey());
+                        }
                     }
                 }
                 friendsAdapter.notifyDataSetChanged();
@@ -107,9 +112,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
 
             }
         });
-
     }
-
     @Override
     public void onFriendsClick(int position) {
         String visitUserId = list2.get(position);
@@ -118,7 +121,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         profileIntent.putExtra("visitUserId",visitUserId);
         startActivity(profileIntent);
     }
-
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
