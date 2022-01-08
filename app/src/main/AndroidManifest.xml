@@ -24,13 +24,16 @@
             android:name=".OtherUserProfile"
             android:exported="true" />
         <activity
-            android:name=".PontosDeInteresse"
+            android:name=".PontosDeInteresseHelper.PontosDeInteresse"
             android:exported="false" />
         <activity
-            android:name=".FindFriends"
+            android:name=".FriendsHelper.FindFriends"
             android:exported="true" />
         <activity
             android:name=".Setting"
+            android:exported="false" />
+        <activity
+            android:name=".DescricaoDoLocal"
             android:exported="false" />
         <activity
             android:name=".ResetPassword"

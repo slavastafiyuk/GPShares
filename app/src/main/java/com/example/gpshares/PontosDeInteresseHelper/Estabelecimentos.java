@@ -1,4 +1,4 @@
-package com.example.gpshares;
+package com.example.gpshares.PontosDeInteresseHelper;
 
 import com.google.android.gms.maps.model.LatLng;
 

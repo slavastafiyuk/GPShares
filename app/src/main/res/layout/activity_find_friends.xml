@@ -5,7 +5,7 @@
     android:id="@+id/drawerlayout_find_friends"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindFriends"
+    tools:context=".FriendsHelper.FindFriends"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -69,7 +69,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view"
+        android:id="@+id/navigation_view_FindFriends"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

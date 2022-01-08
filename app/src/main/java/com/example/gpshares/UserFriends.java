@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.gpshares.FriendsHelper.Friends;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -79,7 +79,7 @@ public class UserFriends extends AppCompatActivity {
         }
 
         public void setNomeInteiro(String nomeInteiro){
-            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullName);
+            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullNames);
             myName.setText(nomeInteiro);
         }
 
