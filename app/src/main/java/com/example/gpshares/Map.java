@@ -24,8 +24,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.gpshares.Dialogs.Dialog_map;
+import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.MapHelper.FetchURL;
 import com.example.gpshares.MapHelper.TaskLoadedCallback;
+import com.example.gpshares.PontosDeInteresseHelper.Estabelecimentos;
+import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.maps.CameraUpdateFactory;

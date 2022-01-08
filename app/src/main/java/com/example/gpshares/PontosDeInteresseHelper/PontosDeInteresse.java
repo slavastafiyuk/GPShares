@@ -1,4 +1,4 @@
-package com.example.gpshares;
+package com.example.gpshares.PontosDeInteresseHelper;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.gpshares.DescricaoDoLocal;
 import com.example.gpshares.Dialogs.Dialog_filter_PontosDeInteresse;
-import com.example.gpshares.PontosDeInteresseHelper.FindNewRestaurante;
-import com.example.gpshares.PontosDeInteresseHelper.MyAdapter;
+import com.example.gpshares.FriendsHelper.FindFriends;
+import com.example.gpshares.Login;
+import com.example.gpshares.Map;
+import com.example.gpshares.R;
+import com.example.gpshares.Setting;
 import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class PontosDeInteresse extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Dialog_filter_PontosDeInteresse.DialogListenerFilter {
+public class PontosDeInteresse extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Dialog_filter_PontosDeInteresse.DialogListenerFilter, MyAdapter.onAdapterListener {
     //SideMenu--------------------------------------------------------------------------------------
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -38,6 +42,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     private DatabaseReference rota, amigos;
     private RecyclerView searchResults;
     ArrayList<FindNewRestaurante> list;
+    ArrayList<String> listIDS;
     MyAdapter myAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +60,13 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         //RecyclerView, Janela dos resultados dos restaurantes
+        listIDS = new ArrayList<>();
         list = new ArrayList<>();
         searchResults = (RecyclerView) findViewById(R.id.searchResultRestaurantes);
         searchResults.setHasFixedSize(true);
         searchResults.setLayoutManager(new LinearLayoutManager(this));
         //list = new ArrayList<>();
-        myAdapter =new MyAdapter(this,list);
+        myAdapter =new MyAdapter(this, list, this);
         searchResults.setAdapter(myAdapter);
         restaurantesButton=findViewById(R.id.buttonRestaurantes);
         //Lista inicial
@@ -68,6 +74,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
+                listIDS.clear();
                 String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 for (DataSnapshot i : snapshot.getChildren()){
                     if (i.hasChild("Estabelecimentos")){
@@ -75,20 +82,26 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
                             while(z.iterator().hasNext()){
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + z.iterator().next().getValue());
+                                System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + i.getKey());
+                                System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + findNewRestaurante.getNome());
                                 String visibilidade = findNewRestaurante.getVisibilidade();
                                 if (visibilidade.equals("Publico")){
                                     list.add(findNewRestaurante);
+                                    listIDS.add(i.getKey());
                                 }else if (visibilidade.equals("Amigos")){
                                     if (utilizador.equals(i.getKey())){
                                         list.add(findNewRestaurante);
+                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + i.getKey());
+                                        listIDS.add(i.getKey());
                                     }else{
-                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                             @Override
                                             public void onCallback(boolean i) {
                                                 if (i){
-                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
+                                                    listIDS.add(amigo);
                                                 }
                                             }
                                         });
@@ -103,17 +116,21 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 String visibilidade = findNewRestaurante.getVisibilidade();
                                 if (visibilidade.equals("Publico")){
                                     list.add(findNewRestaurante);
+                                    listIDS.add(i.getKey());
                                 }else if (visibilidade.equals("Amigos")){
                                     if (utilizador.equals(i.getKey())){
                                         list.add(findNewRestaurante);
+                                        listIDS.add(i.getKey());
                                     }else{
-                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                             @Override
                                             public void onCallback(boolean i) {
 
                                                 if (i){
-                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
+                                                    listIDS.add(amigo);
                                                 }
                                             }
                                         });
@@ -137,6 +154,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
+                        listIDS.clear();
                         //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         for (DataSnapshot i : snapshot.getChildren()){
@@ -151,17 +169,20 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                     //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + visibilidade + " " + i.getKey());
                                     if (visibilidade.equals("Publico")){
                                         list.add(findNewRestaurante);
+                                        listIDS.add(i.getKey());
                                     }else if (visibilidade.equals("Amigos")){
                                         if (utilizador.equals(i.getKey())){
                                             list.add(findNewRestaurante);
+                                            listIDS.add(i.getKey());
                                         }else{
-                                            verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                                 @Override
                                                 public void onCallback(boolean i) {
-
                                                     if (i){
-                                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                         list.add(findNewRestaurante);
+                                                        listIDS.add(amigo);
                                                     }
                                                 }
                                             });
@@ -187,6 +208,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
+                        listIDS.clear();
                         String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         for (DataSnapshot i : snapshot.getChildren()){
                             if (i.hasChild("Estabelecimentos")){
@@ -196,17 +218,21 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                     String visibilidade = findNewRestaurante.getVisibilidade();
                                     if (visibilidade.equals("Publico")){
                                         list.add(findNewRestaurante);
+                                        listIDS.add(i.getKey());
                                     }else if (visibilidade.equals("Amigos")){
                                         if (utilizador.equals(i.getKey())){
                                             list.add(findNewRestaurante);
+                                            listIDS.add(i.getKey());
                                         }else{
-                                            verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                                 @Override
                                                 public void onCallback(boolean i) {
 
                                                     if (i){
-                                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                         list.add(findNewRestaurante);
+                                                        listIDS.add(amigo);
                                                     }
                                                 }
                                             });
@@ -244,9 +270,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         });
     }
 
-    private interface FirebaseCallback{
-        void onCallback(boolean i);
-    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -283,6 +307,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 list.clear();
+                listIDS.clear();
                 String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 for (DataSnapshot i : snapshot.getChildren()){
                     if (i.hasChild("Estabelecimentos") && restaurantes.equals("Restaurantes")){
@@ -293,16 +318,20 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 String visibilidade = findNewRestaurante.getVisibilidade();
                                 if (visibilidade.equals("Publico")){
                                     list.add(findNewRestaurante);
+                                    listIDS.add(i.getKey());
                                 }else if (visibilidade.equals("Amigos")){
                                     if (utilizador.equals(i.getKey())){
                                         list.add(findNewRestaurante);
+                                        listIDS.add(i.getKey());
                                     }else{
-                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                             @Override
                                             public void onCallback(boolean i) {
                                                 if (i){
-                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    //.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
+                                                    listIDS.add(amigo);
                                                 }
                                             }
                                         });
@@ -317,17 +346,21 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 String visibilidade = findNewRestaurante.getVisibilidade();
                                 if (visibilidade.equals("Publico")){
                                     list.add(findNewRestaurante);
+                                    listIDS.add(i.getKey());
                                 }else if (visibilidade.equals("Amigos")){
                                     if (utilizador.equals(i.getKey())){
                                         list.add(findNewRestaurante);
+                                        listIDS.add(i.getKey());
                                     }else{
-                                        verificarAmizade(utilizador, i.getKey(), new FirebaseCallback(){
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback(){
                                             @Override
                                             public void onCallback(boolean i) {
 
                                                 if (i){
-                                                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
+                                                    listIDS.add(amigo);
                                                 }
                                             }
                                         });
@@ -344,6 +377,19 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             }
         });
 
+    }
+
+    @Override
+    public void onAdapterClick(int position) {
+        //String visitUserId = listIDS.get(position);
+        System.out.println("OOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAA");
+        Intent localIntent = new Intent(this, DescricaoDoLocal.class);
+        //localIntent.putExtra("visitUserId", visitUserId);
+        startActivity(localIntent);
+    }
+
+    private interface FirebaseCallback{
+        void onCallback(boolean i);
     }
 
 }

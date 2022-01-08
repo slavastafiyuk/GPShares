@@ -16,19 +16,27 @@ import java.util.ArrayList;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHolder> {
     Context context;
     ArrayList<FindNewFriends> list;
+    private onFriendsListener monFriendsListener;
 
-
-    public FriendsAdapter (Context context, ArrayList<FindNewFriends> list) {
+    public FriendsAdapter (Context context, ArrayList<FindNewFriends> list, onFriendsListener onFriendsListener) {
         this.context = context;
         this.list = list;
+        this.monFriendsListener = onFriendsListener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView nome;
-        public MyViewHolder(final View view){
+        onFriendsListener onFriendsListener;
+        public MyViewHolder(final View view, onFriendsListener onFriendsListener){
             super(view);
             nome = view.findViewById(R.id.allUsersFullNames);
+            view.setOnClickListener(this);
+            this.onFriendsListener = onFriendsListener;
+        }
 
+        @Override
+        public void onClick(View v) {
+            onFriendsListener.onFriendsClick(getAdapterPosition());
         }
     }
 
@@ -36,7 +44,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     @Override
     public FriendsAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.all_users_layout, parent, false);
-        return new MyViewHolder(itemView);
+        return new MyViewHolder(itemView, monFriendsListener);
+
     }
 
     @Override
@@ -48,5 +57,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.MyViewHo
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public interface onFriendsListener{
+        void onFriendsClick(int position);
     }
 }

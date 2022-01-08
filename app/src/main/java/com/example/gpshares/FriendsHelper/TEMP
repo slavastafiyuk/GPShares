@@ -1,0 +1,40 @@
+Query searchFriendsQuery = allUsersDatabaseRef.orderByChild("nomeInteiro")
+        .startAt(searchBoxInput).endAt(searchBoxInput + "\uf8ff");
+System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + " " + allUsersDatabaseRef.child("Dados").child("nomeInteiro"));
+FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder> firebaseRecyclerAdapter
+        = new FirebaseRecyclerAdapter<FindNewFriends, FindNewFriendsViewHolder>(
+                FindNewFriends.class,
+                R.layout.all_users_layout,
+                FindNewFriendsViewHolder.class,
+                searchFriendsQuery
+) {
+    @Override
+    protected void populateViewHolder(FindNewFriendsViewHolder findNewFriendsViewHolder, FindNewFriends findNewFriends, int i) {
+        findNewFriendsViewHolder.setNomeInteiro(findNewFriends.getNomeInteiro());
+        findNewFriendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String visitUserId = getRef(i).getKey();
+                Intent profileIntent = new Intent(FindFriends.this, OtherUserProfile.class);
+                profileIntent.putExtra("visitUserId",visitUserId);
+                startActivity(profileIntent);
+            }
+        });
+    }
+};
+SearchResult.setAdapter(firebaseRecyclerAdapter);
+
+
+public static class FindNewFriendsViewHolder extends RecyclerView.ViewHolder{
+        View mView;
+
+        public FindNewFriendsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+        }
+
+        public void setNomeInteiro(String nomeInteiro){
+            TextView myName = (TextView) mView.findViewById(R.id.allUsersFullNames);
+            myName.setText(nomeInteiro);
+        }
+    }

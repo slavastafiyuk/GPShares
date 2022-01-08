@@ -5,7 +5,7 @@
     android:id="@+id/drawerlayout_find_friends"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindFriends"
+    tools:context=".FriendsHelper.FindFriends"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
