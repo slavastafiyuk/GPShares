@@ -5,12 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.FriendsHelper.Friends;
+import com.example.gpshares.FriendsHelper.FriendsAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,12 +22,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class UserFriends extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class UserFriends extends AppCompatActivity implements FriendsAdapter.onFriendsListener {
 
     private RecyclerView myFriendList;
     private DatabaseReference FriendsRef, UsersRef;
     private FirebaseAuth mAuth;
     private String online_user_id;
+    ArrayList<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,5 +94,13 @@ public class UserFriends extends AppCompatActivity {
             TextView friendsDate = (TextView) mView.findViewById(R.id.allUsersStatus);
             friendsDate.setText("Amigos desde:< " + date);
         }
+    }
+
+    @Override
+    public void onFriendsClick(int position) {
+        String visitUserId = list.get(position);
+        Intent profileIntent = new Intent(UserFriends.this, OtherUserProfile.class);
+        profileIntent.putExtra("visitUserId",visitUserId);
+        startActivity(profileIntent);
     }
 }
