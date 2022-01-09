@@ -16,22 +16,31 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     Context context;
     ArrayList<FindNewRestaurante> list;
+    private onAdapterListener monAdapterListener;
 
-
-    public MyAdapter(Context context, ArrayList<FindNewRestaurante> list) {
+    public MyAdapter(Context context, ArrayList<FindNewRestaurante> list, onAdapterListener onAdapterListener) {
         this.context = context;
         this.list = list;
+        this.monAdapterListener = onAdapterListener;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder{
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView avaliacao;
         private TextView nome;
         private TextView comentario;
-        public MyViewHolder(final View view){
+        onAdapterListener onAdapterListener;
+        public MyViewHolder(final View view, onAdapterListener onAdapterListener){
             super(view);
             avaliacao = view.findViewById(R.id.allEstabelecimentosAvaliacao);
             nome = view.findViewById(R.id.allEstabelecimentosFullName);
             comentario = view.findViewById(R.id.allEstabelecimentosComentarios);
+            view.setOnClickListener(this);
+            this.onAdapterListener = onAdapterListener;
+        }
+
+        @Override
+        public void onClick(View v) {
+            onAdapterListener.onAdapterClick(getAdapterPosition());
         }
     }
 
@@ -39,7 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(context).inflate(R.layout.all_restaurantes_layout, parent, false);
-        return new MyViewHolder(itemView);
+        return new MyViewHolder(itemView, monAdapterListener);
     }
 
     @Override
@@ -53,5 +62,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    public interface onAdapterListener{
+        void onAdapterClick(int position);
     }
 }

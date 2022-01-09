@@ -1,4 +1,4 @@
-package com.example.gpshares;
+package com.example.gpshares.FriendsHelper;
 
 public class Friends {
 

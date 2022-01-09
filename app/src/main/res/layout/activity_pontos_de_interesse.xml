@@ -54,6 +54,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
+        <Button
+            android:id="@+id/buttonFiltrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/Filter"
+            android:onClick="Filtrar"
+            app:layout_constraintStart_toEndOf="@+id/cinemaButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
