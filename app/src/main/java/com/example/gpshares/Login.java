@@ -41,6 +41,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 
@@ -56,12 +57,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
+    private DatabaseReference databaseIdentificadores;
+
+    static final String code = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static SecureRandom rnd = new SecureRandom();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        databaseIdentificadores = FirebaseDatabase.getInstance().getReference("identificadores");
         register = (TextView) findViewById(R.id.ViewRegistrar);
         register.setOnClickListener(this);
 
@@ -106,16 +111,26 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         Log.d(TAG, "handleFacebookToken" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     String email = "FacebookAuthenticated";
                     String user = mAuth.getCurrentUser().getUid();
+                    String identificador = randomCode(8);
                     String nomeInteiro = mAuth.getCurrentUser().getDisplayName();
-                    Utilizador utilizador = new Utilizador(nomeInteiro, email);
                     Log.d(TAG, "sign in with credential: successful");
-                    databaseReference.child("user").addValueEventListener(new ValueEventListener() {
+                    verificarIdentificador(identificador, new FirebaseCallback() {
+                        @Override
+                        public void onCallback(boolean i) {
+                            if (i){
+                                identificador.replace(identificador, randomCode(8));
+                            }
+                        }
+                    });
+                    Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
+                    databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()){
@@ -134,29 +149,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     }
                                 });
                             }
-                            //int existencia = 0;
-                            //for (DataSnapshot i : snapshot.getChildren()){
-                            //    String z = i.getKey();
-                            //    if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
-                            //        existencia=1;
-                            //    }
-                            //    if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
-                            //        FirebaseDatabase.getInstance().getReference("Users")
-                            //                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                            //                .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            //            @Override
-                            //            public void onComplete(@NonNull Task<Void> task) {
-                            //                if (task.isSuccessful()) {
-                            //                    FirebaseUser user = mAuth.getCurrentUser();
-                            //                    startActivity(new Intent(Login.this, Map.class));
-                            //                }
-                            //            }
-                            //        });
-                            //    }else if(existencia == 1){
-                            //        FirebaseUser user = mAuth.getCurrentUser();
-                            //        startActivity(new Intent(Login.this, Map.class));
-                            //    }
-                            //}
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -170,6 +162,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             }
         });
     }
+
+
 
     //private void UpdateUI (FirebaseUser user){
     //    if (user != null){
@@ -233,7 +227,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String user = mAuth.getCurrentUser().getUid();
-                            Utilizador utilizador = new Utilizador(nomeInteiro, email);
+                            String identificador = randomCode(8);
+
+                            verificarIdentificador(identificador, new FirebaseCallback() {
+                                @Override
+                                public void onCallback(boolean i) {
+                                    if (i){
+                                        identificador.replace(identificador, randomCode(8));
+                                    }
+                                }
+                            });
+                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
                             databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -326,10 +330,36 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 } else {
                     Toast.makeText(Login.this, "Houve uma falha durante o login, verifique se indicou as credenciais validas", Toast.LENGTH_LONG).show();
                 }
-
-
             }
         });
 
     }
+
+    String randomCode (int t){
+        StringBuilder sb = new StringBuilder(t);
+        for (int i = 0; i < t; i++){
+            sb.append(code.charAt(rnd.nextInt(code.length())));
+        }
+        return sb.toString();
+    }
+
+    private interface FirebaseCallback {
+        void onCallback(boolean i);
+    }
+
+    public void verificarIdentificador(String identificador, FirebaseCallback firebaseCallback){
+        databaseIdentificadores.child(identificador).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    firebaseCallback.onCallback(true);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
