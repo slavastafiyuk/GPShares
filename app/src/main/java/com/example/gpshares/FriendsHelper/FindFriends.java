@@ -104,6 +104,9 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                             list2.add(i.getKey());
                         }
                     }
+                    //if ()){
+                    //    Toast.makeText(FindFriends.this, "Não encontramos o utilizador solicitado, verifique se introduziu codigo correto", Toast.LENGTH_SHORT).show();
+                    //}
                 }
                 friendsAdapter.notifyDataSetChanged();
             }
