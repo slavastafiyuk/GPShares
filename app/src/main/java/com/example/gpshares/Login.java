@@ -52,7 +52,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText editTextTextEmailAddress, editTextTextPassword;
     private Button signIn, signInGoogle;
     private LoginButton loginFacebook;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth, myUID;
     private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
@@ -111,35 +111,52 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     String email = "FacebookAuthenticated";
+                    String user = mAuth.getCurrentUser().getUid();
                     String nomeInteiro = mAuth.getCurrentUser().getDisplayName();
                     Utilizador utilizador = new Utilizador(nomeInteiro, email);
                     Log.d(TAG, "sign in with credential: successful");
-                    databaseReference.addValueEventListener(new ValueEventListener() {
+                    databaseReference.child("user").addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int existencia = 0;
-                            for (DataSnapshot i : snapshot.getChildren()){
-                                String z = i.getKey();
-                                if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
-                                    existencia=1;
-                                };
-                                if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
-                                    FirebaseDatabase.getInstance().getReference("Users")
-                                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                            .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                FirebaseUser user = mAuth.getCurrentUser();
-                                                startActivity(new Intent(Login.this, Map.class));
-                                            }
+                            if (snapshot.exists()){
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                startActivity(new Intent(Login.this, Map.class));
+                            }else{
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                        .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            startActivity(new Intent(Login.this, Map.class));
                                         }
-                                    });
-                                }else if(existencia == 1){
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    startActivity(new Intent(Login.this, Map.class));
-                                }
+                                    }
+                                });
                             }
+                            //int existencia = 0;
+                            //for (DataSnapshot i : snapshot.getChildren()){
+                            //    String z = i.getKey();
+                            //    if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
+                            //        existencia=1;
+                            //    }
+                            //    if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
+                            //        FirebaseDatabase.getInstance().getReference("Users")
+                            //                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                            //                .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            //            @Override
+                            //            public void onComplete(@NonNull Task<Void> task) {
+                            //                if (task.isSuccessful()) {
+                            //                    FirebaseUser user = mAuth.getCurrentUser();
+                            //                    startActivity(new Intent(Login.this, Map.class));
+                            //                }
+                            //            }
+                            //        });
+                            //    }else if(existencia == 1){
+                            //        FirebaseUser user = mAuth.getCurrentUser();
+                            //        startActivity(new Intent(Login.this, Map.class));
+                            //    }
+                            //}
                         }
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
@@ -215,33 +232,26 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            String user = mAuth.getCurrentUser().getUid();
                             Utilizador utilizador = new Utilizador(nomeInteiro, email);
-                            databaseReference.addValueEventListener(new ValueEventListener() {
+                            databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    int existencia = 0;
-                                    for (DataSnapshot i : snapshot.getChildren()){
-                                        //i.getKey() == FirebaseAuth.getInstance().getCurrentUser().getUid()
-                                        String z = i.getKey();
-                                        if (Objects.equals(z, Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())){
-                                            existencia=1;
-                                        }
-                                        if (!snapshot.getChildren().iterator().hasNext() && existencia == 0){
-                                            FirebaseDatabase.getInstance().getReference("Users")
-                                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                                    .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        FirebaseUser user = mAuth.getCurrentUser();
-                                                        startActivity(new Intent(Login.this, Map.class));
-                                                    }
+                                    if (snapshot.exists()){
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        startActivity(new Intent(Login.this, Map.class));
+                                    }else{
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                                .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    FirebaseUser user = mAuth.getCurrentUser();
+                                                    startActivity(new Intent(Login.this, Map.class));
                                                 }
-                                            });
-                                        }else if(existencia == 1){
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            startActivity(new Intent(Login.this, Map.class));
-                                        }
+                                            }
+                                        });
                                     }
                                 }
                                 @Override
