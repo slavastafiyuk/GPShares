@@ -24,13 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UserFriends extends AppCompatActivity implements FriendsAdapter.onFriendsListener {
+public class UserFriends extends AppCompatActivity{
 
     private RecyclerView myFriendList;
     private DatabaseReference FriendsRef, UsersRef;
     private FirebaseAuth mAuth;
     private String online_user_id;
-    ArrayList<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,15 +91,7 @@ public class UserFriends extends AppCompatActivity implements FriendsAdapter.onF
 
         public void setDate(String date) {
             TextView friendsDate = (TextView) mView.findViewById(R.id.allUsersStatus);
-            friendsDate.setText("Amigos desde:< " + date);
+            friendsDate.setText("Amigos desde: " + date);
         }
-    }
-
-    @Override
-    public void onFriendsClick(int position) {
-        String visitUserId = list.get(position);
-        Intent profileIntent = new Intent(UserFriends.this, OtherUserProfile.class);
-        profileIntent.putExtra("visitUserId",visitUserId);
-        startActivity(profileIntent);
     }
 }

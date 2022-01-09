@@ -43,7 +43,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     private RecyclerView SearchResult;
     private DatabaseReference allUsersDatabaseRef;
     private FirebaseAuth mAuth;
-    private String meuID;
+    private String meuID, friendID;
     ArrayList<FindNewFriends> list;
     ArrayList<String> list2;
     FriendsAdapter friendsAdapter;
@@ -62,6 +62,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         toggle.syncState();
         mAuth = FirebaseAuth.getInstance();
         meuID = mAuth.getCurrentUser().getUid();
+        friendID = mAuth.getCurrentUser().getUid();
         //RecyclerView, Janela de Resultados
         SearchResult = (RecyclerView) findViewById(R.id.searchResult);
         SearchResult.setHasFixedSize(true);
@@ -99,6 +100,8 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                     if (i.child("nomeInteiro").getValue().equals(searchBoxInput)){
                         if (meuID.equals(id)){
                             Toast.makeText(FindFriends.this, "Não consegue adicionar a sí proprio", Toast.LENGTH_SHORT).show();
+                        }else if(friendID.equals(id)){
+                            Toast.makeText(FindFriends.this, "Esse utilizador já é seu amigo", Toast.LENGTH_SHORT).show();
                         }else{
                             list.add(findnewfriends);
                             list2.add(i.getKey());
