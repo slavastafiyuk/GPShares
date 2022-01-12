@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class Dialog_filter_PontosDeInteresse extends AppCompatDialogFragment {
     private Dialog_filter_PontosDeInteresse.DialogListenerFilter listener2;
-    private CheckBox restaurantes, cinemas;
+    private CheckBox restaurantes, cinemas, centroComercial;
     private ArrayList<String> Fresults;
     @NonNull
     @Override
@@ -29,6 +29,7 @@ public class Dialog_filter_PontosDeInteresse extends AppCompatDialogFragment {
         Fresults = new ArrayList<>();
         Fresults.add(0, "0"); //0 para restaurantes
         Fresults.add(1, "0"); //0 para cinemas
+        Fresults.add(2, "0"); //0 para centros comerciais
         builder.setView(view)
                 .setTitle("ALGO")
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -53,12 +54,14 @@ public class Dialog_filter_PontosDeInteresse extends AppCompatDialogFragment {
                         //}
                         String Frestaurantes = Fresults.get(0);
                         String Fcinemas = Fresults.get(1);
+                        String FcentroComercial = Fresults.get(2);
                         int size = Fresults.size();
-                        listener2.applyTextsFilter(Frestaurantes, Fcinemas, size);
+                        listener2.applyTextsFilter(Frestaurantes, Fcinemas, FcentroComercial, size);
                     }
                 });
         restaurantes = view.findViewById(R.id.Filter_restaurantes);
         cinemas = view.findViewById(R.id.Filter_cinemas);
+        centroComercial = view.findViewById(R.id.Filter_CentroComercial);
         restaurantes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +78,15 @@ public class Dialog_filter_PontosDeInteresse extends AppCompatDialogFragment {
                 }
             }
         });
+        centroComercial.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (centroComercial.isChecked()){
+                    Fresults.set(2, "cComercial");
+                }
+            }
+        });
+
         return builder.create();
     }
 
@@ -90,7 +102,7 @@ public class Dialog_filter_PontosDeInteresse extends AppCompatDialogFragment {
     }
 
     public interface DialogListenerFilter {
-        void applyTextsFilter(String restaurantes, String cinemas, int size);
+        void applyTextsFilter(String restaurantes, String cinemas, String centroComercial, int size);
     }
 }
 
