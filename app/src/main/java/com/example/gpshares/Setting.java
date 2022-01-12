@@ -56,6 +56,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         userID = user.getUid();
         final TextView fullNameTextView = (TextView) findViewById(R.id.textViewName);
         final TextView emailTextView = (TextView) findViewById(R.id.textViewEmail);
+        final TextView identificadorTextView = (TextView) findViewById(R.id.textViewIdentificador);
         //final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
         //GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -65,6 +66,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 if (userProfile != null) {
                     fullNameTextView.setText(userProfile.nomeInteiro);
                     emailTextView.setText(userProfile.email);
+                    identificadorTextView.setText(userProfile.identificador);
                 }
             }
             @Override

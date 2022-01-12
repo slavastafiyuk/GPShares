@@ -95,9 +95,9 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                 list2.clear();
                 for (DataSnapshot i : snapshot.getChildren()){
                     FindNewFriends findnewfriends = i.getValue(FindNewFriends.class);
-                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX" + i.child("nomeInteiro").getValue() + " " + searchBoxInput);
+                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX" + i.child("identificador").getValue() + " " + searchBoxInput);
                     String id = i.getKey();
-                    if (i.child("nomeInteiro").getValue().equals(searchBoxInput)){
+                    if (i.child("identificador").getValue().equals(searchBoxInput)){
                         if (meuID.equals(id)){
                             Toast.makeText(FindFriends.this, "Não consegue adicionar a sí proprio", Toast.LENGTH_SHORT).show();
                         }else if(friendID.equals(id)){

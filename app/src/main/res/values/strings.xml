@@ -23,7 +23,7 @@
     <string name="marcar_lugar">Marcar</string>
     <string-array name="tipo">
         <item>Restaurantes</item>
-        <item>CentrosComerciais</item>
+        <item>Centros Comerciais</item>
         <item>Cinemas</item>
     </string-array>
     <string-array name="Avaliacao">
@@ -48,4 +48,6 @@
     <string name="F_restaurantes">Restaurantes</string>
     <string name="F_cinemas">Cinemas</string>
     <string name="Filter">Filtrar</string>
+    <string name="identificador">Identificador:</string>
+    <string name="F_centroComercial">Centros comerciais</string>
 </resources>
