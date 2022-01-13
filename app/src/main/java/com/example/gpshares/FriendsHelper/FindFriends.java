@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gpshares.GlobalVariables;
@@ -61,6 +62,10 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         View headerView = navigationView.getHeaderView(0);
         ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
         imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
+        TextView nomeDoUtilizador = (TextView) headerView.findViewById(R.id.NomeHeader);
+        nomeDoUtilizador.setText(GlobalVariables.nomeUtilizador);
+        TextView identificadorDoUtilizador = (TextView) headerView.findViewById(R.id.IdentificadorHeader);
+        identificadorDoUtilizador.setText(GlobalVariables.nomeUtilizador);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
