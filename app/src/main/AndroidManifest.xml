@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GPShares">
         <activity
+            android:name=".Login"
+            android:exported="false" />
+        <activity
             android:name=".UserFriends"
             android:exported="true" />
         <activity
@@ -58,7 +61,7 @@
             android:exported="false"
             android:label="@string/title_activity_map" />
         <activity
-            android:name=".Login"
+            android:name=".Loading"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

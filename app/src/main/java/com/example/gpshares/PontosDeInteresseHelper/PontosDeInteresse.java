@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.gpshares.DescricaoDoLocal;
 import com.example.gpshares.Dialogs.Dialog_filter_PontosDeInteresse;
 import com.example.gpshares.FriendsHelper.FindFriends;
+import com.example.gpshares.GlobalVariables;
 import com.example.gpshares.Login;
 import com.example.gpshares.Map;
 import com.example.gpshares.R;
@@ -55,6 +57,10 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         drawerLayout = findViewById(R.id.drawerlayout_pontosDeInteresse);
         navigationView = findViewById(R.id.navigation_viewPontosDeInteresse);
         navigationView.setNavigationItemSelectedListener(this);
+        //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
+        imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);

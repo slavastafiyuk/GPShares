@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -68,10 +69,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     private GoogleMap mMap;
     private ActivityMapBinding binding;
 
-    //--------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //--------------------------------
+        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + GlobalVariables.imagemPerfil);
+
         if (!isLocationPermissionGranted()) {
             try {
                 requestLocationPermission();
@@ -104,6 +107,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             drawerLayout = findViewById(R.id.drawerlayout);
             navigationView = findViewById(R.id.navigation_view);
             navigationView.setNavigationItemSelectedListener(this);
+            //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            System.out.println("BITMAP" + GlobalVariables.imagemPerfil);
+            View headerView = navigationView.getHeaderView(0);
+            ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
+            imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
             toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);

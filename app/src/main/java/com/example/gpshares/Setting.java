@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.Objects;
@@ -68,7 +70,8 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
     private FirebaseUser user;
     private DatabaseReference reference;
     private String userID;
-
+    private ByteArrayOutputStream bytes;
+    private Bitmap bitmap;
     //imagem
     ImageView imageView_S;
     //Storage
@@ -95,25 +98,30 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 chooseProfilePicture();
             }
         });
-
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + mAuth+".png");
-        objectStorageReference.child(mAuth+".jpg").getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
-                imageView_S.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Setting.this, "FUUUUCK", Toast.LENGTH_SHORT).show();
-            }
-        });
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + GlobalVariables.imagemPerfil);
+        imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
+        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + mAuth+".png");
+        //objectStorageReference.child(mAuth+".jpg").getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        //    @Override
+        //    public void onSuccess(byte[] bytes) {
+        //        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
+        //        imageView_S.setImageBitmap(bitmap);
+        //    }
+        //}).addOnFailureListener(new OnFailureListener() {
+        //    @Override
+        //    public void onFailure(@NonNull Exception e) {
+        //        Toast.makeText(Setting.this, "FUUUUCK", Toast.LENGTH_SHORT).show();
+        //    }
+        //});
 
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_settings);
         navigationView = (NavigationView) findViewById(R.id.navigation_viewSettings);
         navigationView.setNavigationItemSelectedListener(this);
+        //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
+        imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
@@ -128,21 +136,24 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         final TextView identificadorTextView = (TextView) findViewById(R.id.textViewIdentificador);
         //final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
         //GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Utilizador userProfile = snapshot.getValue(Utilizador.class);
-                if (userProfile != null) {
-                    fullNameTextView.setText(userProfile.nomeInteiro);
-                    emailTextView.setText(userProfile.email);
-                    identificadorTextView.setText(userProfile.identificador);
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(Setting.this, "Algo correu mal a processar os seus dados", Toast.LENGTH_SHORT).show();
-            }
-        });
+        //reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        //    @Override
+        //    public void onDataChange(@NonNull DataSnapshot snapshot) {
+        //        Utilizador userProfile = snapshot.getValue(Utilizador.class);
+        //        if (userProfile != null) {
+        //            fullNameTextView.setText(userProfile.nomeInteiro);
+        //            emailTextView.setText(userProfile.email);
+        //            identificadorTextView.setText(userProfile.identificador);
+        //        }
+        //    }
+        //    @Override
+        //    public void onCancelled(@NonNull DatabaseError error) {
+        //        Toast.makeText(Setting.this, "Algo correu mal a processar os seus dados", Toast.LENGTH_SHORT).show();
+        //    }
+        //});
+        fullNameTextView.setText(GlobalVariables.nomeUtilizador);
+        emailTextView.setText(GlobalVariables.formaAuth);
+        identificadorTextView.setText(GlobalVariables.identificador);
     }
     @Override
     public void onBackPressed() {
@@ -228,45 +239,50 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             case 1:
                 if (resultCode == RESULT_OK){
                     Uri selectedImageUri = data.getData();
-                    imageView_S.setImageURI(selectedImageUri);
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                        bytes = new ByteArrayOutputStream();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    byte bb[] = bytes.toByteArray();
+                    System.out.println("BITMAP" + bitmap);
+                    GlobalVariables.imagemPerfil = bitmap;
+                    imageView_S.setImageBitmap(bitmap);
                     System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + selectedImageUri);
-                    String nameOfImage = mAuth + "." + getExtension(selectedImageUri);
-                    StorageReference imageRef=objectStorageReference.child(nameOfImage);
-                    UploadTask objectUploadTask = imageRef.putFile(selectedImageUri);
-                    objectUploadTask.continueWith(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    StorageReference sr = objectStorageReference.child(mAuth + ".jpg");
+                    sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            if (!task.isSuccessful()){
-                                throw task.getException();
-                            }
-                            return imageRef.getDownloadUrl();
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(Setting.this, "Golo", Toast.LENGTH_SHORT).show();
                         }
-                    }).addOnCompleteListener(new OnCompleteListener<Task<Uri>>() {
+                    }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<Task<Uri>> task) {
-                            if (task.isSuccessful()){
-                                java.util.Map<String, String> objectMap = new HashMap<>();
-                                objectMap.put("url", task.getResult().toString());
-                                objectFirebaseFirestore.collection("Links").document(mAuth)
-                                        .set(objectMap)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Toast.makeText(Setting.this, "Golo", Toast.LENGTH_SHORT).show();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(Setting.this, "Fail", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }else if (!task.isSuccessful()){
-                                Toast.makeText(Setting.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
-                            }
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            java.util.Map<String, String> objectMap = new HashMap<>();
+                            objectMap.put("url", task.getResult().toString());
+                            objectFirebaseFirestore.collection("Links").document(mAuth)
+                                    .set(objectMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(Setting.this, "Golo", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(Setting.this, "Fail", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(Setting.this, "Fuuuckkk", Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
                 break;
             case 2:
@@ -276,7 +292,8 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     byte bb[] = bytes.toByteArray();
-                    imageView_S.setImageBitmap(bitmapImage);
+                    GlobalVariables.imagemPerfil = bitmapImage;
+                    imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
                     StorageReference sr = objectStorageReference.child(mAuth + ".jpg");
                     sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
