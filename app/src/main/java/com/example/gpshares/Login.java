@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private EditText editTextTextEmailAddress, editTextTextPassword;
     private Button signIn, signInGoogle;
     private LoginButton loginFacebook;
-    private FirebaseAuth mAuth, myUID;
+    private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;

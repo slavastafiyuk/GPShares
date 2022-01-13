@@ -9,6 +9,7 @@
     >
 
     <ImageView
+        android:id="@+id/imagemMenuPerfil"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:src="@drawable/unknowuser"

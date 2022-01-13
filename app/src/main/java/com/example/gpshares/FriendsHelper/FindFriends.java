@@ -13,8 +13,10 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.gpshares.GlobalVariables;
 import com.example.gpshares.Login;
 import com.example.gpshares.Map;
 import com.example.gpshares.OtherUserProfile;
@@ -55,6 +57,10 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_find_friends);
         navigationView = (NavigationView) findViewById(R.id.navigation_view_FindFriends);
         navigationView.setNavigationItemSelectedListener(this);
+        //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        View headerView = navigationView.getHeaderView(0);
+        ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
+        imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);

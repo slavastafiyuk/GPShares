@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,10 +20,10 @@ public class DescricaoDoLocal extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference Local_Ref;
     private String idDoUtilizador, local, nome_local;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_descricao_do_local);
 
         mAuth = FirebaseAuth.getInstance();
