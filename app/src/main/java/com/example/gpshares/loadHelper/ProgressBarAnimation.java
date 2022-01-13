@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import com.example.gpshares.GlobalVariables;
 import com.example.gpshares.Login;
 import com.example.gpshares.Map;
+import com.example.gpshares.R;
 import com.example.gpshares.Setting;
 import com.example.gpshares.Utilizador;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -87,6 +88,8 @@ public class ProgressBarAnimation extends Animation {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(context.getResources(),
+                            R.drawable.unknowuser);
                 }
             });
             if (value == to) {
