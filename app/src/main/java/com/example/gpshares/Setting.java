@@ -73,11 +73,11 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
     private ByteArrayOutputStream bytes;
     private Bitmap bitmap;
     //imagem
-    ImageView imageView_S;
+    private ImageView imageView_S;
     //Storage
-    StorageReference objectStorageReference;
-    FirebaseFirestore objectFirebaseFirestore;
-    EditText nameOfImage;
+    private StorageReference objectStorageReference;
+    private FirebaseFirestore objectFirebaseFirestore;
+    private EditText nameOfImage;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -100,19 +100,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         });
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + GlobalVariables.imagemPerfil);
         imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
-        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAA" + mAuth+".png");
-        //objectStorageReference.child(mAuth+".jpg").getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-        //    @Override
-        //    public void onSuccess(byte[] bytes) {
-        //        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0 , bytes.length);
-        //        imageView_S.setImageBitmap(bitmap);
-        //    }
-        //}).addOnFailureListener(new OnFailureListener() {
-        //    @Override
-        //    public void onFailure(@NonNull Exception e) {
-        //        Toast.makeText(Setting.this, "FUUUUCK", Toast.LENGTH_SHORT).show();
-        //    }
-        //});
 
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_settings);
@@ -122,6 +109,10 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         View headerView = navigationView.getHeaderView(0);
         ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
         imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
+        TextView nomeDoUtilizador = (TextView) headerView.findViewById(R.id.NomeHeader);
+        nomeDoUtilizador.setText(GlobalVariables.nomeUtilizador);
+        TextView identificadorDoUtilizador = (TextView) headerView.findViewById(R.id.IdentificadorHeader);
+        identificadorDoUtilizador.setText(GlobalVariables.nomeUtilizador);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
@@ -262,7 +253,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             java.util.Map<String, String> objectMap = new HashMap<>();
                             objectMap.put("url", task.getResult().toString());
-                            objectFirebaseFirestore.collection("Links").document(mAuth)
+                            objectFirebaseFirestore.collection(mAuth).document(mAuth)
                                     .set(objectMap)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -280,7 +271,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(Setting.this, "Fuuuckkk", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Setting.this, "ERRO", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -305,7 +296,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                             java.util.Map<String, String> objectMap = new HashMap<>();
                             objectMap.put("url", task.getResult().toString());
-                            objectFirebaseFirestore.collection("Links").document(mAuth)
+                            objectFirebaseFirestore.collection(mAuth).document(mAuth)
                                     .set(objectMap)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -323,7 +314,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(Setting.this, "Fuuuckkk", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Setting.this, "ERRO", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

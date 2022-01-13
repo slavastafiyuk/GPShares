@@ -44,7 +44,6 @@ public class ProgressBarAnimation extends Animation {
     private String userID;
     private StorageReference objectStorageReference;
 
-
     public ProgressBarAnimation(Context context, ProgressBar progressBar, TextView textView, float from, float to){
         this.context = context;
         this.progressBar = progressBar;
@@ -93,7 +92,6 @@ public class ProgressBarAnimation extends Animation {
                 }
             });
             if (value == to) {
-
                 if (user.getEmail().equals("")) {
                     context.startActivities(new Intent[]{new Intent(context, Map.class)});
                 } else if (user.isEmailVerified()) {

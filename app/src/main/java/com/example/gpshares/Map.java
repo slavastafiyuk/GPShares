@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,12 +45,19 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -68,13 +77,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     double lon1;
     private GoogleMap mMap;
     private ActivityMapBinding binding;
+    //--------------------------------
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //--------------------------------
-        System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + GlobalVariables.imagemPerfil);
-
         if (!isLocationPermissionGranted()) {
             try {
                 requestLocationPermission();
@@ -112,6 +122,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             View headerView = navigationView.getHeaderView(0);
             ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
             imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
+            TextView nomeDoUtilizador = (TextView) headerView.findViewById(R.id.NomeHeader);
+            nomeDoUtilizador.setText(GlobalVariables.nomeUtilizador);
+            TextView identificadorDoUtilizador = (TextView) headerView.findViewById(R.id.IdentificadorHeader);
+            identificadorDoUtilizador.setText(GlobalVariables.identificador);
             toolbar = findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
@@ -163,7 +177,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(false);
-
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(@NonNull LatLng latLng) {
@@ -204,7 +217,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             //    ActivityCompat#requestPermissions
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (myLocation == null) {
             Criteria criteria = new Criteria();
             criteria.setAccuracy(Criteria.ACCURACY_COARSE);
@@ -217,7 +230,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, new LocationListener() {
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
                 @Override
                 public void onLocationChanged(Location myLocation) {
                     double latitude = myLocation.getLatitude();
@@ -287,15 +300,23 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         dialog.show(getSupportFragmentManager(), "dialog");
     }
     @Override
-    public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade) {
+    public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade, ByteArrayOutputStream imagem) {
+        StorageReference objectStorageReference;
+        FirebaseFirestore objectFirebaseFirestore;
+        String mAuth;
+        mAuth = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        objectStorageReference = FirebaseStorage.getInstance().getReference(mAuth);
+        objectFirebaseFirestore=FirebaseFirestore.getInstance();
         Toast.makeText(this, tipo_de_estabelecimento + avaliacao_do_estabelecimento + nome + comment + visibilidade, Toast.LENGTH_SHORT).show();
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        Location myLocation = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude, visibilidade);
+        String caminho = mAuth + tipo_de_estabelecimento + nome + myPosition.longitude + myPosition.longitude + ".jpg";
+
+        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude, visibilidade, caminho);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -308,5 +329,40 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 Toast.makeText(Map.this, "Houve um erro", Toast.LENGTH_SHORT).show();
             }
         });
+        byte bb[] = imagem.toByteArray();
+        StorageReference sr = objectStorageReference.child(caminho);
+        sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(getApplication(), "Golo", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                java.util.Map<String, String> objectMap = new HashMap<>();
+                objectMap.put("url", task.getResult().toString());
+                objectFirebaseFirestore.collection(mAuth).document(caminho)
+                        .set(objectMap)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(getApplication(), "Golo", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getApplication(), "Fail", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplication(), "ERRRO", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 }
