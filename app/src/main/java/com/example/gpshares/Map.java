@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -47,6 +46,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -241,14 +241,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                         new FetchURL(Map.this).execute(url, "driving");
                     }
                 }
+
                 @Override
                 public void onProviderDisabled(String provider) {
                     // TODO Auto-generated method stub
                 }
+
                 @Override
                 public void onProviderEnabled(String provider) {
                     // TODO Auto-generated method stub
                 }
+
                 @Override
                 public void onStatusChanged(String provider, int status,
                                             Bundle extras) {
@@ -257,14 +260,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             });
         }
     }
+
     private boolean isLocationPermissionGranted() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED;
     }
+
     private void requestLocationPermission() {
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                 LOCATION_PERMISSION_CODE);
     }
+
     //Rotas-----------------------------------------------------------------------------------------
     private String getRequestURL(LatLng origin, LatLng dest, String directionMode) {
         //Origem da rota
@@ -283,6 +289,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getResources().getString(R.string.google_maps_key);
         return url;
     }
+
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null) {
@@ -290,13 +297,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
+
     public void Marcador(View view) {
         openDialog();
     }
+
     public void openDialog() {
         Dialog_map dialog = new Dialog_map();
         dialog.show(getSupportFragmentManager(), "dialog");
+
     }
+
     @Override
     public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade, ByteArrayOutputStream imagem) {
         StorageReference objectStorageReference;
@@ -304,7 +315,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         String mAuth;
         mAuth = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
         objectStorageReference = FirebaseStorage.getInstance().getReference(mAuth);
-        objectFirebaseFirestore=FirebaseFirestore.getInstance();
+        objectFirebaseFirestore = FirebaseFirestore.getInstance();
         Toast.makeText(this, tipo_de_estabelecimento + avaliacao_do_estabelecimento + nome + comment + visibilidade, Toast.LENGTH_SHORT).show();
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -327,6 +338,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 Toast.makeText(Map.this, "Houve um erro", Toast.LENGTH_SHORT).show();
             }
         });
+
+
         byte bb[] = imagem.toByteArray();
         StorageReference sr = objectStorageReference.child(caminho);
         sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {

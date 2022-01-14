@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,20 +24,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
 
-import com.example.gpshares.GlobalVariables;
 import com.example.gpshares.R;
-import com.example.gpshares.Setting;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 
 public class Dialog_map extends AppCompatDialogFragment {
     private Bitmap imagem;
@@ -45,6 +38,8 @@ public class Dialog_map extends AppCompatDialogFragment {
     private TextInputEditText coment_estabelecimento, nome_estabelecimento;
     private ImageView imageView;
     private ByteArrayOutputStream bytes;
+    private FloatingActionButton floatingActionButton;
+
     @NonNull
     @Override
     public android.app.Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -56,20 +51,10 @@ public class Dialog_map extends AppCompatDialogFragment {
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.cancel();
                     }
                 })
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String username = autoCompleteTextView.getText().toString();
-                        String password = autoCompleteTextView2.getText().toString();
-                        String nome = nome_estabelecimento.getText().toString();
-                        String comment = coment_estabelecimento.getText().toString();
-                        String visibilidade = visibilidadeAutoComplete.getText().toString();
-                        listener.applyTexts(username, password, nome, comment, visibilidade, bytes);
-                    }
-                });
+                .setPositiveButton("Ok", null);
 
         imageView = view.findViewById(R.id.imageView_PlaceADD);
         coment_estabelecimento = view.findViewById(R.id.coment_do_estabelecimento);
@@ -90,17 +75,41 @@ public class Dialog_map extends AppCompatDialogFragment {
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         visibilidadeAutoComplete.setAdapter(adapter3);
 
-
+        floatingActionButton = view.findViewById(R.id.floatingActionButtonADDPIC);
         imageView = view.findViewById(R.id.imageView_PlaceADD);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton.setFocusable(true);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 choosePicture();
             }
         });
-
-
-        return builder.create();
+        AlertDialog dialog1 =  builder.create();
+        dialog1.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button b = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
+                b.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                        if (imageView.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.logo).getConstantState())) {
+                            Toast.makeText(getActivity(), "Tem de adicionar imagem para prosseguir", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String username = autoCompleteTextView.getText().toString();
+                            String password = autoCompleteTextView2.getText().toString();
+                            String nome = nome_estabelecimento.getText().toString();
+                            String comment = coment_estabelecimento.getText().toString();
+                            String visibilidade = visibilidadeAutoComplete.getText().toString();
+                            listener.applyTexts(username, password, nome, comment, visibilidade, bytes);
+                            dialog1.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+        return dialog1;
     }
 
     @Override
@@ -164,7 +173,6 @@ public class Dialog_map extends AppCompatDialogFragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 1:
-
                 Uri selectedImageUri = data.getData();
                 try {
                     imagem = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
@@ -172,14 +180,14 @@ public class Dialog_map extends AppCompatDialogFragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                imagem.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                imagem.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                 imageView.setImageBitmap(imagem);
                 break;
             case 2:
                 Bundle bundle = data.getExtras();
                 imagem = (Bitmap) bundle.get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                imagem.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                imagem.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                 imageView.setImageBitmap(imagem);
                 break;
         }
