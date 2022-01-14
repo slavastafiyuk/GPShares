@@ -8,53 +8,60 @@
 
     <EditText
         android:id="@+id/nomeDoUtilizador"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
-        android:layout_marginTop="150dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="@string/nome"
+        android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:importantForAutofill="no"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/idadeDoUtilizador"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="@string/idade"
+        android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomeDoUtilizador"
-        android:importantForAutofill="no"
-         />
+        app:layout_constraintTop_toBottomOf="@+id/nomeDoUtilizador" />
 
     <EditText
         android:id="@+id/editTextTextEmailAddress2"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="@string/email"
-        android:textSize="24sp"
+        android:importantForAutofill="no"
         android:inputType="textEmailAddress"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/idadeDoUtilizador"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@+id/idadeDoUtilizador" />
 
     <EditText
         android:id="@+id/editTextTextPassword2"
-        android:layout_width="400dp"
-        android:layout_height="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="@string/password"
         android:importantForAutofill="no"
@@ -66,16 +73,17 @@
 
     <Button
         android:id="@+id/RegisterBtn"
-        android:layout_width="380dp"
-        android:layout_height="55dp"
+        android:layout_width="170dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#0Ed6B9"
         android:text="@string/registrar"
-        android:textSize="26sp"
-        android:textStyle="bold"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2"
+        android:background="@drawable/button_style"
+        app:backgroundTint="@null"
+        android:textColor="@color/black"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -87,4 +95,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="204dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GPShare"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
