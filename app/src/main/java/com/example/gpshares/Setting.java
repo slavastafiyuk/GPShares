@@ -236,7 +236,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                     byte bb[] = bytes.toByteArray();
                     System.out.println("BITMAP" + bitmap);
                     GlobalVariables.imagemPerfil = bitmap;
@@ -281,7 +281,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     Bundle bundle = data.getExtras();
                     Bitmap bitmapImage = (Bitmap) bundle.get("data");
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    bitmapImage.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                     byte bb[] = bytes.toByteArray();
                     GlobalVariables.imagemPerfil = bitmapImage;
                     imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
