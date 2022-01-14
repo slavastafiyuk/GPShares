@@ -8,6 +8,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +52,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "FacebookAuthentication";
     private TextView register, resetPW;
     private EditText editTextTextEmailAddress, editTextTextPassword;
-    private Button signIn, signInGoogle;
+    private Button signIn;
+    private ImageButton signInGoogle, signInFacebook;
     private LoginButton loginFacebook;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
@@ -73,8 +75,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         signIn = (Button) findViewById(R.id.LOGIN);
         signIn.setOnClickListener(this);
 
-        signInGoogle = (Button) findViewById(R.id.googleAuth);
+        signInGoogle = (ImageButton) findViewById(R.id.googleAuth);
         signInGoogle.setOnClickListener(this);
+
+        signInFacebook = (ImageButton) findViewById(R.id.facebookAuth);
+        signInFacebook.setOnClickListener(this);
 
         editTextTextEmailAddress = (EditText) findViewById(R.id.editTextTextEmailAddress);
         editTextTextPassword = (EditText) findViewById(R.id.editTextTextPassword);
@@ -285,6 +290,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.googleAuth:
                 signIn();
                 break;
+        }
+        if (v.getId() == R.id.facebookAuth){
+            loginFacebook.performClick();
         }
     }
     private void userLogin() {
