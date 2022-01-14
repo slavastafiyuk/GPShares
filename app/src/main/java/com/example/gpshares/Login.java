@@ -2,7 +2,9 @@ package com.example.gpshares;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -148,6 +150,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            GlobalVariables.nomeUtilizador = nomeInteiro;
+                                            GlobalVariables.formaAuth = email;
+                                            GlobalVariables.identificador = identificador;
+                                            GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getResources(),
+                                                    R.drawable.unknowuser);
                                             FirebaseUser user = mAuth.getCurrentUser();
                                             startActivity(new Intent(Login.this, Map.class));
                                         }
@@ -256,6 +263,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    GlobalVariables.nomeUtilizador = nomeInteiro;
+                                                    GlobalVariables.formaAuth = email;
+                                                    GlobalVariables.identificador = identificador;
+                                                    GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getResources(),
+                                                            R.drawable.unknowuser);
                                                     FirebaseUser user = mAuth.getCurrentUser();
                                                     startActivity(new Intent(Login.this, Map.class));
                                                 }
