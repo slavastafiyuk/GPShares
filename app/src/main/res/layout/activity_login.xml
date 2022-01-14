@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     tools:context=".Login">
 
@@ -21,8 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
-    <!--android:layout_width="400dp"
-       android:layout_height="55dp"-->
 
     <EditText
         android:id="@+id/editTextTextPassword"
@@ -45,46 +43,44 @@
 
     <Button
         android:id="@+id/LOGIN"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="1dp"
-        android:backgroundTint="#0Ed6B9"
         android:text="@string/login"
-        android:textSize="26sp"
-        android:textStyle="bold"
+        android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
-    <!--android:layout_width="380dp"
-        android:layout_height="55dp"-->
+        app:layout_constraintTop_toBottomOf="@+id/ResetPW"
+        android:background="@drawable/button_style"
+        app:backgroundTint="@null"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/ResetPW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="30dp"
         android:text="@string/ForgotPW"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
     <TextView
         android:id="@+id/ViewRegistrar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="30dp"
-        android:text="@string/registrar"
+        android:layout_marginTop="20dp"
+        android:text="Ainda não se registou?\nCrie conta Aqui."
         android:textSize="16sp"
         android:textStyle="bold"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/googleAuth" />
 
     <ProgressBar
         android:id="@+id/progressBar2"
@@ -102,9 +98,9 @@
         android:id="@+id/login_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/facebook"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:background="@drawable/facebook"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -115,11 +111,11 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:text="Faça Login com:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ResetPW" />
+        app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
 
     <ImageButton
         android:id="@+id/googleAuth"
