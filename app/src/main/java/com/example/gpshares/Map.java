@@ -79,8 +79,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     private ActivityMapBinding binding;
     //--------------------------------
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
