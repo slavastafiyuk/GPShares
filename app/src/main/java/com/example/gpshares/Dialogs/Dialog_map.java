@@ -77,7 +77,7 @@ public class Dialog_map extends AppCompatDialogFragment {
 
         floatingActionButton = view.findViewById(R.id.floatingActionButtonADDPIC);
         imageView = view.findViewById(R.id.imageView_PlaceADD);
-        floatingActionButton.setFocusable(true);
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,16 +93,33 @@ public class Dialog_map extends AppCompatDialogFragment {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN");
-                        if (imageView.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.logo).getConstantState())) {
+                        System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN" + autoCompleteTextView.getText().toString().equals("FALTA_DECIDIR"));
+                        if (nome_estabelecimento.getText().toString().equals("")){
+                            nome_estabelecimento.setError("Necessita de adicionar o nome");
+                            nome_estabelecimento.requestFocus();
+                        }else if (autoCompleteTextView.getText().toString().equals("FALTA_DECIDIR")){
+                            autoCompleteTextView.setError("Necessita de escolher o tipo de estabelecimento");
+                            autoCompleteTextView.requestFocus();
+                        }else if (autoCompleteTextView2.getText().toString().equals("FALTA_DECIDIR")){
+                            autoCompleteTextView2.setError("Necessita de adicionar a avaliação");
+                            autoCompleteTextView2.requestFocus();
+                        }else if (coment_estabelecimento.getText().toString().equals("")){
+                            coment_estabelecimento.setError("Necessita de adicionar comentario");
+                            coment_estabelecimento.requestFocus();
+                        }else if (visibilidadeAutoComplete.getText().toString().equals("FALTA_DECIDIR")){
+                            visibilidadeAutoComplete.setError("Necessida de decidir a visibilidade");
+                            visibilidadeAutoComplete.requestFocus();
+                        }else if (imageView.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.logo).getConstantState())) {
+                            floatingActionButton.setFocusableInTouchMode(true);
+                            floatingActionButton.requestFocus();
                             Toast.makeText(getActivity(), "Tem de adicionar imagem para prosseguir", Toast.LENGTH_SHORT).show();
                         } else {
-                            String username = autoCompleteTextView.getText().toString();
-                            String password = autoCompleteTextView2.getText().toString();
+                            String tipo = autoCompleteTextView.getText().toString();
+                            String avaliacao = autoCompleteTextView2.getText().toString();
                             String nome = nome_estabelecimento.getText().toString();
                             String comment = coment_estabelecimento.getText().toString();
                             String visibilidade = visibilidadeAutoComplete.getText().toString();
-                            listener.applyTexts(username, password, nome, comment, visibilidade, bytes);
+                            listener.applyTexts(tipo, avaliacao, nome, comment, visibilidade, bytes);
                             dialog1.dismiss();
                         }
                     }
