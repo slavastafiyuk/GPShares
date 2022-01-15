@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.FriendsHelper.FindFriends;
@@ -74,6 +75,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         .asBitmap()
                         .load(objectStorageReference.child(caminho_da_imagem))
                         .centerCrop()
+                        .fitCenter()
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

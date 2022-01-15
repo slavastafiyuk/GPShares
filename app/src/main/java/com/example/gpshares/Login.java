@@ -2,9 +2,9 @@ package com.example.gpshares;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -16,13 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -43,8 +49,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -62,10 +74,11 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
     private DatabaseReference databaseIdentificadores;
-
+    private String userID;
+    private StorageReference objectStorageReference;
     static final String code = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     static SecureRandom rnd = new SecureRandom();
-
+    //private String FBemail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +155,29 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()){
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + user.getEmail());
+                                userID = user.getUid();
+                                objectStorageReference = FirebaseStorage.getInstance().getReference(userID);
+                                GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
+                                GlobalVariables.identificador = snapshot.child("identificador").getValue().toString();
+                                GlobalVariables.formaAuth = snapshot.child("email").getValue().toString();
+                                try{
+                                    Glide.with(getApplicationContext())
+                                            .asBitmap()
+                                            .load(objectStorageReference.child(userID + ".jpg"))
+                                            .centerCrop()
+                                            .fitCenter()
+                                            .into(new SimpleTarget<Bitmap>() {
+                                                @Override
+                                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                    GlobalVariables.imagemPerfil = resource;
+                                                }
+                                            });
+                                }catch (Exception e){
+                                    System.out.println("EXCEPTION" + e);
+                                    GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                                            R.drawable.unknowuser);
+                                }
                                 startActivity(new Intent(Login.this, Map.class));
                             }else{
                                 FirebaseDatabase.getInstance().getReference("Users")
@@ -255,6 +291,27 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
+                                        GlobalVariables.identificador = snapshot.child("identificador").getValue().toString();
+                                        GlobalVariables.formaAuth = snapshot.child("email").getValue().toString();
+                                        try{
+                                            Glide.with(getApplicationContext())
+                                                    .asBitmap()
+                                                    .load(objectStorageReference.child(userID + ".jpg"))
+                                                    .centerCrop()
+                                                    .fitCenter()
+                                                    .into(new SimpleTarget<Bitmap>() {
+                                                        @Override
+                                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                            GlobalVariables.imagemPerfil = resource;
+                                                        }
+                                                    });
+                                        }catch (Exception e){
+                                            System.out.println("EXCEPTION" + e);
+                                            GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                                                    R.drawable.unknowuser);
+                                        }
+
                                         startActivity(new Intent(Login.this, Map.class));
                                     }else{
                                         FirebaseDatabase.getInstance().getReference("Users")
@@ -302,9 +359,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             case R.id.googleAuth:
                 signIn();
                 break;
-        }
-        if (v.getId() == R.id.facebookAuth){
-            loginFacebook.performClick();
+            case R.id.facebookAuth:
+                loginFacebook.performClick();
         }
     }
     private void userLogin() {
@@ -341,6 +397,38 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     assert user != null;
                     if (user.isEmailVerified()) {
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                        databaseReference.child(user.getUid()).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
+                                    GlobalVariables.identificador = snapshot.child("identificador").getValue().toString();
+                                    GlobalVariables.formaAuth = snapshot.child("email").getValue().toString();
+                                    try {
+                                        Glide.with(getApplicationContext())
+                                                .asBitmap()
+                                                .load(objectStorageReference.child(userID + ".jpg"))
+                                                .centerCrop()
+                                                .fitCenter()
+                                                .into(new SimpleTarget<Bitmap>() {
+                                                    @Override
+                                                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                        GlobalVariables.imagemPerfil = resource;
+                                                    }
+                                                });
+                                    } catch (Exception e) {
+                                        System.out.println("EXCEPTION" + e);
+                                        GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
+                                                R.drawable.unknowuser);
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+                        });
                         startActivity(new Intent(Login.this, Map.class));
                     } else {
                         user.sendEmailVerification();
@@ -352,7 +440,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 }
             }
         });
-
     }
 
     String randomCode (int t){
