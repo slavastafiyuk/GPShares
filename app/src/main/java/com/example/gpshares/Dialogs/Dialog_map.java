@@ -203,7 +203,7 @@ public class Dialog_map extends AppCompatDialogFragment {
             case 2:
                 Bundle bundle = data.getExtras();
                 imagem = (Bitmap) bundle.get("data");
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bytes = new ByteArrayOutputStream();
                 imagem.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                 imageView.setImageBitmap(imagem);
                 break;

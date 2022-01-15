@@ -1,4 +1,4 @@
-package com.example.gpshares;
+package com.example.gpshares.loadHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.gpshares.R;
 import com.example.gpshares.loadHelper.ProgressBarAnimation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -21,16 +22,12 @@ public class Loading extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading);
-
         progressBar = findViewById(R.id.loadProgress);
         textView = findViewById(R.id.progress_percentage);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         progressBar.setMax(100);
         progressBar.setScaleY(3f);
-
         progressAnimation();
     }
 
@@ -41,7 +38,7 @@ public class Loading extends AppCompatActivity {
         if (user != null){
             animation.setDuration(4000);
         }else {
-            animation.setDuration(1000);
+            animation.setDuration(0);
         }
         progressBar.setAnimation(animation);
     }

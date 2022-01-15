@@ -148,8 +148,6 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
 
                                 }
                             });
-
-
                         }else{
                             Toast.makeText(Registrar.this, "Houve um problema durante o registro, Tente de novo", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
@@ -157,7 +155,6 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                     }
                 });
     }
-
     String randomCode (int t){
         StringBuilder sb = new StringBuilder(t);
         for (int i = 0; i < t; i++){
@@ -184,6 +181,4 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
             }
         });
     }
-
-
 }
