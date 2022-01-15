@@ -178,6 +178,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                             R.drawable.unknowuser);
                                 }
+                                try {
+                                    Thread.sleep(2000);
+                                    //Any other code to execute after 5 min execution pause.
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 startActivity(new Intent(Login.this, Map.class));
                             }else{
                                 System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
@@ -314,7 +320,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                             GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                     R.drawable.unknowuser);
                                         }
-
+                                        try {
+                                            Thread.sleep(2000);
+                                            //Any other code to execute after 5 min execution pause.
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                         startActivity(new Intent(Login.this, Map.class));
                                     }else{
                                         FirebaseDatabase.getInstance().getReference("Users")
@@ -425,14 +436,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                         System.out.println("EXCEPTION" + e);
                                         GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                 R.drawable.unknowuser);
+                                    }try {
+                                        Thread.sleep(2000);
+                                        //Any other code to execute after 5 min execution pause.
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
+                                    startActivity(new Intent(Login.this, Map.class));
                                 }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
-                        startActivity(new Intent(Login.this, Map.class));
+
                     } else {
                         user.sendEmailVerification();
                         Toast.makeText(Login.this, "Verifique o seu email para ativar a conta", Toast.LENGTH_LONG).show();

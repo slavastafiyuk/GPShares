@@ -78,7 +78,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     private GoogleMap mMap;
     private ActivityMapBinding binding;
     //--------------------------------
-
+    private double latitude_from_Intent;
+    private double longitude_from_Intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +130,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
+            //Obter latitude e longitude do lugar
+            try {
+                longitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("longitude").toString());
+                latitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("latitude").toString());
+            }catch (Exception e){
+                longitude_from_Intent = 0.0F;
+            }
         }
     }
 
@@ -145,9 +153,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            //case R.id.nav_map:
-            //    startActivity(new Intent(this, Map.class));
-            //    break;
             case R.id.nav_settings:
                 startActivity(new Intent(this, Setting.class));
                 break;
@@ -175,6 +180,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(false);
+
             mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(@NonNull LatLng latLng) {
@@ -189,23 +195,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     MarkerOptions markerOptions = new MarkerOptions();
                     markerOptions.position(latLng);
                     if (listPoints.size() == 1) {
-                        //add first marker to the map
-                        //markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                        //mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                         mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                     }
-                    //else {
-                    //    //add second marker to the map
-                    //    markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                    //}
-                    //mMap.addMarker(markerOptions);
-                    //if (listPoints.size() == 2) {
-                    //    //Create the URL to ge trrequest from first marker to second marker
-                    //    String url = getRequestURL(listPoints.get(0), listPoints.get(1), "driving");
-                    //    new FetchURL(Map.this).execute(url, "driving");
-                    //    //TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
-                    //    //taskRequestDirections.execute(url);
-                    //}
                 }
             });
         }
@@ -236,6 +227,14 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     lat1 = latitude;
                     lon1 = longitude;
                     place1 = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
+                    if (longitude_from_Intent != 0.0F && latitude_from_Intent != 0.0F){
+                        LatLng place = new LatLng(latitude_from_Intent, longitude_from_Intent);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.position(place);
+                        mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        String url = getRequestURL(place1.getPosition(), place, "driving" );
+                        new FetchURL(Map.this).execute(url, "driving");
+                    }
                     if (listPoints.size() == 1) {
                         String url = getRequestURL(place1.getPosition(), listPoints.get(0), "driving");
                         new FetchURL(Map.this).execute(url, "driving");
