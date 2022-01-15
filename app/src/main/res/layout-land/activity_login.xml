@@ -2,16 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="horizontal"
     tools:context=".Login">
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="220dp"
         android:layout_height="180dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
@@ -34,12 +37,14 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="10dp"
         android:text="Faça Login com:"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
 
     <ImageButton
         android:id="@+id/googleAuth"
@@ -47,12 +52,11 @@
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/google"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
-
 
     <ImageButton
         android:id="@+id/facebookAuth"
@@ -60,8 +64,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/facebook"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.26"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
@@ -70,12 +74,12 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginStart="50dp"
         android:text="GPShare"
         android:textSize="25dp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.106"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -84,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="@string/email"
         android:importantForAutofill="no"
@@ -100,7 +104,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="50dp"
         android:ems="10"
         android:hint="@string/password"
         android:importantForAutofill="no"
@@ -115,7 +119,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="50dp"
         android:background="@drawable/button_style"
         android:text="@string/login"
         android:textColor="@color/black"
@@ -130,7 +134,7 @@
         android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="50dp"
         android:text="@string/ForgotPW"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -144,7 +148,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="50dp"
         android:gravity="center"
         android:text="Ainda não se registou?\nCrie conta Aqui."
         android:textSize="16sp"
