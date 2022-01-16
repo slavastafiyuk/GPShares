@@ -25,6 +25,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +52,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     private String idDoUtilizador, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         nome = findViewById(R.id.Nome_Do_Local);
         imageView = findViewById(R.id.imageView_Local);
         firebaseFirestore = FirebaseFirestore.getInstance();
+        floatingActionButton = findViewById(R.id.make_a_route);
 
         Local_Ref.child(idDoUtilizador).addValueEventListener(new ValueEventListener() {
             @Override
@@ -85,6 +88,18 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + nome_local);
                 String coment_do_local = snapshot.child("Estabelecimentos").child(local).child(nome_local).child("comentario").getValue().toString();
                 nome.setText(coment_do_local);
+                floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        double latitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("latitude").getValue().toString());
+                        double longitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("longitude").getValue().toString());
+                        System.out.println("ASDASDASD" + latitude + longitude);
+                        Intent localIntent = new Intent(getApplicationContext(), Map.class);
+                        localIntent.putExtra("longitude", longitude);
+                        localIntent.putExtra("latitude", latitude);
+                        startActivity(localIntent);
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

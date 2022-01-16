@@ -174,12 +174,19 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                 }
                                             });
                                 }catch (Exception e){
-                                    System.out.println("EXCEPTION" + e);
+                                    System.out.println("EXCEPTIONAAAAAAAAAAAA" + e);
                                     GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                             R.drawable.unknowuser);
                                 }
+                                try {
+                                    Thread.sleep(2000);
+                                    //Any other code to execute after 5 min execution pause.
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 startActivity(new Intent(Login.this, Map.class));
                             }else{
+                                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                         .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -291,6 +298,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     if (snapshot.exists()){
                                         FirebaseUser user = mAuth.getCurrentUser();
+                                        userID = user.getUid();
+                                        objectStorageReference = FirebaseStorage.getInstance().getReference(userID);
                                         GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
                                         GlobalVariables.identificador = snapshot.child("identificador").getValue().toString();
                                         GlobalVariables.formaAuth = snapshot.child("email").getValue().toString();
@@ -307,11 +316,16 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                         }
                                                     });
                                         }catch (Exception e){
-                                            System.out.println("EXCEPTION" + e);
+                                            System.out.println("EXCEPTIONAAAAAAAAAAAAAAAAA" + e);
                                             GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                     R.drawable.unknowuser);
                                         }
-
+                                        try {
+                                            Thread.sleep(2000);
+                                            //Any other code to execute after 5 min execution pause.
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
                                         startActivity(new Intent(Login.this, Map.class));
                                     }else{
                                         FirebaseDatabase.getInstance().getReference("Users")
@@ -422,14 +436,20 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                         System.out.println("EXCEPTION" + e);
                                         GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                 R.drawable.unknowuser);
+                                    }try {
+                                        Thread.sleep(2000);
+                                        //Any other code to execute after 5 min execution pause.
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
                                     }
+                                    startActivity(new Intent(Login.this, Map.class));
                                 }
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
-                        startActivity(new Intent(Login.this, Map.class));
+
                     } else {
                         user.sendEmailVerification();
                         Toast.makeText(Login.this, "Verifique o seu email para ativar a conta", Toast.LENGTH_LONG).show();
