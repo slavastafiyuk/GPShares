@@ -125,23 +125,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         final TextView fullNameTextView = (TextView) findViewById(R.id.textViewName);
         final TextView emailTextView = (TextView) findViewById(R.id.textViewEmail);
         final TextView identificadorTextView = (TextView) findViewById(R.id.textViewIdentificador);
-        //final TextView ageTextView = (TextView) findViewById(R.id.textViewAge);
-        //GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
-        //reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
-        //    @Override
-        //    public void onDataChange(@NonNull DataSnapshot snapshot) {
-        //        Utilizador userProfile = snapshot.getValue(Utilizador.class);
-        //        if (userProfile != null) {
-        //            fullNameTextView.setText(userProfile.nomeInteiro);
-        //            emailTextView.setText(userProfile.email);
-        //            identificadorTextView.setText(userProfile.identificador);
-        //        }
-        //    }
-        //    @Override
-        //    public void onCancelled(@NonNull DatabaseError error) {
-        //        Toast.makeText(Setting.this, "Algo correu mal a processar os seus dados", Toast.LENGTH_SHORT).show();
-        //    }
-        //});
         fullNameTextView.setText(GlobalVariables.nomeUtilizador);
         emailTextView.setText(GlobalVariables.formaAuth);
         identificadorTextView.setText(GlobalVariables.identificador);
@@ -343,22 +326,20 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
-    public void uploadImage(View view){
-        try {
-
-        }catch (Exception e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String getExtension(Uri uri){
-        try {
-            ContentResolver objectContentResolver = getContentResolver();
-            MimeTypeMap objectMimeTypeMap = MimeTypeMap.getSingleton();
-            return objectMimeTypeMap.getExtensionFromMimeType(objectContentResolver.getType(uri));
-        }catch (Exception e){
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        return null;
-    }
+    //public void uploadImage(View view){
+    //    try {
+    //    }catch (Exception e) {
+    //        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    //    }
+    //}
+    //private String getExtension(Uri uri){
+    //    try {
+    //        ContentResolver objectContentResolver = getContentResolver();
+    //        MimeTypeMap objectMimeTypeMap = MimeTypeMap.getSingleton();
+    //        return objectMimeTypeMap.getExtensionFromMimeType(objectContentResolver.getType(uri));
+    //    }catch (Exception e){
+    //        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+    //    }
+    //    return null;
+    //}
 }
