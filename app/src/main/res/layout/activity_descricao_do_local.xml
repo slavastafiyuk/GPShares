@@ -44,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView_Local" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/comentList"
+            android:id="@+id/commentList"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="25dp"
@@ -66,11 +66,11 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="25dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/sendComent"
+            app:layout_constraintEnd_toStartOf="@+id/sendComment"
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addComent"
+                android:id="@+id/addComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
@@ -79,7 +79,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:id="@+id/sendComent"
+            android:id="@+id/sendComment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="25dp"

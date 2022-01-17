@@ -4,10 +4,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +33,8 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +48,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 //
 public class DescricaoDoLocal extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -48,25 +62,60 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     DocumentReference documentReference;
     private TextView nome;
     private FirebaseAuth mAuth;
-    private DatabaseReference Local_Ref;
-    private String idDoUtilizador, local, nome_local;
+    private DatabaseReference Local_Ref, Post_ref;
+    private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
     private FloatingActionButton floatingActionButton;
+    private RecyclerView CommentList;
+    private ImageButton postComment;
+    private EditText commentInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descricao_do_local);
+
+        CommentList = (RecyclerView) findViewById(R.id.commentList);
+        CommentList.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        CommentList.setLayoutManager(linearLayoutManager);
+        commentInput = (EditText) findViewById(R.id.addComment);
+        postComment = (ImageButton) findViewById(R.id.sendComment);
         mAuth = FirebaseAuth.getInstance();
+        userID = mAuth.getCurrentUser().getUid();
         idDoUtilizador = getIntent().getExtras().get("UserId").toString();
         local = getIntent().getExtras().get("place").toString();
         nome_local = getIntent().getExtras().get("nome").toString();
         Local_Ref = FirebaseDatabase.getInstance().getReference().child("Users");
+        Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("Comments");
         nome = findViewById(R.id.Nome_Do_Local);
         imageView = findViewById(R.id.imageView_Local);
         firebaseFirestore = FirebaseFirestore.getInstance();
         floatingActionButton = findViewById(R.id.make_a_route);
+
+        postComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Local_Ref.child(userID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            String userName = snapshot.child("nomeInteiro").getValue().toString();
+                            validateComment(userName);
+                            commentInput.setText("");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
 
         Local_Ref.child(idDoUtilizador).addValueEventListener(new ValueEventListener() {
             @Override
@@ -122,6 +171,40 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    private void validateComment(String userName) {
+        String commentText = commentInput.getText().toString();
+        if (TextUtils.isEmpty(commentText)){
+            Toast.makeText(this, "O comentário não tem texto...", Toast.LENGTH_SHORT).show();
+        }else{
+            Calendar callForDate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
+            final String saveCurrentDate =  currentDate.format(callForDate.getTime());
+
+            Calendar callForTime = Calendar.getInstance();
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+            final String saveCurrentTime =  currentTime.format(callForDate.getTime());
+
+            final String randomKey = userID + saveCurrentDate + saveCurrentTime;
+            HashMap commentsMap = new HashMap();
+            commentsMap.put("idUtilizador", userID);
+            commentsMap.put("comment", commentText);
+            commentsMap.put("date", saveCurrentDate);
+            commentsMap.put("time", saveCurrentTime);
+            commentsMap.put("nomeInteiro", userName);
+            Post_ref.child(randomKey).updateChildren(commentsMap)
+                    .addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(DescricaoDoLocal.this, "Comentário enviado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(DescricaoDoLocal.this, "Erro ao enviar, tente de novo.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     @Override
