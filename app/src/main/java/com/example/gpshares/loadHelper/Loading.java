@@ -1,14 +1,13 @@
 package com.example.gpshares.loadHelper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.gpshares.R;
-import com.example.gpshares.loadHelper.ProgressBarAnimation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,7 +35,7 @@ public class Loading extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         ProgressBarAnimation animation = new ProgressBarAnimation(this, progressBar, textView, 0f, 100f);
         if (user != null){
-            animation.setDuration(4000);
+            animation.setDuration(6000);
         }else {
             animation.setDuration(0);
         }

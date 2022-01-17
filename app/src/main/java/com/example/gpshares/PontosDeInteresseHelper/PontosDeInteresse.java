@@ -44,7 +44,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
     ArrayList<FindNewRestaurante> list;
     ArrayList<Local> listIDS;
     MyAdapter myAdapter;
-    private Button restaurantesButton, cinemasButton;
+    private Button restaurantesButton, cinemasButton, filt;
     private DatabaseReference rota, amigos;
     private RecyclerView searchResults;
 
@@ -71,6 +71,13 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        filt = findViewById(R.id.buttonFiltrar);
+        filt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Filtrar(v);
+            }
+        });
         //RecyclerView, Janela dos resultados dos restaurantes
         listIDS = new ArrayList<>();
         list = new ArrayList<>();
