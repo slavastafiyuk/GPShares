@@ -30,11 +30,12 @@ tools:openDrawer="start">
 
     <ImageView
         android:id="@+id/OtherUserImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="155dp"
+        android:layout_height="149dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="148dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/unknowuser" />
@@ -43,32 +44,32 @@ tools:openDrawer="start">
         android:id="@+id/OtherUserFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="164dp"
         android:text="Nome do Utilizador"
         android:textSize="25dp"
         android:textStyle="bold"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OtherUserImage" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
     <Button
         android:id="@+id/SendFriendRequest"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
+        android:layout_width="209dp"
+        android:layout_height="50dp"
         android:layout_marginTop="40dp"
+        android:text="Pedir Amizade"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:text="Pedir Amizade"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/OtherUserFullName" />
 
     <Button
         android:id="@+id/DeclineFriendRequest"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_width="129dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="24dp"
         android:text="Decline"
         android:textSize="20dp"
         android:textStyle="bold"

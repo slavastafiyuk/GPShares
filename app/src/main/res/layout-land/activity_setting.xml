@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="324dp"
+            android:layout_marginTop="232dp"
             android:text="@string/nomeInt"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -72,8 +72,8 @@
             android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="324dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="232dp"
             app:layout_constraintStart_toEndOf="@+id/textViewN"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -97,13 +97,14 @@
 
         <ImageView
             android:id="@+id/imageView_Settings"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="100dp"
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:layout_marginTop="76dp"
+            android:src="@drawable/unknowuser"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.499"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/unknowuser" />
+            app:layout_constraintTop_toTopOf="parent" />
         <!--
         <TextView
             android:id="@+id/textViewAge"
