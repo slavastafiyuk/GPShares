@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.GPShares" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#35b5ad</item>
-        <item name="colorPrimaryVariant">#18524e</item>
+        <item name="colorPrimary">#0073cf</item>
+        <item name="colorPrimaryVariant">#000080</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

@@ -7,7 +7,7 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".OtherUserProfile"
 android:fitsSystemWindows="true"
-    android:background="#2c2b3f"
+
 tools:openDrawer="start">
 
 <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@ tools:openDrawer="start">
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#18524e"
+        android:background="#000080"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,6 @@ tools:openDrawer="start">
         android:text="Nome do Utilizador"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/toolbar" />
