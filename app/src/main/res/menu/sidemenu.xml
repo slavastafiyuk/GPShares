@@ -11,6 +11,17 @@
         <item android:title="Social">
             <menu>
                 <item
+                    android:id="@+id/nav_pontos_de_interesse"
+                    android:icon="@drawable/ic_baseline_settings_24"
+                    android:title="Pontos de interesse"
+                    />
+            </menu>
+        </item>
+    </group>
+    <group android:checkableBehavior="single">
+        <item android:title="Social">
+            <menu>
+                <item
                     android:id="@+id/nav_settings"
                     android:icon="@drawable/ic_baseline_settings_24"
                     android:title="Profile"
@@ -18,12 +29,12 @@
                 <item
                     android:id="@+id/menu_friends"
                     android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="Friends"
+                    android:title="Amigos"
                     />
                 <item
                     android:id="@+id/menu_add"
                     android:icon="@drawable/ic_baseline_exit_to_app_24"
-                    android:title="Add Friends"
+                    android:title="Adicionar Amigos"
                     />
             </menu>
         </item>

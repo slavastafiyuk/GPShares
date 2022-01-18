@@ -17,8 +17,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 public class Registrar extends AppCompatActivity implements View.OnClickListener {
@@ -27,12 +32,17 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
     private ProgressBar progressBar;
 
     private FirebaseAuth mAuth;
+    DatabaseReference databaseIdentificadores, databaseUser;
+    static final String code = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    static SecureRandom rnd = new SecureRandom();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar);
         mAuth = FirebaseAuth.getInstance();
+        databaseIdentificadores = FirebaseDatabase.getInstance().getReference("identificadores");
+        databaseUser = FirebaseDatabase.getInstance().getReference("Users");
 
         RegisterBtn = (Button) findViewById(R.id.RegisterBtn);
         RegisterBtn.setOnClickListener(this);
@@ -91,28 +101,51 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
             editTextTextPassword2.requestFocus();
             return;
         }
-
         progressBar.setVisibility(View.VISIBLE);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-                            Utilizador utilizador = new Utilizador(nomeInteiro, email);
-                            FirebaseDatabase.getInstance().getReference("Users")
-                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                    .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            String identificador = randomCode(8);
+                            String user = mAuth.getCurrentUser().getUid();
+                            verificarIdentificador(identificador, new FirebaseCallback() {
                                 @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
-                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                        user.sendEmailVerification();
-                                        Toast.makeText(Registrar.this, "Registro efetuado com sucesso, foi-lhe enviado um email para verificar a sua conta", Toast.LENGTH_LONG).show();
+                                public void onCallback(boolean i) {
+                                    if (i){
+                                        identificador.replace(identificador, randomCode(8));
+                                    }
+                                }
+                            });
+                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
+                            databaseUser.child(user).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    if (snapshot.exists()){
+                                        Toast.makeText(Registrar.this, "O utilizador ja existe", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }else{
-                                        Toast.makeText(Registrar.this, "Houve um problema durante o registro, Tente de novo", Toast.LENGTH_LONG).show();
-                                        progressBar.setVisibility(View.GONE);
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                                .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                                    user.sendEmailVerification();
+                                                    Toast.makeText(Registrar.this, "Registro efetuado com sucesso, foi-lhe enviado um email para verificar a sua conta", Toast.LENGTH_LONG).show();
+                                                    progressBar.setVisibility(View.GONE);
+                                                }else{
+                                                    Toast.makeText(Registrar.this, "Houve um problema durante o registro, Tente de novo", Toast.LENGTH_LONG).show();
+                                                    progressBar.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        });
                                     }
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
                         }else{
@@ -122,6 +155,30 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                     }
                 });
     }
+    String randomCode (int t){
+        StringBuilder sb = new StringBuilder(t);
+        for (int i = 0; i < t; i++){
+            sb.append(code.charAt(rnd.nextInt(code.length())));
+        }
+        return sb.toString();
+    }
 
+    private interface FirebaseCallback {
+        void onCallback(boolean i);
+    }
 
+    public void verificarIdentificador(String identificador, FirebaseCallback firebaseCallback){
+        databaseIdentificadores.child(identificador).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    firebaseCallback.onCallback(true);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

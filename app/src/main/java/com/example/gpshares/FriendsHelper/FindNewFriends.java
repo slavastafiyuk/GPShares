@@ -1,7 +1,16 @@
-package com.example.gpshares;
+package com.example.gpshares.FriendsHelper;
 
 public class FindNewFriends {
     public String nomeInteiro;
+    public String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public FindNewFriends(){
 
@@ -15,7 +24,10 @@ public class FindNewFriends {
         return nomeInteiro;
     }
 
-    public void setNomeInteiro(String nomeInteiro) {
+    public void setNomeInteiro(String nomeInteiro , String email) {
         this.nomeInteiro = nomeInteiro;
+        this.email = email;
     }
+
+
 }

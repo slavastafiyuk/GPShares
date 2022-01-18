@@ -1,23 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawerlayout_find_friends"
+    android:id="@+id/drawerlayout_pontosDeInteresse"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FriendsHelper.FindFriends"
+    tools:context=".Setting"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start">
-
+    tools:openDrawer="start"
+    >
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/myLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/cinemaButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/cinemas"
+            app:layout_constraintStart_toEndOf="@+id/buttonRestaurantes"
+            app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:background="#673AB7"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,49 +35,39 @@
             app:titleMarginStart="10dp"
             app:titleTextColor="#FFFFFF" />
 
-        <ImageButton
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="116dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/search"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/searchResult"
+            android:id="@+id/searchResultRestaurantes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="200dp"
+            android:layout_marginTop="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <Button
+            android:id="@+id/buttonRestaurantes"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="120dp"
-            app:layout_constraintEnd_toStartOf="@+id/searchButton"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/restaurantes"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchBoxInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/white"
-                android:hint="Procurar Amigos:" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+        <Button
+            android:id="@+id/buttonFiltrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/Filter"
+            app:layout_constraintStart_toEndOf="@+id/cinemaButton"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_view_FindFriends"
+        android:id="@+id/navigation_viewPontosDeInteresse"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

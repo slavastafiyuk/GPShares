@@ -5,7 +5,7 @@
     <string name="password">Palavra-passe</string>
     <string name="login">Login</string>
     <string name="registrar">Registrar</string>
-    <string name="ForgotPW">Escqueci-me da password</string>
+    <string name="ForgotPW">Esqueci-me da password</string>
     <string name="nome">Nome inteiro</string>
     <string name="idade">Idade</string>
     <string name="reset">Reset Password</string>
@@ -21,14 +21,33 @@
     <string name="facebook_app_id">5314220315261820</string>
     <string name="fb_login_protocol_scheme">fb5314220315261820</string>
     <string name="marcar_lugar">Marcar</string>
-    <string-array name="languages">
-        <item>English</item>
-        <item>German</item>
-        <item>Chinese</item>
+    <string-array name="tipo">
+        <item>Restaurantes</item>
+        <item>Centros Comerciais</item>
+        <item>Cinemas</item>
     </string-array>
-    <string-array name="languages2">
-        <item>English2</item>
-        <item>German2</item>
-        <item>Chinese2</item>
+    <string-array name="Avaliacao">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
+    <string name="tipo_de_estabelecimento">Tipo de estabelecimento</string>
+    <string name="avaliacao">Avaliação</string>
+    <string name="coment">Comentario</string>
+    <string name="nome_do_estabelecimento">Nome do estabelecimento</string>
+    <string name="restaurantes">Restaurantes</string>
+    <string name="cinemas">Cinemas</string>
+    <string name="visibilidade">Visibilidade</string>
+    <string-array name="tipo_visibilidade">
+        <item>Privado</item>
+        <item>Publico</item>
+        <item>Amigos</item>
+    </string-array>
+    <string name="F_restaurantes">Restaurantes</string>
+    <string name="F_cinemas">Cinemas</string>
+    <string name="Filter">Filtrar</string>
+    <string name="identificador">Identificador:</string>
+    <string name="F_centroComercial">Centros comerciais</string>
 </resources>
