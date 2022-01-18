@@ -6,18 +6,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +34,9 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.Dialogs.Dialog_map;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.MapHelper.FetchURL;
@@ -41,6 +51,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -52,6 +63,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -84,6 +96,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     //----------------------Pontos de interesse
     ArrayList<FindNewRestaurante> list;
     ArrayList<Local> list2;
+    Bitmap icon_marker;
+    private StorageReference objectStorageReference;
     //--------------------------------
     double lat1;
     double lon1;
@@ -97,6 +111,49 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Definir Raio de interesse
+        if (GlobalVariables.AreaDeInteresse == 0){
+            AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+            LayoutInflater inflater = getLayoutInflater();
+            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse,null);
+            TextInputEditText area = dialogView.findViewById(R.id.Kms);
+            Button submeter = dialogView.findViewById(R.id.submeter_Kms);
+            builder.setCancelable(false);
+            builder.setView(dialogView);
+            final AlertDialog alertDialogProfilePicture = builder.create();
+            alertDialogProfilePicture.show();
+            submeter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (area.toString().isEmpty()){
+                        area.setError("Tem de introduzir um valor para a area de interesse");
+                        area.requestFocus();
+                    }else {
+                        try {
+                            int Area_De_Interesse = Integer.parseInt(area.getText().toString());
+                            System.out.println("OOOOOOOOOOOOOOOOOOO" + Area_De_Interesse);
+                            if (Area_De_Interesse <= 0){
+                                area.setError("Valor tem de ser superior a zero");
+                                area.requestFocus();
+                            }else{
+                                GlobalVariables.AreaDeInteresse = Area_De_Interesse;
+                                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO" + FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
+                                FirebaseDatabase.getInstance().getReference("Users")
+                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                        .child("AreaDeInteresse")
+                                        .setValue(Area_De_Interesse);
+                                alertDialogProfilePicture.cancel();
+                            }
+                        }catch (NumberFormatException e){
+                            area.setError("Tem de introduzir um valor valido");
+                            area.requestFocus();
+                        }
+                    }
+                }
+            });
+        }
+
         //lista para obter informação dos pontos de interesse
         list = new ArrayList<>();
         list2 = new ArrayList<>();
@@ -203,7 +260,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -260,7 +316,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             }
         }
     }
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -269,7 +324,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             super.onBackPressed();
         }
     }
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -294,7 +348,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         item.setChecked(true);
         return true;
     }
-
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -339,9 +392,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
-
             //Obter Dados dos lugares
-
             //------------------------------------
             for (int i = 0; i < list.size(); i++) {
                 double longitude_from_list = list.get(i).getLongitude();
@@ -351,8 +402,12 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 String avaliacao = list.get(i).getAvaliacao();
                 LatLng place_from_list = new LatLng(latitude_from_list, longitude_from_list);
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(place_from_list);
-                mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                String UserId = list2.get(i).getUserId();
+                String place = list2.get(i).getPlace();
+                String nome = list2.get(i).getNomeDoLocal();
+                mMap.addMarker(markerOptions
+                        .position(place_from_list)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                         .title(nome_from_list)
                         .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
             }
@@ -367,8 +422,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(@NonNull Marker marker) {
-                            //float result[] = new float[3];
-                            //Location.distanceBetween(place1.getPosition().latitude, place1.getPosition().longitude,marker.getPosition().latitude, marker.getPosition().longitude, result);
                             String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude,marker.getPosition().latitude, marker.getPosition().longitude);
                             new AlertDialog.Builder(Map.this)
                                     .setTitle(marker.getTitle())
@@ -382,7 +435,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                     }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
                                 }
                             }).setNeutralButton("Descrição", new DialogInterface.OnClickListener() {
                                 @Override
@@ -393,7 +445,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                             String place = list2.get(z).getPlace();
                                             String nome = list2.get(z).getNomeDoLocal();
                                             System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + nome + " " + place + " " + UserId);
-                                            //System.out.println("OOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAA" + UserId);
                                             Intent localIntent = new Intent(Map.this, DescricaoDoLocal.class);
                                             localIntent.putExtra("UserId", UserId);
                                             localIntent.putExtra("place", place);

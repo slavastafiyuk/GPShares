@@ -149,7 +149,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                             }
                         }
                     });
-                    Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
+                    Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
                     databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -292,7 +292,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                     }
                                 }
                             });
-                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
+                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
                             databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
