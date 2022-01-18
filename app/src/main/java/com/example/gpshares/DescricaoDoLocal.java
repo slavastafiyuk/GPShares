@@ -189,7 +189,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 commentsViewHolder.setNomeInteiro(comments.getNomeInteiro());
                 commentsViewHolder.setComment(comments.getComment());
                 commentsViewHolder.setDate(comments.getDate());
-                commentsViewHolder.setTime(comments.getTime());
             }
         };
         CommentList.setAdapter(firebaseRecyclerAdapter);
@@ -216,11 +215,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             TextView data = (TextView) mView.findViewById(R.id.commentDate);
             data.setText(date + " ");
         }
-
-        public void setTime(String time) {
-            TextView tempo = (TextView) mView.findViewById(R.id.commentTime);
-            tempo.setText("ás" + time);
-        }
     }
 
     private void validateComment(String userName) {
@@ -229,19 +223,14 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             Toast.makeText(this, "O comentário não tem texto...", Toast.LENGTH_SHORT).show();
         }else{
             Calendar callForDate = Calendar.getInstance();
-            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy 'ás' HH:mm:ss");
             final String saveCurrentDate =  currentDate.format(callForDate.getTime());
 
-            Calendar callForTime = Calendar.getInstance();
-            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
-            final String saveCurrentTime =  currentTime.format(callForDate.getTime());
-
-            final String randomKey = userID + saveCurrentDate + saveCurrentTime;
+            final String randomKey = userID + saveCurrentDate;
             HashMap commentsMap = new HashMap();
             commentsMap.put("idUtilizador", userID);
             commentsMap.put("comment", commentText);
             commentsMap.put("date", saveCurrentDate);
-            commentsMap.put("time", saveCurrentTime);
             commentsMap.put("nomeInteiro", userName);
             Post_ref.child(randomKey).updateChildren(commentsMap)
                     .addOnCompleteListener(new OnCompleteListener() {

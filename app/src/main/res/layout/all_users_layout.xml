@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:background="#673AB7">
+    android:background="@drawable/option_style">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/allUsersImage"
@@ -24,7 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="user full name"
-            android:textColor="@color/white"
             android:textAlignment="textStart"
             android:textSize="18sp"/>
 
@@ -33,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Status"
-            android:textColor="@color/white"
             android:textAlignment="textStart"
             android:textSize="16sp"/>
 

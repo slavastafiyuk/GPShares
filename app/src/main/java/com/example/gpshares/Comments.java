@@ -1,17 +1,16 @@
 package com.example.gpshares;
 
 public class Comments {
-    public String comment, date, nomeInteiro, time;
+    public String comment, date, nomeInteiro;
 
     public Comments(){
 
     }
 
-    public Comments(String comment, String date, String nomeInteiro, String time) {
+    public Comments(String comment, String date, String nomeInteiro) {
         this.comment = comment;
         this.date = date;
         this.nomeInteiro = nomeInteiro;
-        this.time = time;
     }
 
     public String getComment() {
@@ -36,13 +35,5 @@ public class Comments {
 
     public void setNomeInteiro(String nomeInteiro) {
         this.nomeInteiro = nomeInteiro;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 }

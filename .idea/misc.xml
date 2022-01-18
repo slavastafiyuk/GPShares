@@ -14,9 +14,10 @@
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.240625" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/drawable/ic_launcher_background.xml" value="0.240625" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/drawable/option_style.xml" value="0.22962962962962963" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout-land/activity_find_friends.xml" value="0.22" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout-land/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout-land/activity_registrar.xml" value="0.1900352733686067" />
-        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_descricao_do_local.xml" value="0.21" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_descricao_do_local.xml" value="0.25" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_find_friends.xml" value="0.25" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_findfriends.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_friend_requests.xml" value="0.22" />
@@ -29,7 +30,7 @@
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_reset_password.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_setting.xml" value="0.25" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/activity_user_friends.xml" value="0.22447916666666667" />
-        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/all_comments_layout.xml" value="0.67" />
+        <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/all_comments_layout.xml" value="0.25" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/all_restaurantes_layout.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/all_users_layout.xml" value="0.25" />
         <entry key="..\:/Users/Pedro/AndroidStudioProjects/GPShares3/app/src/main/res/layout/dropdown_item.xml" value="0.213768115942029" />
