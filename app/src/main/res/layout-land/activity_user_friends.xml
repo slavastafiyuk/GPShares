@@ -2,16 +2,15 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
-android:id="@+id/drawerlayout_other_users"
+android:id="@+id/drawerlayout_user_friends"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".OtherUserProfile"
+tools:context=".UserFriends"
 android:fitsSystemWindows="true"
-    android:background="#2c2b3f"
 tools:openDrawer="start">
 
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/OtherUserLayout"
+    android:id="@+id/myLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,7 +18,7 @@ tools:openDrawer="start">
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="#18524e"
+        android:background="#673AB7"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,53 +27,25 @@ tools:openDrawer="start">
         app:titleMarginStart="10dp"
         app:titleTextColor="#FFFFFF" />
 
-    <ImageView
-        android:id="@+id/OtherUserImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="80dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/FriendList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="110dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/unknowuser" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/OtherUserFullName"
+        android:id="@+id/AllList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Nome do Utilizador"
+        android:layout_marginTop="75dp"
+        android:text="Amigos:"
         android:textSize="25dp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OtherUserImage" />
-
-    <Button
-        android:id="@+id/SendFriendRequest"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        android:text="Pedir Amizade"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/OtherUserFullName" />
-
-    <Button
-        android:id="@+id/DeclineFriendRequest"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Decline"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/SendFriendRequest" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
