@@ -33,6 +33,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -173,6 +174,55 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         toggle.syncState();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseRecyclerAdapter<Comments, CommentsViewHolder> firebaseRecyclerAdapter
+                = new FirebaseRecyclerAdapter<Comments, CommentsViewHolder>(
+                        Comments.class,
+                        R.layout.all_comments_layout,
+                        CommentsViewHolder.class,
+                        Post_ref
+        ) {
+            @Override
+            protected void populateViewHolder(CommentsViewHolder commentsViewHolder, Comments comments, int i) {
+                commentsViewHolder.setNomeInteiro(comments.getNomeInteiro());
+                commentsViewHolder.setComment(comments.getComment());
+                commentsViewHolder.setDate(comments.getDate());
+                commentsViewHolder.setTime(comments.getTime());
+            }
+        };
+        CommentList.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    public static class CommentsViewHolder extends RecyclerView.ViewHolder{
+        View mView;
+        public CommentsViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mView = itemView;
+        }
+
+        public void setNomeInteiro(String nomeInteiro) {
+            TextView userName = (TextView) mView.findViewById(R.id.commentUserName);
+            userName.setText(nomeInteiro + " ");
+        }
+
+        public void setComment(String comment) {
+            TextView CommentText = (TextView) mView.findViewById(R.id.commentText);
+            CommentText.setText(comment);
+        }
+
+        public void setDate(String date) {
+            TextView data = (TextView) mView.findViewById(R.id.commentDate);
+            data.setText(date + " ");
+        }
+
+        public void setTime(String time) {
+            TextView tempo = (TextView) mView.findViewById(R.id.commentTime);
+            tempo.setText("ás" + time);
+        }
+    }
+
     private void validateComment(String userName) {
         String commentText = commentInput.getText().toString();
         if (TextUtils.isEmpty(commentText)){
@@ -183,7 +233,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             final String saveCurrentDate =  currentDate.format(callForDate.getTime());
 
             Calendar callForTime = Calendar.getInstance();
-            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss");
             final String saveCurrentTime =  currentTime.format(callForDate.getTime());
 
             final String randomKey = userID + saveCurrentDate + saveCurrentTime;

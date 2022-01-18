@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="7dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/commentUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"/>
+
+            <TextView
+                android:id="@+id/publicado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Publicado a: "/>
+
+            <TextView
+                android:id="@+id/commentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Data:"/>
+
+            <TextView
+                android:id="@+id/commentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horas:" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comentário"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
