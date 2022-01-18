@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#2c2b3f"
     tools:context=".Registrar">
 
     <EditText
@@ -18,6 +19,8 @@
         android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColorHint="#50FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,6 +36,8 @@
         android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColorHint="#50FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/nomeDoUtilizador" />
@@ -48,6 +53,8 @@
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         android:textSize="24sp"
+        android:textColorHint="#50FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/idadeDoUtilizador" />
@@ -63,6 +70,8 @@
         android:importantForAutofill="no"
         android:inputType="textPassword"
         android:textSize="24sp"
+        android:textColorHint="#50FFFFFF"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
@@ -76,7 +85,7 @@
         android:layout_marginEnd="50dp"
         android:background="@drawable/button_style"
         android:text="@string/registrar"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="18dp"
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
@@ -100,6 +109,7 @@
         android:layout_height="180dp"
         android:layout_marginStart="50dp"
         android:layout_marginTop="50dp"
+        app:tint="#35b5ad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -114,6 +124,7 @@
         android:text="GPShare"
         android:textSize="25dp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"

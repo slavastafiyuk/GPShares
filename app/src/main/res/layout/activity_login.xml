@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:background="#2c2b3f"
     tools:context=".Login">
+
 
     <EditText
         android:id="@+id/editTextTextEmailAddress"
@@ -14,16 +16,20 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
+        android:textColorHint="#50FFFFFF"
         android:hint="@string/email"
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/editTextTextPassword"
+        android:textColorHint="#50FFFFFF"
+        android:textColor="@color/white"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -56,10 +62,11 @@
         app:layout_constraintTop_toBottomOf="@+id/ResetPW"
         android:background="@drawable/button_style"
         app:backgroundTint="@null"
-        android:textColor="@color/black"/>
+        android:textColor="@color/white"/>
 
     <TextView
         android:id="@+id/ResetPW"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ForgotPW"
@@ -78,6 +85,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/googleAuth" />
@@ -113,6 +121,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Faça Login com:"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/LOGIN" />
@@ -148,6 +157,7 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="100dp"
+        app:tint="#35b5ad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -157,6 +167,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:text="GPShare"
         android:textSize="25dp"
         android:textStyle="bold"
