@@ -7,4 +7,5 @@ public class GlobalVariables {
     public static String formaAuth;
     public static String identificador;
     public static Bitmap imagemPerfil;
+    public static int AreaDeInteresse;
 }
