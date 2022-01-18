@@ -30,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.gpshares.Dialogs.Dialog_map;
+import com.example.gpshares.Dialogs.Dialog_rate;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
@@ -123,7 +125,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 objectStorageReference = FirebaseStorage.getInstance().getReference(idDoUtilizador);
                 String caminho_da_imagem = snapshot.child("Estabelecimentos").child(local).child(nome_local).child("imagem").getValue().toString();
-                System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + " " + caminho_da_imagem);
+                System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + " " + idDoUtilizador);
                 Glide.with(getApplicationContext())
                         .asBitmap()
                         .load(objectStorageReference.child(caminho_da_imagem))
@@ -132,6 +134,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                System.out.println("ola");
                                 imageView.setImageBitmap(resource);
                             }
                         });
@@ -253,6 +256,16 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void Corfirmar(View view) {
+        openDialogRate();
+    }
+
+    public void openDialogRate() {
+        Dialog_rate dialog = new Dialog_rate();
+        dialog.show(getSupportFragmentManager(), "dialog");
+
     }
 
     @SuppressLint("NonConstantResourceId")
