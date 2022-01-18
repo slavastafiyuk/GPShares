@@ -31,6 +31,7 @@
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.5755208333333334" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/drawable/ic_launcher_background.xml" value="0.5755208333333334" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/drawable/option_style.xml" value="0.5755208333333334" />
+        <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout-land/activity_find_friends.xml" value="0.47354497354497355" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout-land/activity_login.xml" value="0.4104938271604938" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout-land/activity_other_user_profile.xml" value="0.47354497354497355" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout-land/activity_registrar.xml" value="0.4104938271604938" />
@@ -50,6 +51,7 @@
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_start.xml" value="0.40625" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_test.xml" value="0.40625" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/activity_user_friends.xml" value="0.48489583333333336" />
+        <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/alert_area_de_interesse.xml" value="0.559375" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/alert_dialog_profile_picture.xml" value="0.48489583333333336" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/all_comments_layout.xml" value="0.559375" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/all_restaurantes_layout.xml" value="0.48489583333333336" />
@@ -61,6 +63,7 @@
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/layout/nav_header.xml" value="0.40625" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/menu/drawer_menu.xml" value="0.559375" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/menu/sidemenu.xml" value="0.47760416666666666" />
+        <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/mipmap-anydpi-v26/Icon.xml" value="0.5755208333333334" />
         <entry key="..\:/Users/coldb/AndroidStudioProjects/GPShares/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.5755208333333334" />
         <entry key="..\:/Users/slava/AndroidStudioProjects/GPShares2/app/src/main/res/layout/activity_login.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/slava/AndroidStudioProjects/GPShares2/app/src/main/res/layout/activity_map.xml" value="0.2957427536231884" />

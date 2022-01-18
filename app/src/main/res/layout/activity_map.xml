@@ -22,7 +22,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#673AB7"
+            android:background="#000080"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintBottom_toTopOf="@+id/map"
             app:layout_constraintTop_toTopOf="parent"
