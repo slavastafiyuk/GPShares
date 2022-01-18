@@ -3,28 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="#2c2b3f"
     android:layout_height="match_parent"
     tools:context=".Registrar">
 
     <EditText
         android:id="@+id/nomeDoUtilizador"
+        android:textColorHint="#50FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
         android:hint="@string/nome"
         android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
         android:id="@+id/idadeDoUtilizador"
+        android:textColorHint="#50FFFFFF"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -35,6 +39,7 @@
         android:importantForAutofill="no"
         android:inputType="text"
         android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nomeDoUtilizador" />
@@ -42,6 +47,7 @@
     <EditText
         android:id="@+id/editTextTextEmailAddress2"
         android:layout_width="match_parent"
+        android:textColorHint="#50FFFFFF"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
@@ -51,6 +57,7 @@
         android:importantForAutofill="no"
         android:inputType="textEmailAddress"
         android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idadeDoUtilizador" />
@@ -60,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
+        android:textColorHint="#50FFFFFF"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
@@ -67,6 +75,7 @@
         android:importantForAutofill="no"
         android:inputType="textPassword"
         android:textSize="24sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress2" />
@@ -83,7 +92,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword2"
         android:background="@drawable/button_style"
         app:backgroundTint="@null"
-        android:textColor="@color/black"/>
+        android:textColor="@color/white"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -103,12 +112,14 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="25dp"
         android:layout_marginEnd="100dp"
+        app:tint="#35b5ad"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
     <TextView
+        android:textColor="@color/white"
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

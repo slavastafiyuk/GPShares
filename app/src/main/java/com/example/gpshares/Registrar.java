@@ -117,7 +117,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                                     }
                                 }
                             });
-                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador);
+                            Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
                             databaseUser.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {

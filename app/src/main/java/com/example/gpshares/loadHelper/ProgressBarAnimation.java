@@ -73,6 +73,11 @@ public class ProgressBarAnimation extends Animation {
                         GlobalVariables.nomeUtilizador = userProfile.nomeInteiro;
                         GlobalVariables.formaAuth = userProfile.email;
                         GlobalVariables.identificador = userProfile.identificador;
+                        try {
+                            GlobalVariables.AreaDeInteresse = userProfile.AreaDeInteresse;
+                        }catch (Exception e){
+                            GlobalVariables.AreaDeInteresse = 0;
+                        }
                     }
                 }
                 @Override
