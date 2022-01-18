@@ -402,9 +402,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 String avaliacao = list.get(i).getAvaliacao();
                 LatLng place_from_list = new LatLng(latitude_from_list, longitude_from_list);
                 MarkerOptions markerOptions = new MarkerOptions();
-                //String UserId = list2.get(i).getUserId();
-                //String place = list2.get(i).getPlace();
-                //String nome = list2.get(i).getNomeDoLocal();
                 String distance = distance(MinhaLocalizacao.getPosition().latitude, MinhaLocalizacao.getPosition().longitude,place_from_list.latitude, place_from_list.longitude);
                 double dist = Double.parseDouble(distance.trim().replace(",","."));
                 double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
