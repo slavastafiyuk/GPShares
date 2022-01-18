@@ -47,6 +47,7 @@ import com.example.gpshares.PontosDeInteresseHelper.Local;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -88,7 +89,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     NavigationView navigationView;
     Toolbar toolbar;
     //Rotas------------------
-    MarkerOptions place1;
+    MarkerOptions place1, MinhaLocalizacao;
     Polyline currentPolyline;
     //------------------
     ArrayList<LatLng> listPoints;
@@ -96,8 +97,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     //----------------------Pontos de interesse
     ArrayList<FindNewRestaurante> list;
     ArrayList<Local> list2;
-    Bitmap icon_marker;
-    private StorageReference objectStorageReference;
     //--------------------------------
     double lat1;
     double lon1;
@@ -153,7 +152,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 }
             });
         }
-
         //lista para obter informação dos pontos de interesse
         list = new ArrayList<>();
         list2 = new ArrayList<>();
@@ -392,6 +390,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
+            MinhaLocalizacao = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
+
             //Obter Dados dos lugares
             //------------------------------------
             for (int i = 0; i < list.size(); i++) {
@@ -402,14 +402,20 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 String avaliacao = list.get(i).getAvaliacao();
                 LatLng place_from_list = new LatLng(latitude_from_list, longitude_from_list);
                 MarkerOptions markerOptions = new MarkerOptions();
-                String UserId = list2.get(i).getUserId();
-                String place = list2.get(i).getPlace();
-                String nome = list2.get(i).getNomeDoLocal();
-                mMap.addMarker(markerOptions
-                        .position(place_from_list)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        .title(nome_from_list)
-                        .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                //String UserId = list2.get(i).getUserId();
+                //String place = list2.get(i).getPlace();
+                //String nome = list2.get(i).getNomeDoLocal();
+                String distance = distance(MinhaLocalizacao.getPosition().latitude, MinhaLocalizacao.getPosition().longitude,place_from_list.latitude, place_from_list.longitude);
+                double dist = Double.parseDouble(distance.trim().replace(",","."));
+                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                double dif = dist-area_int;
+                if (dif <=  0){
+                    mMap.addMarker(markerOptions
+                            .position(place_from_list)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            .title(nome_from_list)
+                            .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                }
             }
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
                 @Override
