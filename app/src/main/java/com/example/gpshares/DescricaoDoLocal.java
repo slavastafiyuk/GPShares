@@ -30,6 +30,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.example.gpshares.Dialogs.Dialog_map;
+import com.example.gpshares.Dialogs.Dialog_rate;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
@@ -253,6 +255,16 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void Corfirmar(View view) {
+        openDialogRate();
+    }
+
+    public void openDialogRate() {
+        Dialog_rate dialog = new Dialog_rate();
+        dialog.show(getSupportFragmentManager(), "dialog");
+
     }
 
     @SuppressLint("NonConstantResourceId")
