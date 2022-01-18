@@ -53,4 +53,6 @@
     <string name="interesse">Indique-nos a area de interesse (Raio em Kms dentro do qual ser-lhe-ão mostrados os pontos de interesse no mapa): </string>
     <string name="OK">OK</string>
     <string name="valor">Indique o valor em Kms</string>
+    <string name="adicionar_local">Adicionar_local</string>
+    <string name="redefinir_area_de_interesse">Area de interesse</string>
 </resources>

@@ -29,6 +29,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -47,6 +48,7 @@ import com.example.gpshares.PontosDeInteresseHelper.Local;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -62,6 +64,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -86,9 +89,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     private static final int LOCATION_PERMISSION_CODE = 101;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
+    //BottomMenu----------------------------------------------------------------------------
+    BottomNavigationView navigationViewBottom;
     Toolbar toolbar;
     //Rotas------------------
-    MarkerOptions place1;
+    MarkerOptions place1, MinhaLocalizacao;
     Polyline currentPolyline;
     //------------------
     ArrayList<LatLng> listPoints;
@@ -96,8 +101,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     //----------------------Pontos de interesse
     ArrayList<FindNewRestaurante> list;
     ArrayList<Local> list2;
-    Bitmap icon_marker;
-    private StorageReference objectStorageReference;
     //--------------------------------
     double lat1;
     double lon1;
@@ -153,7 +156,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 }
             });
         }
-
         //lista para obter informação dos pontos de interesse
         list = new ArrayList<>();
         list2 = new ArrayList<>();
@@ -289,6 +291,59 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             }
             //Rotas---------------------------------------------------------------------------------
             listPoints = new ArrayList<>();
+            //ConstraintLayout viewLayout = findViewById(R.id.)
+            navigationViewBottom = findViewById(R.id.bottom_navigation);
+            navigationViewBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.bottom_menu_areainteresse:
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
+                            LayoutInflater inflater = getLayoutInflater();
+                            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse,null);
+                            TextInputEditText area = dialogView.findViewById(R.id.Kms);
+                            Button submeter = dialogView.findViewById(R.id.submeter_Kms);
+                            builder.setCancelable(true);
+                            builder.setView(dialogView);
+                            final AlertDialog alertDialogProfilePicture = builder.create();
+                            alertDialogProfilePicture.show();
+                            submeter.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (area.toString().isEmpty()){
+                                        area.setError("Tem de introduzir um valor para a area de interesse");
+                                        area.requestFocus();
+                                    }else {
+                                        try {
+                                            int Area_De_Interesse = Integer.parseInt(area.getText().toString());
+                                            if (Area_De_Interesse <= 0){
+                                                area.setError("Valor tem de ser superior a zero");
+                                                area.requestFocus();
+                                            }else{
+                                                GlobalVariables.AreaDeInteresse = Area_De_Interesse;
+                                                FirebaseDatabase.getInstance().getReference("Users")
+                                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                                        .child("AreaDeInteresse")
+                                                        .setValue(Area_De_Interesse);
+                                                Intent reopenMap = new Intent(Map.this, Map.class);
+                                                startActivity(reopenMap);
+                                                alertDialogProfilePicture.cancel();
+                                            }
+                                        }catch (NumberFormatException e){
+                                            area.setError("Tem de introduzir um valor valido");
+                                            area.requestFocus();
+                                        }
+                                    }
+                                }
+                            });
+                            break;
+                        case R.id.bottom_menu_addlocation:
+                            openDialog();
+                            break;
+                    }
+                    return true;
+                }
+            });
             //SideMenu------------------------------------------------------------------------------
             drawerLayout = findViewById(R.id.drawerlayout);
             navigationView = findViewById(R.id.navigation_view);
@@ -392,6 +447,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             lon1 = myLocation.getLongitude();
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
+            MinhaLocalizacao = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
+
             //Obter Dados dos lugares
             //------------------------------------
             for (int i = 0; i < list.size(); i++) {
@@ -402,14 +459,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 String avaliacao = list.get(i).getAvaliacao();
                 LatLng place_from_list = new LatLng(latitude_from_list, longitude_from_list);
                 MarkerOptions markerOptions = new MarkerOptions();
-                String UserId = list2.get(i).getUserId();
-                String place = list2.get(i).getPlace();
-                String nome = list2.get(i).getNomeDoLocal();
-                mMap.addMarker(markerOptions
-                        .position(place_from_list)
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                        .title(nome_from_list)
-                        .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                String distance = distance(MinhaLocalizacao.getPosition().latitude, MinhaLocalizacao.getPosition().longitude,place_from_list.latitude, place_from_list.longitude);
+                double dist = Double.parseDouble(distance.trim().replace(",","."));
+                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                double dif = dist-area_int;
+                if (dif <=  0){
+                    mMap.addMarker(markerOptions
+                            .position(place_from_list)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                            .title(nome_from_list)
+                            .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                }
             }
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
                 @Override
@@ -547,9 +607,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
 
-    public void Marcador(View view) {
-        openDialog();
-    }
 
     public void openDialog() {
         Dialog_map dialog = new Dialog_map();
