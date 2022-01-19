@@ -14,34 +14,14 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/textViewN"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="324dp"
-            android:text="@string/nomeInt"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/textViewI"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:text="@string/identificador"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewE" />
-
-        <TextView
-            android:id="@+id/textViewE"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="24dp"
-            android:text="@string/emailDisplay"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -56,62 +36,58 @@
             app:titleMarginStart="10dp"
             app:titleTextColor="#FFFFFF" />
 
-        <!--
-        <TextView
-            android:id="@+id/textViewA"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="25dp"
-            android:text="@string/ageDisplay"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewE" />
-        -->
-
         <TextView
             android:id="@+id/textViewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="324dp"
-            app:layout_constraintStart_toEndOf="@+id/textViewN"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_Settings" />
 
         <TextView
             android:id="@+id/textViewEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
-            app:layout_constraintStart_toEndOf="@+id/textViewE"
+            android:layout_marginTop="10dp"
+            android:textAlignment="center"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
         <TextView
             android:id="@+id/textViewIdentificador"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="25dp"
-            app:layout_constraintStart_toEndOf="@+id/textViewI"
-            app:layout_constraintTop_toBottomOf="@+id/textViewEmail" />
+            android:layout_marginTop="5dp"
+            android:textAlignment="center"
+            android:textSize="17dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewI" />
 
         <ImageView
             android:id="@+id/imageView_Settings"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="25dp"
+            android:src="@drawable/unknowuser"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/unknowuser" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/meus_locais"
             android:layout_width="409dp"
-            android:layout_height="415dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewIdentificador" />
         <!--
         <TextView
             android:id="@+id/textViewAge"
