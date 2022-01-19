@@ -25,6 +25,7 @@ import com.example.gpshares.Login;
 import com.example.gpshares.Map;
 import com.example.gpshares.R;
 import com.example.gpshares.Setting;
+import com.example.gpshares.UserFriends;
 import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -355,6 +356,9 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                 break;
             case R.id.menu_add:
                 startActivity(new Intent(this, FindFriends.class));
+                break;
+            case R.id.menu_friends:
+                startActivity(new Intent(this, UserFriends.class));
                 break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();

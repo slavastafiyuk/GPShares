@@ -31,7 +31,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:inputType="none"
-                android:text="FALTA_DECIDIR" />
+                android:text="Cinema/ Restaurante ..."
+                android:textColor="#70000000"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -51,7 +52,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:inputType="none"
-                android:text="FALTA_DECIDIR" />
+                android:textColor="#70000000"
+                android:text="1 a 5" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -72,6 +74,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/white"
                 android:hint="@string/coment"
+                android:textColor="#70000000"
+                android:text="Comentários ..."
                  />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -111,7 +115,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:inputType="none"
-                android:text="FALTA_DECIDIR" />
+                android:textColor="#70000000"
+                android:text="Publico/Privado ..." />
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView

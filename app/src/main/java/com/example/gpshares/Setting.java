@@ -156,6 +156,8 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_pontos_de_interesse:
                 startActivity(new Intent(this, PontosDeInteresse.class));
+            case R.id.menu_friends:
+                startActivity(new Intent(this, UserFriends.class));
                 break;
         }
         item.setChecked(true);
