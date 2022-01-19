@@ -1,6 +1,7 @@
 package com.example.gpshares;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -71,7 +72,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
-    private FloatingActionButton floatingActionButton, floatingRateButton;
+    private FloatingActionButton floatingActionButton, floatingRateButton, floatingReportButton;
     private RecyclerView CommentList;
     private ImageButton postComment;
     private EditText commentInput;
@@ -111,6 +112,13 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             }
         });
 
+        floatingReportButton = findViewById(R.id.reportButton);
+        floatingReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialogReport();
+            }
+        });
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,6 +370,54 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         });
     }
 
+
+    private void openDialogReport(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(DescricaoDoLocal.this);
+        builder.setCancelable(true);
+        builder.setTitle("Pretende mesmo reportar o lugar ?");
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String Key = userID;
+                        if (!snapshot.child("Reports").hasChild(Key)){
+                            Local_Ref_place.child("Reports").child(Key).setValue("True");
+                            Local_Ref_place.child("reports").setValue(+1);
+                        }
+                        Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.child("reports").getValue().toString().equals(String.valueOf(2))){
+                                    Local_Ref_place.child("visibilidade").setValue("Privado");
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        final AlertDialog alert_rate = builder.create();
+        alert_rate.show();
+    }
+
+
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -390,4 +446,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         item.setChecked(true);
         return true;
     }
+
+
+
 }
