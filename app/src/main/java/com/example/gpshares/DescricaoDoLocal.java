@@ -1,7 +1,6 @@
 package com.example.gpshares;
 
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +26,10 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.gpshares.Dialogs.Dialog_map;
-import com.example.gpshares.Dialogs.Dialog_rate;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
@@ -66,9 +61,11 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     Toolbar toolbar;
     FirebaseFirestore firebaseFirestore;
     DocumentReference documentReference;
+    Button submitRate;
+    RatingBar ratingStars;
     private TextView nome;
     private FirebaseAuth mAuth;
-    private DatabaseReference Local_Ref, Post_ref;
+    private DatabaseReference Local_Ref, Post_ref, Rate_Ref;
     private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
@@ -97,6 +94,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         nome_local = getIntent().getExtras().get("nome").toString();
         Local_Ref = FirebaseDatabase.getInstance().getReference().child("Users");
         Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("Comments");
+        Rate_Ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("OutrasAvaliacoes");
         nome = findViewById(R.id.Nome_Do_Local);
         imageView = findViewById(R.id.imageView_Local);
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -277,15 +275,51 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         View dialogView = inflater.inflate(R.layout.layout_dialog_rate,null);
         builder.setCancelable(true);
         builder.setView(dialogView);
-        Button confirmar = dialogView.findViewById(R.id.sentRate);
-        confirmar.setOnClickListener(new View.OnClickListener() {
+        submitRate = dialogView.findViewById(R.id.sentRate);
+        ratingStars = dialogView.findViewById(R.id.rantingBar);
+        submitRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Local_Ref.child(userID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            String userName = snapshot.child("nomeInteiro").getValue().toString();
+                            validateRate();
+                            ratingStars.setRating(0);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
         final AlertDialog alert_rate = builder.create();
         alert_rate.show();
+    }
+
+    private void validateRate() {
+        float Rate = ratingStars.getRating();
+        if (Rate == 0){
+            Toast.makeText(this, "A Avaliação não pode ser 0...", Toast.LENGTH_SHORT).show();
+        }else{
+            final String Key = userID;
+            HashMap RateMap = new HashMap();
+            RateMap.put("Nota", Rate);
+            Rate_Ref.child(Key).updateChildren(RateMap).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(DescricaoDoLocal.this, "Avaliação enviada com sucesso.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(DescricaoDoLocal.this, "Erro ao enviar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
