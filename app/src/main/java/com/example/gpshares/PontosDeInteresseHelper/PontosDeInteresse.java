@@ -26,6 +26,7 @@ import com.example.gpshares.Map;
 import com.example.gpshares.R;
 import com.example.gpshares.Setting;
 import com.facebook.login.LoginManager;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class PontosDeInteresse extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, Dialog_filter_PontosDeInteresse.DialogListenerFilter, MyAdapter.onAdapterListener {
     //SideMenu--------------------------------------------------------------------------------------
@@ -104,29 +106,36 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + i.getKey());
                                 //System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + findNewRestaurante.getNome());
                                 String visibilidade = findNewRestaurante.getVisibilidade();
-                                if (visibilidade.equals("Publico")) {
-                                    list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
-                                    listIDS.add(local);
-                                } else if (visibilidade.equals("Amigos")) {
-                                    if (utilizador.equals(i.getKey())) {
+                                String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                double dif = dist-area_int;
+                                if (dif <=  0){
+                                    if (visibilidade.equals("Publico")) {
+
                                         list.add(findNewRestaurante);
-                                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + i.getKey());
                                         Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                         listIDS.add(local);
-                                    } else {
-                                        String amigo = i.getKey();
-                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                            @Override
-                                            public void onCallback(boolean i) {
-                                                if (i) {
-                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                    list.add(findNewRestaurante);
-                                                    Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
-                                                    listIDS.add(local);
+                                    } else if (visibilidade.equals("Amigos")) {
+                                        if (utilizador.equals(i.getKey())) {
+                                            list.add(findNewRestaurante);
+                                            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + i.getKey());
+                                            Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                            listIDS.add(local);
+                                        } else {
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                @Override
+                                                public void onCallback(boolean i) {
+                                                    if (i) {
+                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                        Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
+                                                        listIDS.add(local);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -136,31 +145,38 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             while (z.iterator().hasNext()) {
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                 String visibilidade = findNewRestaurante.getVisibilidade();
-                                if (visibilidade.equals("Publico")) {
-                                    list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
-                                    listIDS.add(local);
-                                } else if (visibilidade.equals("Amigos")) {
-                                    if (utilizador.equals(i.getKey())) {
+                                String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                double dif = dist-area_int;
+                                if (dif <=  0){
+                                    if (visibilidade.equals("Publico")) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                         listIDS.add(local);
-                                    } else {
-                                        String amigo = i.getKey();
-                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                            @Override
-                                            public void onCallback(boolean i) {
+                                    } else if (visibilidade.equals("Amigos")) {
+                                        if (utilizador.equals(i.getKey())) {
+                                            list.add(findNewRestaurante);
+                                            Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
+                                            listIDS.add(local);
+                                        } else {
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                @Override
+                                                public void onCallback(boolean i) {
 
-                                                if (i) {
-                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                    list.add(findNewRestaurante);
-                                                    Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
-                                                    listIDS.add(local);
+                                                    if (i) {
+                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                        Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
+                                                        listIDS.add(local);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
+
                             }
                         }
                         if (i.child("Estabelecimentos").hasChild("Centros Comerciais")) {
@@ -168,29 +184,35 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             while (z.iterator().hasNext()) {
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                 String visibilidade = findNewRestaurante.getVisibilidade();
-                                if (visibilidade.equals("Publico")) {
-                                    list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
-                                    listIDS.add(local);
-                                } else if (visibilidade.equals("Amigos")) {
-                                    if (utilizador.equals(i.getKey())) {
+                                String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                double dif = dist-area_int;
+                                if (dif <=  0){
+                                    if (visibilidade.equals("Publico")) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
                                         listIDS.add(local);
-                                    } else {
-                                        String amigo = i.getKey();
-                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                            @Override
-                                            public void onCallback(boolean i) {
+                                    } else if (visibilidade.equals("Amigos")) {
+                                        if (utilizador.equals(i.getKey())) {
+                                            list.add(findNewRestaurante);
+                                            Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
+                                            listIDS.add(local);
+                                        } else {
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                @Override
+                                                public void onCallback(boolean i) {
 
-                                                if (i) {
-                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                    list.add(findNewRestaurante);
-                                                    Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
-                                                    listIDS.add(local);
+                                                    if (i) {
+                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                        Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
+                                                        listIDS.add(local);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -215,40 +237,41 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         list.clear();
                         listIDS.clear();
-                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + snapshot.getChildren().iterator().next().getKey());
                         String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
                         for (DataSnapshot i : snapshot.getChildren()) {
-                            //System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBB" + " " + snapshot.getChildren());
                             if (i.hasChild("Estabelecimentos")) {
                                 Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
                                 while (z.iterator().hasNext()) {
                                     FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + findNewRestaurante.getVisibilidade());
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + FirebaseAuth.getInstance().getCurrentUser().getUid());
                                     String visibilidade = findNewRestaurante.getVisibilidade();
-                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + " " + visibilidade + " " + i.getKey());
-                                    if (visibilidade.equals("Publico")) {
-                                        list.add(findNewRestaurante);
-                                        Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
-                                        listIDS.add(local);
-                                    } else if (visibilidade.equals("Amigos")) {
-                                        if (utilizador.equals(i.getKey())) {
+                                    String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                    double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                    double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                    double dif = dist-area_int;
+                                    if (dif <=  0){
+                                        if (visibilidade.equals("Publico")) {
                                             list.add(findNewRestaurante);
                                             Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                             listIDS.add(local);
-                                        } else {
-                                            String amigo = i.getKey();
-                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                                @Override
-                                                public void onCallback(boolean i) {
-                                                    if (i) {
-                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                        list.add(findNewRestaurante);
-                                                        Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
-                                                        listIDS.add(local);
+                                        } else if (visibilidade.equals("Amigos")) {
+                                            if (utilizador.equals(i.getKey())) {
+                                                list.add(findNewRestaurante);
+                                                Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                                listIDS.add(local);
+                                            } else {
+                                                String amigo = i.getKey();
+                                                verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                    @Override
+                                                    public void onCallback(boolean i) {
+                                                        if (i) {
+                                                            //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                            list.add(findNewRestaurante);
+                                                            Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
+                                                            listIDS.add(local);
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
+                                            }
                                         }
                                     }
                                 }
@@ -283,31 +306,37 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 while (z.iterator().hasNext()) {
                                     FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                     String visibilidade = findNewRestaurante.getVisibilidade();
-                                    if (visibilidade.equals("Publico")) {
-                                        list.add(findNewRestaurante);
-                                        Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
-                                        listIDS.add(local);
-                                    } else if (visibilidade.equals("Amigos")) {
-                                        if (utilizador.equals(i.getKey())) {
+                                    String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                    double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                    double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                    double dif = dist-area_int;
+                                    if (dif <=  0){
+                                        if (visibilidade.equals("Publico")) {
                                             list.add(findNewRestaurante);
                                             Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                             listIDS.add(local);
-                                        } else {
-                                            String amigo = i.getKey();
-                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                                @Override
-                                                public void onCallback(boolean i) {
+                                        } else if (visibilidade.equals("Amigos")) {
+                                            if (utilizador.equals(i.getKey())) {
+                                                list.add(findNewRestaurante);
+                                                Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
+                                                listIDS.add(local);
+                                            } else {
+                                                String amigo = i.getKey();
+                                                verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                    @Override
+                                                    public void onCallback(boolean i) {
 
-                                                    if (i) {
-                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                        list.add(findNewRestaurante);
-                                                        Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
-                                                        listIDS.add(local);
+                                                        if (i) {
+                                                            //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                            list.add(findNewRestaurante);
+                                                            Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
+                                                            listIDS.add(local);
+                                                        }
                                                     }
-                                                }
-                                            });
-                                        }
+                                                });
+                                            }
 
+                                        }
                                     }
                                 }
                             }
@@ -396,28 +425,34 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             while (z.iterator().hasNext()) {
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                 String visibilidade = findNewRestaurante.getVisibilidade();
-                                if (visibilidade.equals("Publico")) {
-                                    list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
-                                    listIDS.add(local);
-                                } else if (visibilidade.equals("Amigos")) {
-                                    if (utilizador.equals(i.getKey())) {
+                                String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                                double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                                double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                                double dif = dist-area_int;
+                                if (dif <=  0){
+                                    if (visibilidade.equals("Publico")) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                         listIDS.add(local);
-                                    } else {
-                                        String amigo = i.getKey();
-                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                            @Override
-                                            public void onCallback(boolean i) {
-                                                if (i) {
-                                                    //.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                    list.add(findNewRestaurante);
-                                                    Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
-                                                    listIDS.add(local);
+                                    } else if (visibilidade.equals("Amigos")) {
+                                        if (utilizador.equals(i.getKey())) {
+                                            list.add(findNewRestaurante);
+                                            Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                            listIDS.add(local);
+                                        } else {
+                                            String amigo = i.getKey();
+                                            verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                                @Override
+                                                public void onCallback(boolean i) {
+                                                    if (i) {
+                                                        //.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                        list.add(findNewRestaurante);
+                                                        Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
+                                                        listIDS.add(local);
+                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
                                 }
                             }
@@ -428,29 +463,35 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                         while (z.iterator().hasNext()) {
                             FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                             String visibilidade = findNewRestaurante.getVisibilidade();
-                            if (visibilidade.equals("Publico")) {
-                                list.add(findNewRestaurante);
-                                Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
-                                listIDS.add(local);
-                            } else if (visibilidade.equals("Amigos")) {
-                                if (utilizador.equals(i.getKey())) {
+                            String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                            double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                            double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                            double dif = dist-area_int;
+                            if (dif <=  0){
+                                if (visibilidade.equals("Publico")) {
                                     list.add(findNewRestaurante);
                                     Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                     listIDS.add(local);
-                                } else {
-                                    String amigo = i.getKey();
-                                    verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                        @Override
-                                        public void onCallback(boolean i) {
+                                } else if (visibilidade.equals("Amigos")) {
+                                    if (utilizador.equals(i.getKey())) {
+                                        list.add(findNewRestaurante);
+                                        Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
+                                        listIDS.add(local);
+                                    } else {
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                            @Override
+                                            public void onCallback(boolean i) {
 
-                                            if (i) {
-                                                //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                list.add(findNewRestaurante);
-                                                Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
-                                                listIDS.add(local);
+                                                if (i) {
+                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                    Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
+                                                    listIDS.add(local);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -462,29 +503,35 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                         while (z.iterator().hasNext()) {
                             FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                             String visibilidade = findNewRestaurante.getVisibilidade();
-                            if (visibilidade.equals("Publico")) {
-                                list.add(findNewRestaurante);
-                                Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
-                                listIDS.add(local);
-                            } else if (visibilidade.equals("Amigos")) {
-                                if (utilizador.equals(i.getKey())) {
+                            String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
+                            double dist = Double.parseDouble(distancia.trim().replace(",","."));
+                            double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
+                            double dif = dist-area_int;
+                            if (dif <=  0){
+                                if (visibilidade.equals("Publico")) {
                                     list.add(findNewRestaurante);
                                     Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
                                     listIDS.add(local);
-                                } else {
-                                    String amigo = i.getKey();
-                                    verificarAmizade(utilizador, amigo, new FirebaseCallback() {
-                                        @Override
-                                        public void onCallback(boolean i) {
+                                } else if (visibilidade.equals("Amigos")) {
+                                    if (utilizador.equals(i.getKey())) {
+                                        list.add(findNewRestaurante);
+                                        Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
+                                        listIDS.add(local);
+                                    } else {
+                                        String amigo = i.getKey();
+                                        verificarAmizade(utilizador, amigo, new FirebaseCallback() {
+                                            @Override
+                                            public void onCallback(boolean i) {
 
-                                            if (i) {
-                                                //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
-                                                list.add(findNewRestaurante);
-                                                Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
-                                                listIDS.add(local);
+                                                if (i) {
+                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
+                                                    list.add(findNewRestaurante);
+                                                    Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
+                                                    listIDS.add(local);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -492,12 +539,12 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                 }
                 myAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
+
 
     @Override
     public void onAdapterClick(int position) {
@@ -514,6 +561,26 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
 
     private interface FirebaseCallback {
         void onCallback(boolean i);
+    }
+
+    private String distance(double lat1, double long1, double lat2, double long2){
+        double longDiff = long1 - long2;
+        double distance = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(longDiff));
+        distance = Math.acos(distance);
+        // radian to degree
+        distance = rad2deg(distance);
+        //em miles
+        distance = distance*60*1.1515;
+        //em km
+        distance = distance * 1.609344;
+        return String.format(Locale.getDefault(),"%.3f", distance);
+    }
+    private double rad2deg(double distance){
+        return (distance*180/Math.PI);
+    }
+    //degree to radian
+    private double deg2rad (double lat1){
+        return (lat1*Math.PI/180);
     }
 
 }
