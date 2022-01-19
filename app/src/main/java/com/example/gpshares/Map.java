@@ -621,8 +621,8 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         Location myLocation = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         String caminho = mAuth + tipo_de_estabelecimento + nome + myPosition.longitude + myPosition.longitude + ".jpg";
-
-        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude, visibilidade, caminho);
+        int reports = 0;
+        Estabelecimentos estabelecimentos = new Estabelecimentos(nome, avaliacao_do_estabelecimento, comment, myPosition.latitude, myPosition.longitude, visibilidade, caminho, reports);
         FirebaseDatabase.getInstance().getReference("Users")
                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).child("Estabelecimentos").child(tipo_de_estabelecimento).child(nome).setValue(estabelecimentos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
