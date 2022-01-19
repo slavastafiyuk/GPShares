@@ -24,6 +24,7 @@ import com.example.gpshares.OtherUserProfile;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.example.gpshares.R;
 import com.example.gpshares.Setting;
+import com.example.gpshares.UserFriends;
 import com.facebook.login.LoginManager;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -147,9 +148,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_settings:
                 startActivity(new Intent(this, Setting.class));
                 break;
-            case R.id.menu_add:
-                startActivity(new Intent(this, FindFriends.class));
-                break;
             case R.id.menu_logout:
                 FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
@@ -157,6 +155,9 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                 break;
             case R.id.nav_pontos_de_interesse:
                 startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
+            case R.id.menu_friends:
+                startActivity(new Intent(this, UserFriends.class));
                 break;
         }
         item.setChecked(true);

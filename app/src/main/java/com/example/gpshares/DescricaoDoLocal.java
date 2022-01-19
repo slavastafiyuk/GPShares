@@ -347,6 +347,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 break;
             case R.id.menu_friends:
                 startActivity(new Intent(this, UserFriends.class));
+                break;
         }
         item.setChecked(true);
         return true;
