@@ -108,7 +108,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                 list2.clear();
                 for (DataSnapshot i : snapshot.getChildren()){
                     FindNewFriends findnewfriends = i.getValue(FindNewFriends.class);
-                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXX" + i.child("identificador").getValue() + " " + searchBoxInput);
                     String id = i.getKey();
                     if (i.child("identificador").getValue().equals(searchBoxInput)){
                         if (meuID.equals(id)){
@@ -135,7 +134,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     @Override
     public void onFriendsClick(int position) {
         String visitUserId = list2.get(position);
-        System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + visitUserId);
         Intent profileIntent = new Intent(FindFriends.this, OtherUserProfile.class);
         profileIntent.putExtra("visitUserId",visitUserId);
         startActivity(profileIntent);

@@ -102,7 +102,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 chooseProfilePicture();
             }
         });
-        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + GlobalVariables.imagemPerfil);
         imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_settings);
@@ -296,10 +295,8 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                     }
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
                     byte bb[] = bytes.toByteArray();
-                    System.out.println("BITMAP" + bitmap);
                     GlobalVariables.imagemPerfil = bitmap;
                     imageView_S.setImageBitmap(bitmap);
-                    System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + selectedImageUri);
                     StorageReference sr = objectStorageReference.child(mAuth + ".jpg");
                     sr.putBytes(bb).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
