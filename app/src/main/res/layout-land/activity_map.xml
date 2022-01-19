@@ -27,7 +27,7 @@
             app:layout_constraintBottom_toTopOf="@+id/map"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
-            app:title="Toolbars"
+            app:title="GPShare"
             app:titleMarginStart="10dp"
             app:titleTextColor="#FFFFFF"
             tools:layout_editor_absoluteX="0dp" />
