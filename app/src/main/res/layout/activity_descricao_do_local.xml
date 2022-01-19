@@ -19,15 +19,14 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#673AB7"
+            android:background="#000080"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:title="Toolbars"
             app:titleMarginStart="10dp"
-            app:titleTextColor="#FFFFFF"
-            />
+            app:titleTextColor="#FFFFFF" />
 
         <TextView
             android:id="@+id/Nome_Do_Local"
