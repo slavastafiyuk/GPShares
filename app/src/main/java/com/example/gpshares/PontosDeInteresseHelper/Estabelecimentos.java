@@ -10,12 +10,13 @@ public class Estabelecimentos {
     public double latitude;
     public double longitude;
     public String imagem;
+    public int reports;
 
     public Estabelecimentos(){
 
     }
 
-    public Estabelecimentos(String nome, String avaliacao, String comentario, double latitude, double longitude, String visibilidade, String imagem){
+    public Estabelecimentos(String nome, String avaliacao, String comentario, double latitude, double longitude, String visibilidade, String imagem, int reports){
         this.nome = nome;
         this.avaliacao = avaliacao;
         this.comentario = comentario;
@@ -23,5 +24,6 @@ public class Estabelecimentos {
         this.longitude = longitude;
         this.visibilidade = visibilidade;
         this.imagem = imagem;
+        this.reports = reports;
     }
 }

@@ -5,37 +5,36 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.example.gpshares.Dialogs.Dialog_map;
-import com.example.gpshares.Dialogs.Dialog_rate;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -63,13 +62,15 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     Toolbar toolbar;
     FirebaseFirestore firebaseFirestore;
     DocumentReference documentReference;
+    Button submitRate;
+    RatingBar ratingStars;
     private TextView nome;
     private FirebaseAuth mAuth;
-    private DatabaseReference Local_Ref, Post_ref;
+    private DatabaseReference Local_Ref, Post_ref, Rate_Ref;
     private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton, floatingRateButton;
     private RecyclerView CommentList;
     private ImageButton postComment;
     private EditText commentInput;
@@ -94,10 +95,20 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         nome_local = getIntent().getExtras().get("nome").toString();
         Local_Ref = FirebaseDatabase.getInstance().getReference().child("Users");
         Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("Comments");
+        Rate_Ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("OutrasAvaliacoes");
         nome = findViewById(R.id.Nome_Do_Local);
         imageView = findViewById(R.id.imageView_Local);
         firebaseFirestore = FirebaseFirestore.getInstance();
         floatingActionButton = findViewById(R.id.make_a_route);
+
+        floatingRateButton = findViewById(R.id.avaliarButton);
+        floatingRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialogRate();
+            }
+        });
+
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,8 +159,8 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         double longitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("longitude").getValue().toString());
                         System.out.println("ASDASDASD" + latitude + longitude);
                         Intent localIntent = new Intent(getApplicationContext(), Map.class);
-                        localIntent.putExtra("longitude", longitude);
-                        localIntent.putExtra("latitude", latitude);
+                        LatLng place_de_interesse = new LatLng(latitude, longitude);
+                        GlobalVariables.PontoDeInteresse = place_de_interesse;
                         startActivity(localIntent);
                     }
                 });
@@ -258,14 +269,59 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         }
     }
 
-    public void Corfirmar(View view) {
-        openDialogRate();
-    }
 
     public void openDialogRate() {
-        Dialog_rate dialog = new Dialog_rate();
-        dialog.show(getSupportFragmentManager(), "dialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(DescricaoDoLocal.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_dialog_rate,null);
+        builder.setCancelable(true);
+        builder.setView(dialogView);
+        submitRate = dialogView.findViewById(R.id.sentRate);
+        ratingStars = dialogView.findViewById(R.id.rantingBar);
+        submitRate.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Local_Ref.child(userID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()){
+                            String userName = snapshot.child("nomeInteiro").getValue().toString();
+                            validateRate();
+                            ratingStars.setRating(0);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        final AlertDialog alert_rate = builder.create();
+        alert_rate.show();
+    }
+
+    private void validateRate() {
+        float Rate = ratingStars.getRating();
+        if (Rate == 0){
+            Toast.makeText(this, "A Avaliação não pode ser 0...", Toast.LENGTH_SHORT).show();
+        }else{
+            final String Key = userID;
+            HashMap RateMap = new HashMap();
+            RateMap.put("Nota", Rate);
+            Rate_Ref.child(Key).updateChildren(RateMap).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(DescricaoDoLocal.this, "Avaliação enviada com sucesso.", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(DescricaoDoLocal.this, "Erro ao enviar", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
