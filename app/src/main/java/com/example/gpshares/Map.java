@@ -542,7 +542,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                         String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude, GlobalVariables.PontoDeInteresse.latitude, GlobalVariables.PontoDeInteresse.longitude);
                         double dist = Double.parseDouble(distance.trim().replace(",", "."));
                         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + dist);
-                        if (dist < 0.1) {
+                        if (dist < 0.05) {
                             GlobalVariables.PontoDeInteresse = null;
                             currentPolyline.remove();
                             parar.setVisibility(View.GONE);

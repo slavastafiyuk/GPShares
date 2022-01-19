@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -66,7 +67,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         TextView nomeDoUtilizador = (TextView) headerView.findViewById(R.id.NomeHeader);
         nomeDoUtilizador.setText(GlobalVariables.nomeUtilizador);
         TextView identificadorDoUtilizador = (TextView) headerView.findViewById(R.id.IdentificadorHeader);
-        identificadorDoUtilizador.setText(GlobalVariables.nomeUtilizador);
+        identificadorDoUtilizador.setText(GlobalVariables.identificador);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
@@ -139,6 +140,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         profileIntent.putExtra("visitUserId",visitUserId);
         startActivity(profileIntent);
     }
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

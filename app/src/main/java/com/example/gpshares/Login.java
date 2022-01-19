@@ -150,12 +150,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         }
                     });
                     Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
+                    Identificador identif = new Identificador(user, identificador);
                     databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.exists()){
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + user.getEmail());
                                 userID = user.getUid();
                                 objectStorageReference = FirebaseStorage.getInstance().getReference(userID);
                                 GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
@@ -174,7 +174,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                 }
                                             });
                                 }catch (Exception e){
-                                    System.out.println("EXCEPTIONAAAAAAAAAAAA" + e);
                                     GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                             R.drawable.unknowuser);
                                 }
@@ -186,7 +185,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 }
                                 startActivity(new Intent(Login.this, Map.class));
                             }else{
-                                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
+                                FirebaseDatabase.getInstance().getReference("Identificadores").child(identificador)
+                                        .setValue(identif).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                    }
+                                });
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                         .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -293,6 +299,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                 }
                             });
                             Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
+                            Identificador identif = new Identificador(user, identificador);
                             databaseReference.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -303,6 +310,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                         GlobalVariables.nomeUtilizador = snapshot.child("nomeInteiro").getValue().toString();
                                         GlobalVariables.identificador = snapshot.child("identificador").getValue().toString();
                                         GlobalVariables.formaAuth = snapshot.child("email").getValue().toString();
+
                                         try{
                                             Glide.with(getApplicationContext())
                                                     .asBitmap()
@@ -316,7 +324,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                         }
                                                     });
                                         }catch (Exception e){
-                                            System.out.println("EXCEPTIONAAAAAAAAAAAAAAAAA" + e);
                                             GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                     R.drawable.unknowuser);
                                         }
@@ -328,6 +335,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                         }
                                         startActivity(new Intent(Login.this, Map.class));
                                     }else{
+
+                                        FirebaseDatabase.getInstance().getReference("Identificadores").child(identificador)
+                                                .setValue(identif);
                                         FirebaseDatabase.getInstance().getReference("Users")
                                                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                                 .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -433,7 +443,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                                                     }
                                                 });
                                     } catch (Exception e) {
-                                        System.out.println("EXCEPTION" + e);
                                         GlobalVariables.imagemPerfil = BitmapFactory.decodeResource(getApplicationContext().getResources(),
                                                 R.drawable.unknowuser);
                                     }try {
