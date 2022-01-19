@@ -39,6 +39,7 @@ import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -160,8 +161,8 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         double longitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("longitude").getValue().toString());
                         System.out.println("ASDASDASD" + latitude + longitude);
                         Intent localIntent = new Intent(getApplicationContext(), Map.class);
-                        localIntent.putExtra("longitude", longitude);
-                        localIntent.putExtra("latitude", latitude);
+                        LatLng place_de_interesse = new LatLng(latitude, longitude);
+                        GlobalVariables.PontoDeInteresse = place_de_interesse;
                         startActivity(localIntent);
                     }
                 });
@@ -278,6 +279,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         builder.setCancelable(true);
         builder.setView(dialogView);
         Button confirmar = dialogView.findViewById(R.id.sentRate);
+
         confirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,7 +289,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         final AlertDialog alert_rate = builder.create();
         alert_rate.show();
     }
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
