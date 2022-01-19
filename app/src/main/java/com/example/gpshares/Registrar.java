@@ -30,7 +30,6 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
     private TextView RegisterBtn;
     private EditText nomeDoUtilizador, idadeDoUtilizador, editTextTextEmailAddress2, editTextTextPassword2;
     private ProgressBar progressBar;
-
     private FirebaseAuth mAuth;
     DatabaseReference databaseIdentificadores, databaseUser;
     static final String code = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -43,10 +42,8 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
         mAuth = FirebaseAuth.getInstance();
         databaseIdentificadores = FirebaseDatabase.getInstance().getReference("identificadores");
         databaseUser = FirebaseDatabase.getInstance().getReference("Users");
-
         RegisterBtn = (Button) findViewById(R.id.RegisterBtn);
         RegisterBtn.setOnClickListener(this);
-
         nomeDoUtilizador = (EditText) findViewById(R.id.nomeDoUtilizador);
         idadeDoUtilizador =(EditText) findViewById(R.id.idadeDoUtilizador);
         editTextTextEmailAddress2 =(EditText) findViewById(R.id.editTextTextEmailAddress2);
@@ -118,6 +115,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                                 }
                             });
                             Utilizador utilizador = new Utilizador(nomeInteiro, email, identificador, 0);
+                            Identificador identif = new Identificador(user, identificador);
                             databaseUser.child(user).addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -125,6 +123,9 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
                                         Toast.makeText(Registrar.this, "O utilizador ja existe", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }else{
+
+                                        FirebaseDatabase.getInstance().getReference("Identificadores").child(identificador)
+                                                .setValue(identif);
                                         FirebaseDatabase.getInstance().getReference("Users")
                                                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                                 .setValue(utilizador).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -171,7 +172,7 @@ public class Registrar extends AppCompatActivity implements View.OnClickListener
         databaseIdentificadores.child(identificador).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (Objects.equals(snapshot.getKey(), identificador)){
                     firebaseCallback.onCallback(true);
                 }
             }

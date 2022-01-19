@@ -5,6 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:id="@+id/drawerlayout_user_friends"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
+
 tools:context=".UserFriends"
 android:fitsSystemWindows="true"
 tools:openDrawer="start">
@@ -17,7 +18,7 @@ tools:openDrawer="start">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:background="#000080"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +51,7 @@ tools:openDrawer="start">
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <com.google.android.material.navigation.NavigationView
-    android:id="@+id/navigation_view"
+    android:id="@+id/navigation_view_userFriends"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="start"
