@@ -104,6 +104,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:src="@drawable/unknowuser" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/meus_locais"
+            android:layout_width="409dp"
+            android:layout_height="415dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
         <!--
         <TextView
             android:id="@+id/textViewAge"
