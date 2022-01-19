@@ -56,4 +56,8 @@
     <string name="adicionar_local">Adicionar_local</string>
     <string name="redefinir_area_de_interesse">Area de interesse</string>
     <string name="parar">Parar</string>
+    <string name="cinema_restaurante">Cinema/ Restaurante ...</string>
+    <string name="_1_a_5">1 a 5</string>
+    <string name="coment_rios">Comentários ...</string>
+    <string name="publico_privado">Publico/Privado ...</string>
 </resources>

@@ -93,20 +93,19 @@ public class Dialog_map extends AppCompatDialogFragment {
                 b.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN" + autoCompleteTextView.getText().toString().equals("FALTA_DECIDIR"));
                         if (nome_estabelecimento.getText().toString().equals("")){
                             nome_estabelecimento.setError("Necessita de adicionar o nome");
                             nome_estabelecimento.requestFocus();
-                        }else if (autoCompleteTextView.getText().toString().equals("FALTA_DECIDIR")){
+                        }else if (autoCompleteTextView.getText().toString().equals("Cinema/ Restaurante ...")){
                             autoCompleteTextView.setError("Necessita de escolher o tipo de estabelecimento");
                             autoCompleteTextView.requestFocus();
-                        }else if (autoCompleteTextView2.getText().toString().equals("FALTA_DECIDIR")){
+                        }else if (autoCompleteTextView2.getText().toString().equals("1 a 5")){
                             autoCompleteTextView2.setError("Necessita de adicionar a avaliação");
                             autoCompleteTextView2.requestFocus();
                         }else if (coment_estabelecimento.getText().toString().equals("")){
                             coment_estabelecimento.setError("Necessita de adicionar comentario");
                             coment_estabelecimento.requestFocus();
-                        }else if (visibilidadeAutoComplete.getText().toString().equals("FALTA_DECIDIR")){
+                        }else if (visibilidadeAutoComplete.getText().toString().equals("Publico/Privado ...")){
                             visibilidadeAutoComplete.setError("Necessida de decidir a visibilidade");
                             visibilidadeAutoComplete.requestFocus();
                         }else if (imageView.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.logo).getConstantState())) {

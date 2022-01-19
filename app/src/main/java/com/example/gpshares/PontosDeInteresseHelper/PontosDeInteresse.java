@@ -87,7 +87,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         searchResults = findViewById(R.id.searchResultRestaurantes);
         searchResults.setHasFixedSize(true);
         searchResults.setLayoutManager(new LinearLayoutManager(this));
-        //list = new ArrayList<>();
         myAdapter = new MyAdapter(this, list, this);
         searchResults.setAdapter(myAdapter);
         restaurantesButton = findViewById(R.id.buttonRestaurantes);
@@ -104,8 +103,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
                             while (z.iterator().hasNext()) {
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
-                                //System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + i.getKey());
-                                //System.out.println("KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK" + findNewRestaurante.getNome());
                                 String visibilidade = findNewRestaurante.getVisibilidade();
                                 String distancia = distance(GlobalVariables.MinhaLocalizacao.latitude, GlobalVariables.MinhaLocalizacao.longitude, findNewRestaurante.getLatitude(), findNewRestaurante.getLongitude());
                                 double dist = Double.parseDouble(distancia.trim().replace(",","."));
@@ -113,14 +110,12 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                 double dif = dist-area_int;
                                 if (dif <=  0){
                                     if (visibilidade.equals("Publico")) {
-
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                         listIDS.add(local);
                                     } else if (visibilidade.equals("Amigos")) {
                                         if (utilizador.equals(i.getKey())) {
                                             list.add(findNewRestaurante);
-                                            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + i.getKey());
                                             Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                             listIDS.add(local);
                                         } else {
@@ -129,7 +124,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                                 @Override
                                                 public void onCallback(boolean i) {
                                                     if (i) {
-                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                         list.add(findNewRestaurante);
                                                         Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
                                                         listIDS.add(local);
@@ -165,9 +159,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                             verificarAmizade(utilizador, amigo, new FirebaseCallback() {
                                                 @Override
                                                 public void onCallback(boolean i) {
-
                                                     if (i) {
-                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                         list.add(findNewRestaurante);
                                                         Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
                                                         listIDS.add(local);
@@ -227,8 +219,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
-
-
         //Lista quando carregamos no botão de restaurantes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         restaurantesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,16 +270,12 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                         }
                         myAdapter.notifyDataSetChanged();
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
                 });
             }
         });
-
-
-
         //Lista quando carregamos no botão de cinemas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         cinemasButton = findViewById(R.id.cinemaButton);
         cinemasButton.setOnClickListener(new View.OnClickListener() {
@@ -336,7 +322,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                                     }
                                                 });
                                             }
-
                                         }
                                     }
                                 }
@@ -344,7 +329,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                         }
                         myAdapter.notifyDataSetChanged();
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
