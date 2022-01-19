@@ -389,7 +389,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         String Key = userID;
                         if (!snapshot.child("Reports").hasChild(Key)){
                             Local_Ref_place.child("Reports").child(Key).setValue("True");
-                            Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                            Local_Ref_place.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     int val = Integer.parseInt(snapshot.child("reports").getValue().toString());
@@ -398,9 +398,9 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
-                            Local_Ref_place.child("reports").setValue(+1);
                         }
                         Local_Ref_place.addValueEventListener(new ValueEventListener() {
                             @Override
