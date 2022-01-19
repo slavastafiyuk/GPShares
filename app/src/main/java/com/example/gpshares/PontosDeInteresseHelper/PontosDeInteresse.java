@@ -68,7 +68,7 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         TextView nomeDoUtilizador = (TextView) headerView.findViewById(R.id.NomeHeader);
         nomeDoUtilizador.setText(GlobalVariables.nomeUtilizador);
         TextView identificadorDoUtilizador = (TextView) headerView.findViewById(R.id.IdentificadorHeader);
-        identificadorDoUtilizador.setText(GlobalVariables.nomeUtilizador);
+        identificadorDoUtilizador.setText(GlobalVariables.identificador);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);

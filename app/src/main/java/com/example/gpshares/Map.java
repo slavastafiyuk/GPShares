@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
@@ -99,6 +101,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     ReentrantLock lock = new ReentrantLock();
     //----------------------Pontos de interesse
     ArrayList<FindNewRestaurante> list;
+    ArrayList<String> listTipo;
     ArrayList<Local> list2;
     //--------------------------------
     double lat1;
@@ -157,6 +160,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         //lista para obter informação dos pontos de interesse
         list = new ArrayList<>();
         list2 = new ArrayList<>();
+        listTipo = new ArrayList<>();
         //------------------------------
         rota = FirebaseDatabase.getInstance().getReference("Users");
         amigos = FirebaseDatabase.getInstance().getReference("Friends");
@@ -176,11 +180,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                     list.add(findNewRestaurante);
                                     Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                     list2.add(local);
+                                    listTipo.add("Restaurantes");
                                 } else if (visibilidade.equals("Amigos")) {
                                     if (utilizador.equals(i.getKey())) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
                                         list2.add(local);
+                                        listTipo.add("Restaurantes");
                                     } else {
                                         String amigo = i.getKey();
                                         verificarAmizade(utilizador, amigo, new FirebaseCallback() {
@@ -190,6 +196,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                                     list.add(findNewRestaurante);
                                                     Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
                                                     list2.add(local);
+                                                    listTipo.add("Restaurantes");
                                                 }
                                             }
                                         });
@@ -206,11 +213,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                     list.add(findNewRestaurante);
                                     Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                     list2.add(local);
+                                    listTipo.add("Cinemas");
                                 } else if (visibilidade.equals("Amigos")) {
                                     if (utilizador.equals(i.getKey())) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                         list2.add(local);
+                                        listTipo.add("Cinemas");
                                     } else {
                                         String amigo = i.getKey();
                                         verificarAmizade(utilizador, amigo, new FirebaseCallback() {
@@ -220,6 +229,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                                     list.add(findNewRestaurante);
                                                     Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
                                                     list2.add(local);
+                                                    listTipo.add("Cinemas");
                                                 }
                                             }
                                         });
@@ -236,11 +246,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                     list.add(findNewRestaurante);
                                     Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
                                     list2.add(local);
+                                    listTipo.add("CComercial");
                                 } else if (visibilidade.equals("Amigos")) {
                                     if (utilizador.equals(i.getKey())) {
                                         list.add(findNewRestaurante);
                                         Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
                                         list2.add(local);
+                                        listTipo.add("CComercial");
                                     } else {
                                         String amigo = i.getKey();
                                         verificarAmizade(utilizador, amigo, new FirebaseCallback() {
@@ -250,6 +262,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                                     list.add(findNewRestaurante);
                                                     Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
                                                     list2.add(local);
+                                                    listTipo.add("CComercial");
                                                 }
                                             }
                                         });
@@ -359,14 +372,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.menu_Open, R.string.menu_Close);
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
-            //Obter latitude e longitude do lugar
-            //try {
-            //    longitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("longitude").toString());
-            //    latitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("latitude").toString());
-            //
-            //} catch (Exception e) {
-            //    longitude_from_Intent = 0.0F;
-            //}
             parar = findViewById(R.id.buttonParar);
             if (GlobalVariables.MinhaLocalizacao != null && GlobalVariables.PontoDeInteresse != null){
                 String url = getRequestURL(GlobalVariables.MinhaLocalizacao, GlobalVariables.PontoDeInteresse, "driving");
@@ -458,11 +463,31 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
                 double dif = dist-area_int;
                 if (dif <=  0){
-                    mMap.addMarker(markerOptions
-                            .position(place_from_list)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                            .title(nome_from_list)
-                            .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                    Bitmap movie = BitmapFactory.decodeResource(getResources(),R.drawable.movie);
+                    Bitmap movie_b = Bitmap.createScaledBitmap(movie,50,50,false);
+                    Bitmap food = BitmapFactory.decodeResource(getResources(),R.drawable.food);
+                    Bitmap food_b = Bitmap.createScaledBitmap(food,50,50,false);
+                    Bitmap shop = BitmapFactory.decodeResource(getResources(),R.drawable.shop);
+                    Bitmap shop_b = Bitmap.createScaledBitmap(shop,50,50,false);
+                    if (listTipo.get(i).equals("Cinemas")){
+                        mMap.addMarker(markerOptions
+                                .position(place_from_list)
+                                .icon(BitmapDescriptorFactory.fromBitmap(movie_b))
+                                .title(nome_from_list)
+                                .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                    }else if (listTipo.get(i).equals("Restaurantes")){
+                        mMap.addMarker(markerOptions
+                                .position(place_from_list)
+                                .icon(BitmapDescriptorFactory.fromBitmap(food_b))
+                                .title(nome_from_list)
+                                .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                    }else if(listTipo.get(i).equals("CComercial")){
+                        mMap.addMarker(markerOptions
+                                .position(place_from_list)
+                                .icon(BitmapDescriptorFactory.fromBitmap(shop_b))
+                                .title(nome_from_list)
+                                .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
+                    }
                 }
             }
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, new LocationListener() {
@@ -590,7 +615,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getResources().getString(R.string.google_maps_key);
         return url;
     }
-
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null) {
@@ -598,14 +622,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
-
-
     public void openDialog() {
         Dialog_map dialog = new Dialog_map();
         dialog.show(getSupportFragmentManager(), "dialog");
 
     }
-
     @Override
     public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade, ByteArrayOutputStream imagem) {
         StorageReference objectStorageReference;

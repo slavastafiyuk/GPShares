@@ -63,7 +63,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     NavigationView navigationView;
     Toolbar toolbar;
     FirebaseFirestore firebaseFirestore;
-    DocumentReference documentReference;
     Button submitRate;
     RatingBar ratingStars;
     private TextView nome;
@@ -96,7 +95,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         local = getIntent().getExtras().get("place").toString();
         nome_local = getIntent().getExtras().get("nome").toString();
         Local_Ref = FirebaseDatabase.getInstance().getReference().child("Users");
-        Local_Ref_place = Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local);
+        Local_Ref_place = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local);
         Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("Comments");
         Rate_Ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("OutrasAvaliacoes");
         nome = findViewById(R.id.Nome_Do_Local);
@@ -389,7 +388,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         String Key = userID;
                         if (!snapshot.child("Reports").hasChild(Key)){
                             Local_Ref_place.child("Reports").child(Key).setValue("True");
-                            Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                            Local_Ref_place.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     int val = Integer.parseInt(snapshot.child("reports").getValue().toString());
@@ -398,9 +397,9 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                                 }
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
+
                                 }
                             });
-                            Local_Ref_place.child("reports").setValue(+1);
                         }
                         Local_Ref_place.addValueEventListener(new ValueEventListener() {
                             @Override

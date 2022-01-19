@@ -2,20 +2,19 @@ package com.example.gpshares;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,17 +29,21 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.gpshares.FriendsHelper.FindFriends;
+import com.example.gpshares.PontosDeInteresseHelper.FindNewRestaurante;
+import com.example.gpshares.PontosDeInteresseHelper.Local;
+import com.example.gpshares.PontosDeInteresseHelper.MyAdapter;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
-import com.facebook.CustomTabMainActivity;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,17 +58,17 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-import io.grpc.Context;
-
-public class Setting extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Setting extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MyAdapter.onAdapterListener {
     //SideMenu--------------------------------------------------------------------------------------
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     Toolbar toolbar;
+    MyAdapter myAdapter;
+    ArrayList<FindNewRestaurante> list;
     private String mAuth;
     private FirebaseUser user;
     private DatabaseReference reference;
@@ -78,18 +81,19 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
     private StorageReference objectStorageReference;
     private FirebaseFirestore objectFirebaseFirestore;
     private EditText nameOfImage;
-
+    private RecyclerView recyclerView;
+    private DatabaseReference rota;
+    ArrayList<Local> listIDS;
+    private DatabaseReference Local_Ref_place;
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         mAuth = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-
         //Storage
         objectStorageReference = FirebaseStorage.getInstance().getReference(mAuth);
-        objectFirebaseFirestore=FirebaseFirestore.getInstance();
-
+        objectFirebaseFirestore = FirebaseFirestore.getInstance();
         //Imagem
         imageView_S = findViewById(R.id.imageView_Settings);
         imageView_S.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +104,6 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         });
         System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAA" + GlobalVariables.imagemPerfil);
         imageView_S.setImageBitmap(GlobalVariables.imagemPerfil);
-
         //SideMenu----------------------------------------------------------------------------------
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout_settings);
         navigationView = (NavigationView) findViewById(R.id.navigation_viewSettings);
@@ -128,7 +131,75 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         fullNameTextView.setText(GlobalVariables.nomeUtilizador);
         emailTextView.setText(GlobalVariables.formaAuth);
         identificadorTextView.setText(GlobalVariables.identificador);
+
+        //Lista dos meus lugares
+        listIDS = new ArrayList<>();
+        rota = FirebaseDatabase.getInstance().getReference("Users");
+        list = new ArrayList<>();
+        recyclerView = findViewById(R.id.meus_locais);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        myAdapter = new MyAdapter(this, list, this);
+        recyclerView.setAdapter(myAdapter);
+
+
+        rota.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                list.clear();
+                listIDS.clear();
+                String utilizador = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                for (DataSnapshot i : snapshot.getChildren()) {
+                    if (i.hasChild("Estabelecimentos")) {
+                        if (i.child("Estabelecimentos").hasChild("Restaurantes")) {
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Restaurantes").getChildren();
+                            while (z.iterator().hasNext()) {
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                if (utilizador.equals(i.getKey())) {
+                                    list.add(findNewRestaurante);
+                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                    listIDS.add(local);
+                                }
+                            }
+                        }
+                        if (i.child("Estabelecimentos").hasChild("Cinemas")) {
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Cinemas").getChildren();
+                            while (z.iterator().hasNext()) {
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                if (utilizador.equals(i.getKey())) {
+                                    list.add(findNewRestaurante);
+                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                    listIDS.add(local);
+                                }
+
+                            }
+                        }
+                        if (i.child("Estabelecimentos").hasChild("Centros Comerciais")) {
+                            Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Centros Comerciais").getChildren();
+                            while (z.iterator().hasNext()) {
+                                FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
+                                if (utilizador.equals(i.getKey())) {
+                                    list.add(findNewRestaurante);
+                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                    listIDS.add(local);
+                                }
+
+                            }
+                        }
+                    }
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
     }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -137,6 +208,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -163,10 +235,11 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         item.setChecked(true);
         return true;
     }
-    private void chooseProfilePicture(){
+
+    private void chooseProfilePicture() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Setting.this);
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.alert_dialog_profile_picture,null);
+        View dialogView = inflater.inflate(R.layout.alert_dialog_profile_picture, null);
         builder.setCancelable(true);
         builder.setView(dialogView);
 
@@ -179,7 +252,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         imageViewCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkAndRequestPermissions()){
+                if (checkAndRequestPermissions()) {
                     takePictureFromCamera();
                     alertDialogProfilePicture.cancel();
                 }
@@ -196,14 +269,14 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         });
     }
 
-    private void takePictureFromGallery(){
+    private void takePictureFromGallery() {
         Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
     }
 
-    private void takePictureFromCamera(){
+    private void takePictureFromCamera() {
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePicture.resolveActivity(getPackageManager()) != null){
+        if (takePicture.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePicture, 2);
         }
     }
@@ -211,9 +284,9 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 1:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImageUri = data.getData();
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
@@ -262,7 +335,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 }
                 break;
             case 2:
-                if (resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Bundle bundle = data.getExtras();
                     Bitmap bitmapImage = (Bitmap) bundle.get("data");
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -307,10 +380,10 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
         }
     }
 
-    private boolean checkAndRequestPermissions(){
-        if (Build.VERSION.SDK_INT >= 23){
+    private boolean checkAndRequestPermissions() {
+        if (Build.VERSION.SDK_INT >= 23) {
             int cameraPermission = ActivityCompat.checkSelfPermission(Setting.this, Manifest.permission.CAMERA);
-            if (cameraPermission == PackageManager.PERMISSION_GRANTED){
+            if (cameraPermission == PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(Setting.this, new String[]{Manifest.permission.CAMERA}, 20);
                 return false;
             }
@@ -321,27 +394,57 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 20 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            
-        }else {
+        if (requestCode == 20 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+        } else {
             Toast.makeText(this, "Permissões não garantidas", Toast.LENGTH_SHORT).show();
         }
     }
 
-    //public void uploadImage(View view){
-    //    try {
-    //    }catch (Exception e) {
-    //        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-    //    }
-    //}
-    //private String getExtension(Uri uri){
-    //    try {
-    //        ContentResolver objectContentResolver = getContentResolver();
-    //        MimeTypeMap objectMimeTypeMap = MimeTypeMap.getSingleton();
-    //        return objectMimeTypeMap.getExtensionFromMimeType(objectContentResolver.getType(uri));
-    //    }catch (Exception e){
-    //        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-    //    }
-    //    return null;
-    //}
+    @Override
+    public void onAdapterClick(int position) {
+        String UserId = listIDS.get(position).getUserId();
+        String place = listIDS.get(position).getPlace();
+        String nome = listIDS.get(position).getNomeDoLocal();
+        AlertDialog.Builder builder = new AlertDialog.Builder(Setting.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.alert_dialog_meus_locais, null);
+        AutoCompleteTextView autoCompleteTextView;
+        autoCompleteTextView = dialogView.findViewById(R.id.alterar_visibilidade_adapter);
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(getApplicationContext(), R.array.tipo_visibilidade, R.layout.dropdown_item);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        autoCompleteTextView.setAdapter(adapter3);
+        builder.setCancelable(true);
+        builder.setView(dialogView);
+        Local_Ref_place = FirebaseDatabase.getInstance().getReference().child("Users").child(UserId).child("Estabelecimentos").child(place).child(nome);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (autoCompleteTextView.getText().toString().equals("Publico/Privado ...")){
+                    autoCompleteTextView.setError("Necessida de decidir a visibilidade");
+                    autoCompleteTextView.requestFocus();
+                }else{
+                    Local_Ref_place.child("visibilidade").setValue(autoCompleteTextView.getText().toString());
+                }
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        }).setNeutralButton("Vista Geral", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent localIntent = new Intent(getApplicationContext(), DescricaoDoLocal.class);
+                localIntent.putExtra("UserId", UserId);
+                localIntent.putExtra("place", place);
+                localIntent.putExtra("nome", nome);
+                startActivity(localIntent);
+            }
+        });
+        final AlertDialog alertDialogProfilePicture = builder.create();
+        alertDialogProfilePicture.show();
+
+    }
+
+
 }
