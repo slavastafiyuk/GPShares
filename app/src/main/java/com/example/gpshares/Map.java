@@ -8,14 +8,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,20 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.gpshares.Dialogs.Dialog_map;
 import com.example.gpshares.FriendsHelper.FindFriends;
 import com.example.gpshares.MapHelper.FetchURL;
@@ -50,12 +41,10 @@ import com.example.gpshares.PontosDeInteresseHelper.Local;
 import com.example.gpshares.PontosDeInteresseHelper.PontosDeInteresse;
 import com.example.gpshares.databinding.ActivityMapBinding;
 import com.facebook.login.LoginManager;
-import com.google.android.gms.common.server.converter.StringToIntConverter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -116,10 +105,10 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Definir Raio de interesse
-        if (GlobalVariables.AreaDeInteresse == 0){
+        if (GlobalVariables.AreaDeInteresse == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
             LayoutInflater inflater = getLayoutInflater();
-            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse,null);
+            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse, null);
             TextInputEditText area = dialogView.findViewById(R.id.Kms);
             Button submeter = dialogView.findViewById(R.id.submeter_Kms);
             builder.setCancelable(false);
@@ -129,17 +118,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             submeter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (area.toString().isEmpty()){
+                    if (area.toString().isEmpty()) {
                         area.setError("Tem de introduzir um valor para a area de interesse");
                         area.requestFocus();
-                    }else {
+                    } else {
                         try {
                             int Area_De_Interesse = Integer.parseInt(area.getText().toString());
                             System.out.println("OOOOOOOOOOOOOOOOOOO" + Area_De_Interesse);
-                            if (Area_De_Interesse <= 0){
+                            if (Area_De_Interesse <= 0) {
                                 area.setError("Valor tem de ser superior a zero");
                                 area.requestFocus();
-                            }else{
+                            } else {
                                 GlobalVariables.AreaDeInteresse = Area_De_Interesse;
                                 System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO" + FirebaseDatabase.getInstance().getReference("Users")
                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
@@ -149,7 +138,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                         .setValue(Area_De_Interesse);
                                 alertDialogProfilePicture.cancel();
                             }
-                        }catch (NumberFormatException e){
+                        } catch (NumberFormatException e) {
                             area.setError("Tem de introduzir um valor valido");
                             area.requestFocus();
                         }
@@ -273,6 +262,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -306,11 +296,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             navigationViewBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.bottom_menu_areainteresse:
                             AlertDialog.Builder builder = new AlertDialog.Builder(Map.this);
                             LayoutInflater inflater = getLayoutInflater();
-                            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse,null);
+                            View dialogView = inflater.inflate(R.layout.alert_area_de_interesse, null);
                             TextInputEditText area = dialogView.findViewById(R.id.Kms);
                             Button submeter = dialogView.findViewById(R.id.submeter_Kms);
                             builder.setCancelable(true);
@@ -320,16 +310,16 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                             submeter.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if (area.toString().isEmpty()){
+                                    if (area.toString().isEmpty()) {
                                         area.setError("Tem de introduzir um valor para a area de interesse");
                                         area.requestFocus();
-                                    }else {
+                                    } else {
                                         try {
                                             int Area_De_Interesse = Integer.parseInt(area.getText().toString());
-                                            if (Area_De_Interesse <= 0){
+                                            if (Area_De_Interesse <= 0) {
                                                 area.setError("Valor tem de ser superior a zero");
                                                 area.requestFocus();
-                                            }else{
+                                            } else {
                                                 GlobalVariables.AreaDeInteresse = Area_De_Interesse;
                                                 FirebaseDatabase.getInstance().getReference("Users")
                                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
@@ -339,7 +329,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                                 startActivity(reopenMap);
                                                 alertDialogProfilePicture.cancel();
                                             }
-                                        }catch (NumberFormatException e){
+                                        } catch (NumberFormatException e) {
                                             area.setError("Tem de introduzir um valor valido");
                                             area.requestFocus();
                                         }
@@ -373,20 +363,21 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
             parar = findViewById(R.id.buttonParar);
-            if (GlobalVariables.MinhaLocalizacao != null && GlobalVariables.PontoDeInteresse != null){
+            if (GlobalVariables.MinhaLocalizacao != null && GlobalVariables.PontoDeInteresse != null) {
                 String url = getRequestURL(GlobalVariables.MinhaLocalizacao, GlobalVariables.PontoDeInteresse, "driving");
                 new FetchURL(Map.this).execute(url, "driving");
                 parar.setVisibility(View.VISIBLE);
                 parar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                       currentPolyline.remove();
-                       parar.setVisibility(View.GONE);
+                        currentPolyline.remove();
+                        parar.setVisibility(View.GONE);
                     }
                 });
             }
         }
     }
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -395,6 +386,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             super.onBackPressed();
         }
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -420,6 +412,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         item.setChecked(true);
         return true;
     }
+
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -447,7 +440,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             LatLng myPosition = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 17));
             MinhaLocalizacao = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
-
             //Obter Dados dos lugares
             //------------------------------------
             for (int i = 0; i < list.size(); i++) {
@@ -458,30 +450,30 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                 String avaliacao = list.get(i).getAvaliacao();
                 LatLng place_from_list = new LatLng(latitude_from_list, longitude_from_list);
                 MarkerOptions markerOptions = new MarkerOptions();
-                String distance = distance(MinhaLocalizacao.getPosition().latitude, MinhaLocalizacao.getPosition().longitude,place_from_list.latitude, place_from_list.longitude);
-                double dist = Double.parseDouble(distance.trim().replace(",","."));
+                String distance = distance(MinhaLocalizacao.getPosition().latitude, MinhaLocalizacao.getPosition().longitude, place_from_list.latitude, place_from_list.longitude);
+                double dist = Double.parseDouble(distance.trim().replace(",", "."));
                 double area_int = Double.parseDouble(String.valueOf(GlobalVariables.AreaDeInteresse));
-                double dif = dist-area_int;
-                if (dif <=  0){
-                    Bitmap movie = BitmapFactory.decodeResource(getResources(),R.drawable.movie);
-                    Bitmap movie_b = Bitmap.createScaledBitmap(movie,50,50,false);
-                    Bitmap food = BitmapFactory.decodeResource(getResources(),R.drawable.food);
-                    Bitmap food_b = Bitmap.createScaledBitmap(food,50,50,false);
-                    Bitmap shop = BitmapFactory.decodeResource(getResources(),R.drawable.shop);
-                    Bitmap shop_b = Bitmap.createScaledBitmap(shop,50,50,false);
-                    if (listTipo.get(i).equals("Cinemas")){
+                double dif = dist - area_int;
+                if (dif <= 0) {
+                    Bitmap movie = BitmapFactory.decodeResource(getResources(), R.drawable.movie);
+                    Bitmap movie_b = Bitmap.createScaledBitmap(movie, 70, 70, false);
+                    Bitmap food = BitmapFactory.decodeResource(getResources(), R.drawable.food);
+                    Bitmap food_b = Bitmap.createScaledBitmap(food, 70, 70, false);
+                    Bitmap shop = BitmapFactory.decodeResource(getResources(), R.drawable.shop);
+                    Bitmap shop_b = Bitmap.createScaledBitmap(shop, 70, 70, false);
+                    if (listTipo.get(i).equals("Cinemas")) {
                         mMap.addMarker(markerOptions
                                 .position(place_from_list)
                                 .icon(BitmapDescriptorFactory.fromBitmap(movie_b))
                                 .title(nome_from_list)
                                 .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
-                    }else if (listTipo.get(i).equals("Restaurantes")){
+                    } else if (listTipo.get(i).equals("Restaurantes")) {
                         mMap.addMarker(markerOptions
                                 .position(place_from_list)
                                 .icon(BitmapDescriptorFactory.fromBitmap(food_b))
                                 .title(nome_from_list)
                                 .snippet("\nAvaliação: " + avaliacao + "\nDescrição:" + comentario_from_list));
-                    }else if(listTipo.get(i).equals("CComercial")){
+                    } else if (listTipo.get(i).equals("CComercial")) {
                         mMap.addMarker(markerOptions
                                 .position(place_from_list)
                                 .icon(BitmapDescriptorFactory.fromBitmap(shop_b))
@@ -502,7 +494,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(@NonNull Marker marker) {
-                            String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude,marker.getPosition().latitude, marker.getPosition().longitude);
+                            String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude, marker.getPosition().latitude, marker.getPosition().longitude);
                             new AlertDialog.Builder(Map.this)
                                     .setTitle(marker.getTitle())
                                     .setMessage(marker.getSnippet() + "\nDistancia: " + distance)
@@ -546,6 +538,23 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                             return false;
                         }
                     });
+                    if (GlobalVariables.PontoDeInteresse != null){
+                        String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude, GlobalVariables.PontoDeInteresse.latitude, GlobalVariables.PontoDeInteresse.longitude);
+                        double dist = Double.parseDouble(distance.trim().replace(",", "."));
+                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + dist);
+                        if (dist < 0.1) {
+                            GlobalVariables.PontoDeInteresse = null;
+                            currentPolyline.remove();
+                            parar.setVisibility(View.GONE);
+                            new AlertDialog.Builder(Map.this)
+                                    .setTitle("Chegou ao sitio!")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                        }
+                                    }).show();
+                        }
+                    }
                 }
 
                 @Override
@@ -567,24 +576,26 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
     }
 
-    private String distance(double lat1, double long1, double lat2, double long2){
+    private String distance(double lat1, double long1, double lat2, double long2) {
         double longDiff = long1 - long2;
         double distance = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(longDiff));
         distance = Math.acos(distance);
         // radian to degree
         distance = rad2deg(distance);
         //em miles
-        distance = distance*60*1.1515;
+        distance = distance * 60 * 1.1515;
         //em km
         distance = distance * 1.609344;
-        return String.format(Locale.getDefault(),"%.3f", distance);
+        return String.format(Locale.getDefault(), "%.3f", distance);
     }
-    private double rad2deg(double distance){
-        return (distance*180/Math.PI);
+
+    private double rad2deg(double distance) {
+        return (distance * 180 / Math.PI);
     }
+
     //degree to radian
-    private double deg2rad (double lat1){
-        return (lat1*Math.PI/180);
+    private double deg2rad(double lat1) {
+        return (lat1 * Math.PI / 180);
     }
 
     private boolean isLocationPermissionGranted() {
@@ -615,6 +626,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getResources().getString(R.string.google_maps_key);
         return url;
     }
+
     @Override
     public void onTaskDone(Object... values) {
         if (currentPolyline != null) {
@@ -622,11 +634,13 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         }
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
+
     public void openDialog() {
         Dialog_map dialog = new Dialog_map();
         dialog.show(getSupportFragmentManager(), "dialog");
 
     }
+
     @Override
     public void applyTexts(String tipo_de_estabelecimento, String avaliacao_do_estabelecimento, String nome, String comment, String visibilidade, ByteArrayOutputStream imagem) {
         StorageReference objectStorageReference;
@@ -706,6 +720,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
