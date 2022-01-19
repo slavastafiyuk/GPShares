@@ -63,7 +63,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     NavigationView navigationView;
     Toolbar toolbar;
     FirebaseFirestore firebaseFirestore;
-    DocumentReference documentReference;
     Button submitRate;
     RatingBar ratingStars;
     private TextView nome;
