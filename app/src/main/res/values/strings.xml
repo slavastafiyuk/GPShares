@@ -55,4 +55,5 @@
     <string name="valor">Indique o valor em Kms</string>
     <string name="adicionar_local">Adicionar_local</string>
     <string name="redefinir_area_de_interesse">Area de interesse</string>
+    <string name="parar">Parar</string>
 </resources>

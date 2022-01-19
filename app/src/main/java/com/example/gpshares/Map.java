@@ -96,7 +96,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     MarkerOptions place1, MinhaLocalizacao;
     Polyline currentPolyline;
     //------------------
-    ArrayList<LatLng> listPoints;
     ReentrantLock lock = new ReentrantLock();
     //----------------------Pontos de interesse
     ArrayList<FindNewRestaurante> list;
@@ -108,8 +107,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
     private GoogleMap mMap;
     private ActivityMapBinding binding;
     //--------------------------------
-    private double latitude_from_Intent;
-    private double longitude_from_Intent;
+    private Button parar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -266,6 +264,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+
         //--------------------------------
         if (!isLocationPermissionGranted()) {
             try {
@@ -289,8 +288,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             if (mapFragment != null) {
                 mapFragment.getMapAsync(this);
             }
-            //Rotas---------------------------------------------------------------------------------
-            listPoints = new ArrayList<>();
             //ConstraintLayout viewLayout = findViewById(R.id.)
             navigationViewBottom = findViewById(R.id.bottom_navigation);
             navigationViewBottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -363,11 +360,25 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             drawerLayout.addDrawerListener(toggle);
             toggle.syncState();
             //Obter latitude e longitude do lugar
-            try {
-                longitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("longitude").toString());
-                latitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("latitude").toString());
-            } catch (Exception e) {
-                longitude_from_Intent = 0.0F;
+            //try {
+            //    longitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("longitude").toString());
+            //    latitude_from_Intent = Double.parseDouble(getIntent().getExtras().get("latitude").toString());
+            //
+            //} catch (Exception e) {
+            //    longitude_from_Intent = 0.0F;
+            //}
+            parar = findViewById(R.id.buttonParar);
+            if (GlobalVariables.MinhaLocalizacao != null && GlobalVariables.PontoDeInteresse != null){
+                String url = getRequestURL(GlobalVariables.MinhaLocalizacao, GlobalVariables.PontoDeInteresse, "driving");
+                new FetchURL(Map.this).execute(url, "driving");
+                parar.setVisibility(View.VISIBLE);
+                parar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                       currentPolyline.remove();
+                       parar.setVisibility(View.GONE);
+                    }
+                });
             }
         }
     }
@@ -409,24 +420,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(false);
-            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-                @Override
-                public void onMapLongClick(@NonNull LatLng latLng) {
-                    //Reset marker quando ja existem 2
-                    if (listPoints.size() == 1) {
-                        listPoints.clear();
-                        mMap.clear();
-                    }
-                    //save first point selected
-                    listPoints.add(latLng);
-                    //criar marker
-                    MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.position(latLng);
-                    if (listPoints.size() == 1) {
-                        mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    }
-                }
-            });
         }
         LocationManager lm = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -479,6 +472,7 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     lat1 = latitude;
                     lon1 = longitude;
                     place1 = new MarkerOptions().position(new LatLng(lat1, lon1)).title("MinhaLocalização");
+                    GlobalVariables.MinhaLocalizacao = place1.getPosition();
                     mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(@NonNull Marker marker) {
@@ -489,8 +483,17 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                     .setPositiveButton("Ir", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
+                                            GlobalVariables.PontoDeInteresse = marker.getPosition();
                                             String url = getRequestURL(place1.getPosition(), marker.getPosition(), "driving");
                                             new FetchURL(Map.this).execute(url, "driving");
+                                            parar.setVisibility(View.VISIBLE);
+                                            parar.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
+                                                    currentPolyline.remove();
+                                                    parar.setVisibility(View.GONE);
+                                                }
+                                            });
                                         }
                                     }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                                 @Override
@@ -517,18 +520,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                             return false;
                         }
                     });
-                    if (longitude_from_Intent != 0.0F && latitude_from_Intent != 0.0F) {
-                        LatLng place = new LatLng(latitude_from_Intent, longitude_from_Intent);
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(place);
-                        mMap.addMarker(markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                        String url = getRequestURL(place1.getPosition(), place, "driving");
-                        new FetchURL(Map.this).execute(url, "driving");
-                    }
-                    if (listPoints.size() == 1) {
-                        String url = getRequestURL(place1.getPosition(), listPoints.get(0), "driving");
-                        new FetchURL(Map.this).execute(url, "driving");
-                    }
                 }
 
                 @Override
