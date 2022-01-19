@@ -389,6 +389,17 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         String Key = userID;
                         if (!snapshot.child("Reports").hasChild(Key)){
                             Local_Ref_place.child("Reports").child(Key).setValue("True");
+                            Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    int val = Integer.parseInt(snapshot.child("reports").getValue().toString());
+                                    val = val + 1;
+                                    Local_Ref_place.child("reports").setValue(val);
+                                }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                }
+                            });
                             Local_Ref_place.child("reports").setValue(+1);
                         }
                         Local_Ref_place.addValueEventListener(new ValueEventListener() {
@@ -398,10 +409,8 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                                     Local_Ref_place.child("visibilidade").setValue("Privado");
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
                     }
