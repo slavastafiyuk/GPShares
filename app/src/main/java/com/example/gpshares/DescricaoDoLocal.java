@@ -145,7 +145,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 objectStorageReference = FirebaseStorage.getInstance().getReference(idDoUtilizador);
                 String caminho_da_imagem = snapshot.child("Estabelecimentos").child(local).child(nome_local).child("imagem").getValue().toString();
-                System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + " " + idDoUtilizador);
                 Glide.with(getApplicationContext())
                         .asBitmap()
                         .load(objectStorageReference.child(caminho_da_imagem))
@@ -154,11 +153,9 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                         .into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                System.out.println("ola");
                                 imageView.setImageBitmap(resource);
                             }
                         });
-                System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV" + nome_local);
                 String coment_do_local = snapshot.child("Estabelecimentos").child(local).child(nome_local).child("comentario").getValue().toString();
                 nome.setText(coment_do_local);
                 floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +163,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                     public void onClick(View v) {
                         double latitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("latitude").getValue().toString());
                         double longitude = Float.parseFloat(snapshot.child("Estabelecimentos").child(local).child(nome_local).child("longitude").getValue().toString());
-                        System.out.println("ASDASDASD" + latitude + longitude);
                         Intent localIntent = new Intent(getApplicationContext(), Map.class);
                         LatLng place_de_interesse = new LatLng(latitude, longitude);
                         GlobalVariables.PontoDeInteresse = place_de_interesse;
@@ -182,7 +178,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         navigationView = findViewById(R.id.navigation_viewDesc_De_Local);
         navigationView.setNavigationItemSelectedListener(this);
         //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        System.out.println("BITMAP" + GlobalVariables.imagemPerfil);
         View headerView = navigationView.getHeaderView(0);
         ImageView imagemMenu = (ImageView) headerView.findViewById(R.id.imagemMenuPerfil);
         imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
@@ -352,7 +347,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 float z = 0;
                 while (k.hasNext()){
                     Object nota = k.next().child("Nota").getValue();
-                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBB" + Integer.parseInt(nota.toString()));
                     z = z + Integer.parseInt(nota.toString());
                     count ++;
 

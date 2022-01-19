@@ -58,7 +58,6 @@ public class UserFriends extends AppCompatActivity implements NavigationView.OnN
         navigationView = findViewById(R.id.navigation_view_userFriends);
         navigationView.setNavigationItemSelectedListener(this);
         myFriendList.setLayoutManager(linearLayoutManager);
-        System.out.println("BITMAP" + GlobalVariables.imagemPerfil);
         View headerView = navigationView.getHeaderView(0);
         ImageView imagemMenu = headerView.findViewById(R.id.imagemMenuPerfil);
         imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);

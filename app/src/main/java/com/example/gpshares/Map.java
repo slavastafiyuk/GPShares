@@ -124,14 +124,11 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     } else {
                         try {
                             int Area_De_Interesse = Integer.parseInt(area.getText().toString());
-                            System.out.println("OOOOOOOOOOOOOOOOOOO" + Area_De_Interesse);
                             if (Area_De_Interesse <= 0) {
                                 area.setError("Valor tem de ser superior a zero");
                                 area.requestFocus();
                             } else {
                                 GlobalVariables.AreaDeInteresse = Area_De_Interesse;
-                                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO" + FirebaseDatabase.getInstance().getReference("Users")
-                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()));
                                 FirebaseDatabase.getInstance().getReference("Users")
                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                         .child("AreaDeInteresse")
@@ -349,7 +346,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
             navigationView = findViewById(R.id.navigation_view);
             navigationView.setNavigationItemSelectedListener(this);
             //MUDAR IMAGEM DO HEADER!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            System.out.println("BITMAP" + GlobalVariables.imagemPerfil);
             View headerView = navigationView.getHeaderView(0);
             ImageView imagemMenu = headerView.findViewById(R.id.imagemMenuPerfil);
             imagemMenu.setImageBitmap(GlobalVariables.imagemPerfil);
@@ -525,7 +521,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                                             String UserId = list2.get(z).getUserId();
                                             String place = list2.get(z).getPlace();
                                             String nome = list2.get(z).getNomeDoLocal();
-                                            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA " + nome + " " + place + " " + UserId);
                                             Intent localIntent = new Intent(Map.this, DescricaoDoLocal.class);
                                             localIntent.putExtra("UserId", UserId);
                                             localIntent.putExtra("place", place);
@@ -541,7 +536,6 @@ public class Map extends AppCompatActivity implements OnMapReadyCallback, TaskLo
                     if (GlobalVariables.PontoDeInteresse != null){
                         String distance = distance(place1.getPosition().latitude, place1.getPosition().longitude, GlobalVariables.PontoDeInteresse.latitude, GlobalVariables.PontoDeInteresse.longitude);
                         double dist = Double.parseDouble(distance.trim().replace(",", "."));
-                        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + dist);
                         if (dist < 0.05) {
                             GlobalVariables.PontoDeInteresse = null;
                             currentPolyline.remove();

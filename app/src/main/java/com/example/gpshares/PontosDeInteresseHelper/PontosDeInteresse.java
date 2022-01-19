@@ -198,7 +198,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                                 public void onCallback(boolean i) {
 
                                                     if (i) {
-                                                        //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                         list.add(findNewRestaurante);
                                                         Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
                                                         listIDS.add(local);
@@ -255,7 +254,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                                     @Override
                                                     public void onCallback(boolean i) {
                                                         if (i) {
-                                                            //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                             list.add(findNewRestaurante);
                                                             Local local = new Local(amigo, "Restaurantes", findNewRestaurante.getNome());
                                                             listIDS.add(local);
@@ -314,7 +312,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                                     public void onCallback(boolean i) {
 
                                                         if (i) {
-                                                            //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                             list.add(findNewRestaurante);
                                                             Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
                                                             listIDS.add(local);
@@ -343,8 +340,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot i : snapshot.child(id_utilizador).getChildren()) {
                     if (i.getKey().equals(id_outro)) {
-                        //System.out.println("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" + id_utilizador);
-                        //System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" + i.getKey() + id_outro);
                         firebaseCallback.onCallback(true);
                     }
                 }
@@ -472,7 +467,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                             public void onCallback(boolean i) {
 
                                                 if (i) {
-                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
                                                     Local local = new Local(amigo, "Cinemas", findNewRestaurante.getNome());
                                                     listIDS.add(local);
@@ -484,7 +478,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                             }
                         }
                     }
-                    System.out.println("LLLLLLLLLLLLLLLLLLLLL" + (i.child("Estabelecimentos").hasChild("Centros Comerciais") && centroComercial.equals("cComercial")));
                     if (i.child("Estabelecimentos").hasChild("Centros Comerciais") && centroComercial.equals("cComercial")) {
 
                         Iterable<DataSnapshot> z = i.child("Estabelecimentos").child("Centros Comerciais").getChildren();
@@ -512,7 +505,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
                                             public void onCallback(boolean i) {
 
                                                 if (i) {
-                                                    //System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" + findNewRestaurante.getAvaliacao());
                                                     list.add(findNewRestaurante);
                                                     Local local = new Local(amigo, "Centros Comerciais", findNewRestaurante.getNome());
                                                     listIDS.add(local);
@@ -539,7 +531,6 @@ public class PontosDeInteresse extends AppCompatActivity implements NavigationVi
         String UserId = listIDS.get(position).getUserId();
         String place = listIDS.get(position).getPlace();
         String nome = listIDS.get(position).getNomeDoLocal();
-        //System.out.println("OOOOOOOOOOOOOOOOOOOOLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAA" + UserId);
         Intent localIntent = new Intent(this, DescricaoDoLocal.class);
         localIntent.putExtra("UserId", UserId);
         localIntent.putExtra("place", place);
