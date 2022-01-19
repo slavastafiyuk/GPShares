@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UserFriends extends AppCompatActivity{
+public class UserFriends extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView myFriendList;
     private DatabaseReference FriendsRef, UsersRef;
@@ -72,9 +73,23 @@ public class UserFriends extends AppCompatActivity{
 
                     }
                 });
+                friendsViewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String visitFriendId = getRef(i).getKey();
+                        Intent friendIntent = new Intent(UserFriends.this, OtherUserProfile.class);
+                        friendIntent.putExtra("visitUserId", visitFriendId);
+                        startActivity(friendIntent);
+                    }
+                });
             }
         };
         myFriendList.setAdapter(firebaseRecyclerAdapter);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        return false;
     }
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder{
