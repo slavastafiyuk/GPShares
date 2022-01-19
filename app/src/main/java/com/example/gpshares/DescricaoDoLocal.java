@@ -53,6 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 
 //
 public class DescricaoDoLocal extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -66,7 +67,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     RatingBar ratingStars;
     private TextView nome;
     private FirebaseAuth mAuth;
-    private DatabaseReference Local_Ref, Post_ref, Rate_Ref;
+    private DatabaseReference Local_Ref, Post_ref, Rate_Ref, Local_Ref_place;
     private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
@@ -94,6 +95,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         local = getIntent().getExtras().get("place").toString();
         nome_local = getIntent().getExtras().get("nome").toString();
         Local_Ref = FirebaseDatabase.getInstance().getReference().child("Users");
+        Local_Ref_place = Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local);
         Post_ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("Comments");
         Rate_Ref = FirebaseDatabase.getInstance().getReference().child("Users").child(idDoUtilizador).child("Estabelecimentos").child(local).child(nome_local).child("OutrasAvaliacoes");
         nome = findViewById(R.id.Nome_Do_Local);
@@ -239,7 +241,6 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             Calendar callForDate = Calendar.getInstance();
             SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy 'ás' HH:mm:ss");
             final String saveCurrentDate =  currentDate.format(callForDate.getTime());
-
             final String randomKey = userID + saveCurrentDate;
             HashMap commentsMap = new HashMap();
             commentsMap.put("idUtilizador", userID);
@@ -322,6 +323,43 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 }
             });
         }
+        Rate_Ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.hasChild(idDoUtilizador)){
+                    Local_Ref_place.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String valor_da_avaliacao = snapshot.child("avaliacao").getValue().toString();
+                            HashMap aval = new HashMap();
+                            aval.put("Nota", valor_da_avaliacao);
+                            Rate_Ref.child(idDoUtilizador).setValue(aval);
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
+                Iterator<DataSnapshot> k = snapshot.getChildren().iterator();
+                int count = 0;
+                float z = 0;
+                while (k.hasNext()){
+                    Object nota = k.next().child("Nota").getValue();
+                    System.out.println("BBBBBBBBBBBBBBBBBBBBBBBB" + Integer.parseInt(nota.toString()));
+                    z = z + Integer.parseInt(nota.toString());
+                    count ++;
+
+                }
+                z = z/count;
+
+                Local_Ref_place.child("avaliacao").setValue(String.valueOf(z));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
