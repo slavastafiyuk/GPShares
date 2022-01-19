@@ -1,10 +1,12 @@
 package com.example.gpshares;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -69,7 +72,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
     private String idDoUtilizador, userID, local, nome_local;
     private StorageReference objectStorageReference;
     private ImageView imageView;
-    private FloatingActionButton floatingActionButton;
+    private FloatingActionButton floatingActionButton, floatingRateButton;
     private RecyclerView CommentList;
     private ImageButton postComment;
     private EditText commentInput;
@@ -98,6 +101,15 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         imageView = findViewById(R.id.imageView_Local);
         firebaseFirestore = FirebaseFirestore.getInstance();
         floatingActionButton = findViewById(R.id.make_a_route);
+
+        floatingRateButton = findViewById(R.id.avaliarButton);
+        floatingRateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialogRate();
+            }
+        });
+
 
         postComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,14 +270,22 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
         }
     }
 
-    public void Corfirmar(View view) {
-        openDialogRate();
-    }
 
     public void openDialogRate() {
-        Dialog_rate dialog = new Dialog_rate();
-        dialog.show(getSupportFragmentManager(), "dialog");
+        AlertDialog.Builder builder = new AlertDialog.Builder(DescricaoDoLocal.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.layout_dialog_rate,null);
+        builder.setCancelable(true);
+        builder.setView(dialogView);
+        Button confirmar = dialogView.findViewById(R.id.sentRate);
+        confirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        final AlertDialog alert_rate = builder.create();
+        alert_rate.show();
     }
 
     @SuppressLint("NonConstantResourceId")
