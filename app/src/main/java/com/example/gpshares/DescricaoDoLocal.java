@@ -348,7 +348,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
                 float z = 0;
                 while (k.hasNext()){
                     Object nota = k.next().child("Nota").getValue();
-                    z = z + Integer.parseInt(nota.toString());
+                    z = z + Float.parseFloat(nota.toString());
                     count ++;
 
                 }
