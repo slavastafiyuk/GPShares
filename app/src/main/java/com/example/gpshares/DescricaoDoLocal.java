@@ -145,6 +145,7 @@ public class DescricaoDoLocal extends AppCompatActivity implements NavigationVie
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 objectStorageReference = FirebaseStorage.getInstance().getReference(idDoUtilizador);
                 String caminho_da_imagem = snapshot.child("Estabelecimentos").child(local).child(nome_local).child("imagem").getValue().toString();
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + caminho_da_imagem);
                 Glide.with(getApplicationContext())
                         .asBitmap()
                         .load(objectStorageReference.child(caminho_da_imagem))

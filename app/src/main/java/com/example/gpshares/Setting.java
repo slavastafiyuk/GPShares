@@ -167,7 +167,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                 if (utilizador.equals(i.getKey())) {
                                     list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                    Local local = new Local(i.getKey(), "Cinemas", findNewRestaurante.getNome());
                                     listIDS.add(local);
                                 }
 
@@ -179,7 +179,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                                 FindNewRestaurante findNewRestaurante = z.iterator().next().getValue(FindNewRestaurante.class);
                                 if (utilizador.equals(i.getKey())) {
                                     list.add(findNewRestaurante);
-                                    Local local = new Local(i.getKey(), "Restaurantes", findNewRestaurante.getNome());
+                                    Local local = new Local(i.getKey(), "Centros Comerciais", findNewRestaurante.getNome());
                                     listIDS.add(local);
                                 }
 
@@ -227,6 +227,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
                 break;
             case R.id.nav_pontos_de_interesse:
                 startActivity(new Intent(this, PontosDeInteresse.class));
+                break;
             case R.id.menu_friends:
                 startActivity(new Intent(this, UserFriends.class));
                 break;
@@ -432,6 +433,7 @@ public class Setting extends AppCompatActivity implements NavigationView.OnNavig
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent localIntent = new Intent(getApplicationContext(), DescricaoDoLocal.class);
+                System.out.println("AAAAAAAAAAAAAAAAAAAAAAA" + UserId + " " + place + " " + nome);
                 localIntent.putExtra("UserId", UserId);
                 localIntent.putExtra("place", place);
                 localIntent.putExtra("nome", nome);
